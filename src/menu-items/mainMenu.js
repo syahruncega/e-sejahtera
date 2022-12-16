@@ -27,40 +27,36 @@ const mainMenu = {
       title: <FormattedMessage id="dashboard" />,
       type: 'item',
       url: '/dashboard',
-      icon: icons.IconDashboard,
-      breadcrumbs: true
+      icon: icons.IconDashboard
     },
     {
       id: 'program',
       title: <FormattedMessage id="program" defaultMessage="Program" />,
       type: 'item',
       url: '/dashboard/program',
-      icon: icons.IconApps,
-      breadcrumbs: true
+      icon: icons.IconApps
     },
     {
       id: 'kegiatan',
-      title: <FormattedMessage id="Kegiatan" defaultMessage="Kegiatan" />,
+      title: <FormattedMessage id="kegiatan" defaultMessage="Kegiatan" />,
       type: 'item',
       url: '/dashboard/kegiatan',
-      icon: icons.IconBox,
-      breadcrumbs: true
+      icon: icons.IconBox
     },
     {
-      id: 'subkegiatan',
-      title: <FormattedMessage id="subkegiatan" defaultMessage="Sub Kegiatan" />,
+      id: 'sub-kegiatan',
+      title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
       type: 'item',
       url: '/dashboard/sub-kegiatan',
       icon: icons.IconSitemap,
-      breadcrumbs: true
+      breadcrumbs: false
     },
     {
       id: 'instansi',
       title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
       type: 'item',
       url: '/dashboard/instansi',
-      icon: icons.IconBuildingSkyscraper,
-      breadcrumbs: true
+      icon: icons.IconBuildingSkyscraper
     }
   ]
 };

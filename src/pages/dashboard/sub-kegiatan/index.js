@@ -35,7 +35,7 @@ import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'store';
-import { getKegiatan } from 'store/slices/kegiatan';
+import { getSubKegiatan } from 'store/slices/sub-kegiatan';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -45,6 +45,8 @@ import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import { ListAltOutlined } from '@mui/icons-material';
+import { useRouter } from 'next/router';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -73,9 +75,9 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
   {
-    id: 'namaKegiatan',
+    id: 'namaSubKegiatan',
     numeric: false,
-    label: 'Nama Kegiatan',
+    label: 'Nama Sub Kegiatan',
     align: 'left'
   },
   {
@@ -200,9 +202,10 @@ EnhancedTableHead.propTypes = {
 
 // ==============================|| PRODUCT LIST ||============================== //
 
-const KegiatanPage = () => {
+const SubKegiatanPage = () => {
   const theme = useTheme();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -211,7 +214,7 @@ const KegiatanPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [search, setSearch] = React.useState('');
   const [rows, setRows] = React.useState([]);
-  const { kegiatan } = useSelector((state) => state.kegiatan);
+  const { subKegiatan } = useSelector((state) => state.subKegiatan);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -224,11 +227,11 @@ const KegiatanPage = () => {
   };
 
   React.useEffect(() => {
-    setRows(kegiatan);
-  }, [kegiatan]);
+    setRows(subKegiatan);
+  }, [subKegiatan]);
 
   React.useEffect(() => {
-    dispatch(getKegiatan());
+    dispatch(getSubKegiatan());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -237,10 +240,10 @@ const KegiatanPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = kegiatan.filter((row) => {
+      const newRows = subKegiatan.filter((row) => {
         let matches = true;
 
-        const properties = ['nama_kegiatan', 'indikator_kinerja_kegiatan', 'pagu_kegiatan'];
+        const properties = ['nama_sub_kegiatan', 'indikator_kinerja_sub_kegiatan', 'pagu_sub_kegiatan'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -256,7 +259,7 @@ const KegiatanPage = () => {
       });
       setRows(newRows);
     } else {
-      getKegiatan();
+      getSubKegiatan();
     }
   };
 
@@ -305,7 +308,7 @@ const KegiatanPage = () => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Page title="Kegiatan">
+    <Page title="Sub Kegiatan">
       <MainCard content={false}>
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -319,7 +322,7 @@ const KegiatanPage = () => {
                   )
                 }}
                 onChange={handleSearch}
-                placeholder="Cari Kegiatan"
+                placeholder="Cari Sub Kegiatan"
                 value={search}
                 size="small"
               />
@@ -342,11 +345,11 @@ const KegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              {/* <Tooltip title="Tambah Kegiatan">
+              <Tooltip title="Tambah Sub Kegiatan">
                 <Fab color="primary" size="small" sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}>
                   <AddIcon fontSize="small" />
                 </Fab>
-              </Tooltip> */}
+              </Tooltip>
             </Grid>
           </Grid>
         </CardContent>
@@ -393,12 +396,32 @@ const KegiatanPage = () => {
                             textDecoration: 'none'
                           }}
                         >
-                          {row.nama_kegiatan}
+                          {row.nama_sub_kegiatan}
                         </Typography>
                       </TableCell>
-                      <TableCell>{row.indikator_kinerja_kegiatan}</TableCell>
-                      <TableCell align="right">Rp{`${row.pagu_kegiatan}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
+                      <TableCell>{row.indikator_kinerja_sub_kegiatan}</TableCell>
+                      <TableCell align="right">Rp{`${row.pagu_sub_kegiatan}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                       <TableCell align="center" sx={{ pr: 3 }}>
+                        <Tooltip title="Detail Sub Kegiatan">
+                          <IconButton
+                            onClick={() =>
+                              router.push({
+                                pathname: '/dashboard/sub-kegiatan/detail',
+                                query: {
+                                  id_sub_kegiatan: row.id
+                                }
+                              })
+                            }
+                            size="large"
+                          >
+                            <ListAltOutlined
+                              fontSize="small"
+                              aria-controls="menu-popular-card-1"
+                              aria-haspopup="true"
+                              sx={{ color: 'grey.500' }}
+                            />
+                          </IconButton>
+                        </Tooltip>
                         <IconButton onClick={handleMenuClick} size="large">
                           <MoreHorizOutlinedIcon
                             fontSize="small"
@@ -463,8 +486,8 @@ const KegiatanPage = () => {
   );
 };
 
-KegiatanPage.getLayout = function getLayout(page) {
+SubKegiatanPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default KegiatanPage;
+export default SubKegiatanPage;

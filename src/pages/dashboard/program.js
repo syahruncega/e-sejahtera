@@ -34,10 +34,8 @@ import { format } from 'date-fns';
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import Avatar from 'components/ui-component/extended/Avatar';
-import Chip from 'components/ui-component/extended/Chip';
 import { useDispatch, useSelector } from 'store';
-import { getProducts } from 'store/slices/product';
+import { getProgram } from 'store/slices/program';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -47,8 +45,6 @@ import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-
-const prodImage = '/assets/images/e-commerce';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -77,28 +73,28 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
   {
-    id: 'name',
+    id: 'instansi',
     numeric: false,
     label: 'Instansi',
     align: 'left'
   },
   {
-    id: 'created',
+    id: 'namaProgram',
     numeric: false,
     label: 'Nama Program',
     align: 'left'
   },
   {
-    id: 'price',
+    id: 'indikatorKinerja',
     numeric: true,
     label: 'Indikator Kinerja',
-    align: 'right'
+    align: 'left'
   },
   {
-    id: 'sale-price',
+    id: 'pagu',
     numeric: true,
     label: 'Pagu',
-    align: 'right'
+    align: 'left'
   }
 ];
 
@@ -221,7 +217,7 @@ const ProgramPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [search, setSearch] = React.useState('');
   const [rows, setRows] = React.useState([]);
-  const { products } = useSelector((state) => state.product);
+  const { program } = useSelector((state) => state.program);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -234,11 +230,11 @@ const ProgramPage = () => {
   };
 
   React.useEffect(() => {
-    setRows(products);
-  }, [products]);
+    setRows(program);
+  }, [program]);
 
   React.useEffect(() => {
-    dispatch(getProducts());
+    dispatch(getProgram());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -247,10 +243,10 @@ const ProgramPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = rows.filter((row) => {
+      const newRows = program.filter((row) => {
         let matches = true;
 
-        const properties = ['name', 'description', 'rating', 'salePrice', 'offerPrice', 'gender'];
+        const properties = ['instansi', 'nama_program', 'indikator_kinerja_program', 'pagu_program'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -266,7 +262,7 @@ const ProgramPage = () => {
       });
       setRows(newRows);
     } else {
-      getProducts();
+      getProgram();
     }
   };
 
@@ -315,7 +311,7 @@ const ProgramPage = () => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Page title="Product List">
+    <Page title="Program">
       <MainCard content={false}>
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -352,11 +348,11 @@ const ProgramPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <Tooltip title="Add Product">
+              {/* <Tooltip title="Tambah Program">
                 <Fab color="primary" size="small" sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}>
                   <AddIcon fontSize="small" />
                 </Fab>
-              </Tooltip>
+              </Tooltip> */}
             </Grid>
           </Grid>
         </CardContent>
@@ -384,7 +380,7 @@ const ProgramPage = () => {
 
                   return (
                     <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
-                      <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.name)}>
+                      <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
                         <Checkbox
                           color="primary"
                           checked={isItemSelected}
@@ -403,12 +399,12 @@ const ProgramPage = () => {
                             textDecoration: 'none'
                           }}
                         >
-                          {row.name}
+                          {row.instansi}
                         </Typography>
                       </TableCell>
-                      <TableCell>{format(new Date(row.created), 'E, MMM d yyyy')}</TableCell>
-                      <TableCell align="right">${row.offerPrice}</TableCell>
-                      <TableCell align="right">${row.salePrice}</TableCell>
+                      <TableCell>{row.nama_program}</TableCell>
+                      <TableCell>{row.indikator_kinerja_program}</TableCell>
+                      <TableCell align="right">Rp{`${row.pagu_program}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                       <TableCell align="center" sx={{ pr: 3 }}>
                         <IconButton onClick={handleMenuClick} size="large">
                           <MoreHorizOutlinedIcon

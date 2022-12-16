@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "json-server": "npx json-server -p 3500 -w data/db.json"
   },
   "dependencies": {
     "@babel/preset-react": "^7.18.6",

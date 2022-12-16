@@ -4,14 +4,20 @@ import { combineReducers } from 'redux';
 // project imports
 import snackbarReducer from './slices/snackbar';
 import menuReducer from './slices/menu';
-import productReducer from './slices/product';
+import programReducer from './slices/program';
+import kegiatanReducer from './slices/kegiatan';
+import subKegiatanReducer from './slices/sub-kegiatan';
+import detailSubKegiatanReducer from './slices/detail-sub-kegiatan';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
 const reducer = combineReducers({
   snackbar: snackbarReducer,
   menu: menuReducer,
-  product: productReducer
+  program: programReducer,
+  kegiatan: kegiatanReducer,
+  subKegiatan: subKegiatanReducer,
+  detailSubKegiatan: detailSubKegiatanReducer
 });
 
 export default reducer;
