@@ -1,0 +1,852 @@
+{
+  "program" : 
+  [
+    {
+      "id" : 1,
+      "instansi" : "Dinas Bina Marga Provinsi Sulawesi Tengah",
+      "nama_program" : "Program Penyelenggaraan Jalan",
+      "indikator_kinerja_program" : "Persentase kemantapan jalan provinsi Persentasi jumlah ruas jalan provinsi yang telah memiliki sertifikat uji laik Proporsi Panjang Jaringan Jalan Dalam Kondisi Baik Rasio Panjang Jalan Dengan Jumlah penduduk",
+      "pagu_program" : "166717589425"
+    },
+    {
+      "id" : 2,
+      "instansi" : "Dinas Pendidikan",
+      "nama_program" : "Program Pengelolaan Pendidikan (SMA)",
+      "indikator_kinerja_program" : "-",
+      "pagu_program" : "10631252856"
+    },
+    {
+      "id" : 3,
+      "instansi" : "Dinas Pendidikan",
+      "nama_program" : "Program Pengelolaan Pendidikan (SMK)",
+      "indikator_kinerja_program" : "-",
+      "pagu_program" : "-"
+    },
+    {
+      "id" : 4,
+      "instansi" : "Dinas Pendidikan",
+      "nama_program" : "Program Pengelolaan Pendidikan (Pendidikan Khusus)",  
+      "indikator_kinerja_program" : "-",
+      "pagu_program" : "-"
+    }
+  ],
+
+  "kegiatan" : 
+  [
+    {
+      "id" : 1,
+      "id_program" : 1,
+      "nama_kegiatan" : "Penyelenggaraan Jalan Provinsi",
+      "indikator_kinerja_kegiatan" : "Panjang Jaringan Jalan Provinsi Dalam Kondisi Mantap",
+      "pagu_kegiatan" : "166717589425"
+    },
+    {
+      "id" : 2,
+      "id_program" : 2,
+      "nama_kegiatan" : "Kegiatan Pengelolaan Pendidikan Sekolah Menengah Atas",
+      "indikator_kinerja_kegiatan" : "-",
+      "pagu_kegiatan" : "4367498082"
+    },
+    {
+      "id" : 3,
+      "id_program" : 3,
+      "nama_kegiatan" : "Kegiatan Pengelolaan Pendidikan Sekolah Menengah Kejuruan",
+      "indikator_kinerja_kegiatan" : "-",
+      "pagu_kegiatan" : "4267529874"
+    },
+    {
+      "id" : 4,
+      "id_program" : 4,
+      "nama_kegiatan" : "Kegiatan Pengelolaan Pendidikan Khusus",
+      "indikator_kinerja_kegiatan" : "-",
+      "pagu_kegiatan" : "-"
+    }
+  ],
+
+  "sub_kegiatan" : 
+  [
+    {
+      "id" : 1,
+      "id_kegiatan" : 1,
+      "nama_sub_kegiatan" : "Pembangunan Jalan",
+      "indikator_kinerja_sub_kegiatan" : "Panjang Jalan Yang Dibangun",
+      "pagu_sub_kegiatan" : "-"
+    },
+    {
+      "id" : 2,
+      "id_kegiatan" : 1,
+      "nama_sub_kegiatan" : "Rekonstruksi Jalan",
+      "indikator_kinerja_sub_kegiatan" : "Panjang Jalan yang Dilakukan Rekonstruksi Jalan",
+      "pagu_sub_kegiatan" : "103000000000"
+    },
+    {
+      "id" : 3,
+      "id_kegiatan" : 1,
+      "nama_sub_kegiatan" : "Pemeliharaan Berkala Jalan",
+      "indikator_kinerja_sub_kegiatan" : "Panjang Jalan yang Dilakukan Pemeliharaan Secara Berkala",
+      "pagu_sub_kegiatan" : "6500000000"
+    },
+    {
+      "id" : 4,
+      "id_kegiatan" : 1,
+      "nama_sub_kegiatan" : "Pemeliharaan Rutin Jalan",
+      "indikator_kinerja_sub_kegiatan" : "Panjang Jalan yang Dilakukan Pemeliharaan Secara Rutin",
+      "pagu_sub_kegiatan" : "15467591000"
+    },
+    {
+      "id" : 5,
+      "id_kegiatan" : 1,
+      "nama_sub_kegiatan" : "Penggantian Jembatan",
+      "indikator_kinerja_sub_kegiatan" : "Panjang Jembatan yangDilakukan Penggantian",
+      "pagu_sub_kegiatan" : "23500000000"
+    },
+    {
+      "id" : 6,
+      "id_kegiatan" : 1,
+      "nama_sub_kegiatan" : "Pemeliharaan Rutin Jembatan",
+      "indikator_kinerja_sub_kegiatan" : "Panjang Jembatan yang Dilakukan Pemeliharaan Secara Rutin",
+      "pagu_sub_kegiatan" : "3300000000"
+    },
+    {
+      "id" : 7,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Pengelolaan Dana BOS Sekolah Menengah Atas",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah Sekolah Menengah Atas yang tersalurkan Dana BOS",
+      "pagu_sub_kegiatan" : "125184975000"
+    },
+    {
+      "id" : 8,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Pemeliharaan Rutin Bangunan Gedung dan Ruang Sekolah",
+      "indikator_kinerja_sub_kegiatan" : "Pemeliharaan Rutin Bangunan Gedung dan Ruang Sekolah",
+      "pagu_sub_kegiatan" : "137969206363"
+    },
+    {
+      "id" : 9,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Pengadaan Alat Praktik dan Peraga Peserta Didik",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMA yang Terpenuhi Pengadaan Alat Praktik dan Peraga Peserta Didik",
+      "pagu_sub_kegiatan" : "172804095"
+    },
+    {
+      "id" : 10,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Pembangunan Sarana, Prasarana dan Utilitas Sekolah",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMA yang Terpenuhi Pembangunan Sarana, Prasarana dan Utilitas Sekolah",
+      "pagu_sub_kegiatan" : "1058000000"
+    },
+    {
+      "id" : 11,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Rehabilitasi Sarana, Prasarana dan Utilitas Sekolah",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMA yang Terpenuhi Rehabilitasi Sarana, Prasarana dan Utilitas Sekolah",
+      "pagu_sub_kegiatan" : "138000000"
+    },
+    {
+      "id" : 12,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Pembinaan Kelembagaan dan Manajemen Sekolah Menengah Atas",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah sekolah yang mendapat Pembinaan Kelembagaan dan Manajemen Sekolah Menengah Atas",
+      "pagu_sub_kegiatan" : "247531860"
+    },
+    {
+      "id" : 13,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Penyediaan Pendidik dan Tenaga Kependidikan bagi Satuan Pendidikan Sekolah Menengah Atas",
+      "indikator_kinerja_sub_kegiatan" : "Tersedianya Jumlah Pendidik dan Tenaga kependidikan",
+      "pagu_sub_kegiatan" : "158902624"
+    },
+    {
+      "id" : 14,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Penyiapan dan Tindak Lanjut Evaluasi Satuan Pendidikan Menengah Atas",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah Dokumen Evaluasi Satuan Pendidikan Menengah Atas",
+      "pagu_sub_kegiatan" : "139575185"
+    },
+    {
+      "id" : 15,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Pembangunan Ruang/Sudut Baca",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMA yang Terpenuhi Pembangunan Ruang/Sudut Baca",
+      "pagu_sub_kegiatan" : "97175000"
+    },
+    {
+      "id" : 16,
+      "id_kegiatan" : 2,
+      "nama_sub_kegiatan" : "Pembinaan Minat, Bakat dan Kreativitas Siswa",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah Siswa yang mendapatkan pembinaan, pengembangan prestasi dibidang sains, dan seni olimpiade, olahraga",
+      "pagu_sub_kegiatan" : "643030727"
+    },
+    {
+      "id" : 17,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Pengelolaan Dana BOS Sekolah Menengah Kejuruan",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah Sekolah Menengah Kejuruan yang tersalurkan Dana BOS",
+      "pagu_sub_kegiatan" : "90622518500"
+    },
+    {
+      "id" : 18,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Pembangunan Ruang Praktik Siswa",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMK yang Terpenuhinya Pembangunan Ruang Praktik Siswa",
+      "pagu_sub_kegiatan" : "142632177086"
+    },
+    {
+      "id" : 19,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Pembinaan Minat, Bakat dan Kreativitas Siswa",
+      "indikator_kinerja_sub_kegiatan" : "Meningkatkan Sumber Daya Manusia Yang Berkualitas Dan Berdaya Saing",
+      "pagu_sub_kegiatan" : "537115841"
+    },
+    {
+      "id" : 20,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Penyiapan dan Tindak Lanjut Evaluasi Satuan Pendidikan Menengah Kejuruan Siswa",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah Dokumen Evaluasi Satuan Pendidikan Menengah Kejuruan",
+      "pagu_sub_kegiatan" : "172500000"
+    },
+    {
+      "id" : 21,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Pengadaan Perlengkapan Sekolah",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMK yang Terpenuhinya Pengadaan Perlengkapan Sekolah",
+      "pagu_sub_kegiatan" : "172500000"
+    },
+    {
+      "id" : 22,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Penyediaan Biaya Personil Peserta Didik Sekolah Menengah Kejuruan",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMK yang Terpenuhinya Tersedianya P Biaya Personil Peserta Didik SMK Yang Putus Sekolah dan Tidak Mampu (Pemenuhan SPM)",
+      "pagu_sub_kegiatan" : "172500000"
+    },
+    {
+      "id" : 23,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Pembinaan Kelembagaan dan Manajemen Sekolah Menengah Kejuruan",
+      "indikator_kinerja_sub_kegiatan" : "Terlaksananya pembinaan dan Pengembangan Kelembagaan Serta Manajemen Pengelolaan Pendidikan Menengah Kejuruan Manusia Yang Berkualitas Dan Berdaya Saing",
+      "pagu_sub_kegiatan" : "230.000.000"
+    },
+    {
+      "id" : 24,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Pemeliharaan Rutin Bangunan Gedung dan Ruang Sekolah",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah SMK yang Terpenuhinya Pemeliharaan Rutin Bangunan Gedung dan Ruang Sekolah",
+      "pagu_sub_kegiatan" : "172500000"
+    },
+    {
+      "id" : 25,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Penyelengaraan Proses Belajar dan Ujian bagi Peserta Didik",
+      "indikator_kinerja_sub_kegiatan" : "Terlaksanya Pengembangan dan Pembinaan Guru SMK",
+      "pagu_sub_kegiatan" : "172500000"
+    },
+    {
+      "id" : 26,
+      "id_kegiatan" : 3,
+      "nama_sub_kegiatan" : "Pengembangan Karir Pendidik dan Tenaga Kependidikan Pada Satuan Pendidikan Sekolah Menengah Kejuruan",
+      "indikator_kinerja_sub_kegiatan" : "Terlaksanya Pengembangan dan Pembinaan Guru SMK",
+      "pagu_sub_kegiatan" : "172500000"
+    },
+    {
+      "id" : 27,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Peningkatan Kapasitas Pengelolaan Dana BOS Sekolah Pendidikan Khusus",
+      "indikator_kinerja_sub_kegiatan" : "Jumlah Sekolah Pendidikan Khusus yang tersalurkan Dana BOS",
+      "pagu_sub_kegiatan" : "2605900000"
+    },
+    {
+      "id" : 28,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Pembangunan Sarana, Prasarana dan Utilitas Sekolah",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Meningkatnya Persentase Jumlah SLB yang Sarananya Memenuhi Standar Nasional Pendidikan",
+      "pagu_sub_kegiatan" : "5575642606"
+    },
+    {
+      "id" : 29,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Penyediaan Pendidik dan Tenaga Kependidikan bagi Satuan Pendidikan Khusus",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Terlaksanya Pengembangan dan Pembinaan Guru SLB",
+      "pagu_sub_kegiatan" : "294249010"
+    },
+    {
+      "id" : 30,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Pembinaan Kelembagaan dan Manajemen Sekolah Pendidikan Khusus",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Terlaksananya pembinaan dan Pengembangan Kelembagaan Serta Manajemen Pengelolaan Pendidikan Khusus",
+      "pagu_sub_kegiatan" : "248502724"
+    },
+    {
+      "id" : 31,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Rehabilitasi Sarana, Prasarana dan Utilitas Sekolah",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Meningkatnya Persentase Jumlah SLB yang Sarananya Memenuhi Standar Nasional Pendidikan",
+      "pagu_sub_kegiatan" : "172500000"
+    },
+    {
+      "id" : 32,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Pengembangan Karir Pendidik dan Tenaga Kependidikan pada Satuan Pendidikan Khusus",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Terlaksanya Pengembangan dan Pembinaan Guru SLB",
+      "pagu_sub_kegiatan" : "230000000"
+    },
+    {
+      "id" : 33,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Pembinaan Minat, Bakat dan Kreativitas Siswa",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Terwujudnya pembinaan, pengembangan prestasi dibidang sains, dan seni olimpiade, olahraga, sains, dan seni",
+      "pagu_sub_kegiatan" : "235769410"
+    },
+    {
+      "id" : 34,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Penyiapan dan Tindak Lanjut Evaluasi Satuan Pendidikan Khusus",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Terwujudnya pembinaan, pengembangan prestasi dibidang sains, dan seni olimpiade, olahraga, sains, dan seni",
+      "pagu_sub_kegiatan" : "230000000"
+    },
+    {
+      "id" : 35,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Pengadaan Alat Praktik dan Peraga Siswa",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Meningkatnya Persentase Jumlah SLB yang Sarananya Memenuhi Standar Nasional Pendidikan",
+      "pagu_sub_kegiatan" : "218110725"
+    },
+    {
+      "id" : 36,
+      "id_kegiatan" : 4,
+      "nama_sub_kegiatan" : "Pemeliharaan Rutin Sarana, Prasarana dan Utilitas Sekolah",
+      "indikator_kinerja_sub_kegiatan" : 
+      "Meningkatnya Persentase Jumlah SLB yang Sarananya Memenuhi Standar Nasional Pendidikan",
+      "pagu_sub_kegiatan" : "172500000"
+    }
+
+  ],
+
+  "detail_sub_kegiatan" :
+  [
+    {
+      "id" : 1,
+      "id_sub_kegiatan" : 1,
+      "fokus_belanja" : "-",
+      "indikator" : "-",
+      "target" : "-",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "-",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 2,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Banggai - Lokotoy",
+      "indikator" : "Panjang Jalan Ruas Banggai - Lokotoy Yang di Rekonstruksi",
+      "target" : "1,3",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "3250000000",
+      "lokasi" : "Banggai Laut",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 3,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Siuna - Bualemo",
+      "indikator" : "Panjang Jalan Ruas Siuna - Bualemo Yang di Rekonstruksi",
+      "target" : "13,6",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "34000000000",
+      "lokasi" : "Banggai",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 4,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Salakan - Sambiut",
+      "indikator" : "Panjang Jalan Ruas Salakan - Sambiut Yang di Rekonstruksi",
+      "target" : "5",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "12500000000",
+      "lokasi" : "Banggai Kepulauan",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 5,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Tonosu - Pendolo",
+      "indikator" : "Panjang Jalan Ruas Tonosu - Pendolo Yang di Rekonstruksi",
+      "target" : "10",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "25000000000",
+      "lokasi" : "Poso",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 6,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Tonosu - Gintu",
+      "indikator" : "Panjang Jalan Ruas Tonosu - Gintu Yang di Rekonstruksi",
+      "target" : "2",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "5000000000",
+      "lokasi" : "Poso",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 7,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Tayawa - Malino",
+      "indikator" : "Panjang Jalan Ruas Tayawa - Malino Yang di Rekonstruksi",
+      "target" : "1,5",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "3750000000",
+      "lokasi" : "Tojo Una-Una",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 8,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Mepanga - Pasir Putih",
+      "indikator" : "Panjang Jalan Ruas Mepanga - Pasir Putih Yang di Rekonstruksi",
+      "target" : "3",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "7500000000",
+      "lokasi" : "Parigi Moutong",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 9,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Pasir Putih (Bts. Parigi Moutong) - Basi",
+      "indikator" : "Panjang Jalan Ruas  Pasir Putih (Bts. Parigi Moutong) - Basi Yang di Rekonstruksi",
+      "target" : "1,6",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "4500000000",
+      "lokasi" : "Toli-Toli",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 10,
+      "id_sub_kegiatan" : 2,
+      "fokus_belanja" : "Rekonstruksi Jalan Ruas Beteleme - Nuha",
+      "indikator" : "Panjang Jalan Ruas Beteleme - Nuha Yang di Rekonstruksi",
+      "target" : "5",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "12500000000",
+      "lokasi" : "Morowali Utara",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 11,
+      "id_sub_kegiatan" : 3,
+      "fokus_belanja" : "Pemeliharaan Berkala Jalan Ruas Ampera - Banawa",
+      "indikator" : "Panjang Jalan Ruas Ampera - Banawa Yang di Lakukan Pemeliharaan secara Berkala",
+      "target" : "1,3",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "650000000000",
+      "lokasi" : "Donggala",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 12,
+      "id_sub_kegiatan" : 4,
+      "fokus_belanja" : "Pemeliharaan Rutin Jalan Kewenangan Pemerintah daerah Provinsi Sulawesi Tengah",
+      "indikator" : "Panjang  Ruas Jalan Kewenangan Pemerintah Provinsi Sulawesi Tengah Yang di Lakukan Pemeliharaan secara Rutin",
+      "target" : "1595,01",
+      "satuan" : "km",
+      "pagu_fokus_belanja" : "15467591000",
+      "lokasi" : "Prov. Sulawesi Tengah",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 13,
+      "id_sub_kegiatan" : 5,
+      "fokus_belanja" : "Penggantian Jembatan Sukamaju",
+      "indikator" : "Panjang Jembatan Sukamaju Yang Di lakukan Penggantian",
+      "target" : "150",
+      "satuan" : "m",
+      "pagu_fokus_belanja" : "5000000000",
+      "lokasi" : "Tojo Una-Una",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 14,
+      "id_sub_kegiatan" : 5,
+      "fokus_belanja" : "Penggantian Jembatan Boilan",
+      "indikator" : "Panjang Jembatan Boilan Yang Di lakukan Penggantian",
+      "target" : "20",
+      "satuan" : "m",
+      "pagu_fokus_belanja" : "5000000000",
+      "lokasi" : "Buol",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 15,
+      "id_sub_kegiatan" : 5,
+      "fokus_belanja" : "Penggantian Jembatan Limpas Oyom - Mulyasari",
+      "indikator" : "Panjang Jembatan Limpas Oyom - Mulyasari Yang Di lakukan Penggantian",
+      "target" : "40",
+      "satuan" : "m",
+      "pagu_fokus_belanja" : "12500000000",
+      "lokasi" : "Toli-Toli",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 16,
+      "id_sub_kegiatan" : 5,
+      "fokus_belanja" : "Bantuan Jembatan Gantung",
+      "indikator" : "-",
+      "target" : "-",
+      "satuan" : "-",
+      "pagu_fokus_belanja" : "1000000000",
+      "lokasi" : "-",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 17,
+      "id_sub_kegiatan" : 6,
+      "fokus_belanja" : "Pemeliharaan Rutin Jembatan Kewenangan Pemerintah daerah Provinsi Sulawesi Tengah",
+      "indikator" : "Panjang  Jembatan Kewenangan Pemerintah Provinsi Sulawesi Tengah Yang di Lakukan Pemeliharaan secara Rutin",
+      "target" : "4436,36",
+      "satuan" : "m",
+      "pagu_fokus_belanja" : "3300000000",
+      "lokasi" : "Prov. Sulawesi Tengah",
+      "keterangan" : "Meningkatkan aksesbilitas masyarakat dan memperlancar distribusi barang"
+    },
+    {
+      "id" : 18,
+      "id_sub_kegiatan" : 7,
+      "fokus_belanja" : "Pembiyaan Peserta Didik / Siswa",
+      "indikator" : "Terpenuhinya Kebutuhan Peserta Didik",
+      "target" : "227",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 19,
+      "id_sub_kegiatan" : 8,
+      "fokus_belanja" : "Pembangunan Tempat Pendidikan",
+      "indikator" : "Terpenuhinya Sarana dan Prasarana Pendidikan",
+      "target" : "31",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 20,
+      "id_sub_kegiatan" : 9,
+      "fokus_belanja" : "Alat Praktik dan Peraga Peserta Didik",
+      "indikator" : "Adanya Alat Praktik dan Peraga Peserta Didik",
+      "target" : "31",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 21,
+      "id_sub_kegiatan" : 10,
+      "fokus_belanja" : "Pembiayaan Penunjang Kebutuhan Sekolah",
+      "indikator" : "Adanya Biaya Penunjang Kebutuhan Sekolah",
+      "target" : "31",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "2569000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 22,
+      "id_sub_kegiatan" : 11,
+      "fokus_belanja" : "Rehab Ruang kebutuhan Pendidikan",
+      "indikator" : "Terlaksananya Rehabiltasi Sarana dan Prasarana utilitas sekolah",
+      "target" : "31",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 23,
+      "id_sub_kegiatan" : 12,
+      "fokus_belanja" : "Kegiatan pengembangan SDM bidang pendidikan",
+      "indikator" : "Terlaksananya kegiatan pengembangan manajemen sekolah",
+      "target" : "227",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 24,
+      "id_sub_kegiatan" : 13,
+      "fokus_belanja" : "Personil Tenaga Pendidik dan Tenaga Kependidikan",
+      "indikator" : "Adanya tenaga pendidik dan Tenaga Kependidikan yang memadai",
+      "target" : "611",
+      "satuan" : "Guru",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 25,
+      "id_sub_kegiatan" : 14,
+      "fokus_belanja" : "Dokumen Pelaksanaan Pembiayan Pendidikan",
+      "indikator" : "Terpenuhinya Pelaksanaan Evaluasi pembiayaan pendidikan",
+      "target" : "227",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "600000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 26,
+      "id_sub_kegiatan" : 15,
+      "fokus_belanja" : "Ruang/Sudut Baca",
+      "indikator" : "Adanya Ruang/Sudut Baca",
+      "target" : "31",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" : "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 27,
+      "id_sub_kegiatan" : 16,
+      "fokus_belanja" : "Peserta Didik / Siswa",
+      "indikator" : "Terlaksananya kegiatan Minat, Bakat dan Kreativitas Siswa",
+      "target" : "2497",
+      "satuan" : "Siswa",
+      "pagu_fokus_belanja" :  "700000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 28,
+      "id_sub_kegiatan" : 17,
+      "fokus_belanja" : "Pembiyaan Peserta Didik / Siswa",
+      "indikator" : "Terpenuhinya Kebutuhan Peserta Didik",
+      "target" : "185",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 29,
+      "id_sub_kegiatan" : 18,
+      "fokus_belanja" : "Ruang Praktek",
+      "indikator" : "Terpenuhinya Ruang Praktek Siswa",
+      "target" : "33",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 30,
+      "id_sub_kegiatan" : 19,
+      "fokus_belanja" : "Peserta Didik / Siswa",
+      "indikator" : "Terlaksananya kegiatan Minat, Bakat dan Kreativitas Siswa",
+      "target" : "106",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "1400000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 31,
+      "id_sub_kegiatan" : 20,
+      "fokus_belanja" : "Dokumen Pelaksanaan Pembiayan Pendidikan",
+      "indikator" : "Terpenuhinya Pelaksanaan Evaluasi pembiayaan pendidikan",
+      "target" : "185",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "250000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 32,
+      "id_sub_kegiatan" : 21,
+      "fokus_belanja" : "Perlengkapan Sekolah",
+      "indikator" : "Adanya Perlengkapan Sekolah dalam mendukung propses belajar mengajar",
+      "target" : "33",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 33,
+      "id_sub_kegiatan" : 22,
+      "fokus_belanja" : "Pembiyaan Peserta Didik / Siswa",
+      "indikator" : "Terpenuhinya Kebutuhan Peserta Didik",
+      "target" : "5400",
+      "satuan" : "Siswa",
+      "pagu_fokus_belanja" :  "250000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 33,
+      "id_sub_kegiatan" : 23,
+      "fokus_belanja" : "Kegiatan pengembangan SDM bidang pendidikan",
+      "indikator" : "terlaksananya kegiatan pengembangan manajemen sekolah",
+      "target" : "185",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "650000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 34,
+      "id_sub_kegiatan" : 24,
+      "fokus_belanja" : "Pembangunan Tempat Pendidikan",
+      "indikator" : "Terpenuhinya Sarana dan Prasarana Pendidikan",
+      "target" : "33",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 35,
+      "id_sub_kegiatan" : 25,
+      "fokus_belanja" : "Kegiatan Pengembangan dan Pembinaan Guru SMK",
+      "indikator" : "Terlaksananya Pembinaan Guru SMK",
+      "target" : "304",
+      "satuan" : "Orang",
+      "pagu_fokus_belanja" :  "300000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 36,
+      "id_sub_kegiatan" : 26,
+      "fokus_belanja" : "Kegiatan Pengembangan dan Pembinaan Guru SMK",
+      "indikator" : "Terlaksananya Pembinaan Guru SMK",
+      "target" : "304",
+      "satuan" : "Orang",
+      "pagu_fokus_belanja" :  "150000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 37,
+      "id_sub_kegiatan" : 27,
+      "fokus_belanja" : "Pembiyaan Peserta Didik / Siswa",
+      "indikator" : "Terpenuhinya Kebutuhan Peserta Didik",
+      "target" : "30",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 38,
+      "id_sub_kegiatan" : 28,
+      "fokus_belanja" : "Pembiayaan Penunjang Kebutuhan Sekolah",
+      "indikator" : "Adanya Biaya Penunjang Kebutuhan Sekolah",
+      "target" : "5",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "300000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 39,
+      "id_sub_kegiatan" : 29,
+      "fokus_belanja" : "Personil Tenaga Pendidik dan Tenaga Kependidikan",
+      "indikator" : "Adanya Biaya Penunjang Kebutuhan Sekolah",
+      "target" : "94",
+      "satuan" : "Orang",
+      "pagu_fokus_belanja" :  "366508200",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 40,
+      "id_sub_kegiatan" : 30,
+      "fokus_belanja" : "Kegiatan pengembangan SDM bidang pendidikan",
+      "indikator" : "terlaksananya kegiatan pengembangan manajemen sekolah",
+      "target" : "30",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "500000000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 41,
+      "id_sub_kegiatan" : 31,
+      "fokus_belanja" : "Rehab Ruang kebutuhan Pendidikan",
+      "indikator" : "Terlaksananya Rehabiltasi Sarana dan Prasarana utilitas sekolah",
+      "target" : "5",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 42,
+      "id_sub_kegiatan" : 32,
+      "fokus_belanja" : "Kegiatan Pengembangan dan Pembinaan Guru SMK",
+      "indikator" : "Terlaksananya Pembinaan Guru SMK",
+      "target" : "94",
+      "satuan" : "Orang",
+      "pagu_fokus_belanja" :  "403274000",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 43,
+      "id_sub_kegiatan" : 33,
+      "fokus_belanja" : "Peserta Didik / Siswa",
+      "indikator" : "Terlaksananya kegiatan Minat, Bakat dan Kreativitas Siswa",
+      "target" : "330",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "301549125",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 44,
+      "id_sub_kegiatan" : 34,
+      "fokus_belanja" : "Dokumen Pelaksanaan Pembiayan Pendidiian",
+      "indikator" : "Terpenuhinya Pelaksanaan Evaluasi pembiayaan pendidikan",
+      "target" : "30",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "124894250",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "Pagu Validasi pada SIPD (pagu sementara)"
+    },
+    {
+      "id" : 45,
+      "id_sub_kegiatan" : 35,
+      "fokus_belanja" : "Alat Praktik dan Peraga Peserta Didik",
+      "indikator" : "Adanya Alat Praktik dan Peraga Peserta Didik",
+      "target" : "5",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    },
+    {
+      "id" : 46,
+      "id_sub_kegiatan" : 36,
+      "fokus_belanja" : "Pembangunan Tempat Pendidikan",
+      "indikator" : "Terpenuhinya Sarana dan Prasarana Pendidikan",
+      "target" : "5",
+      "satuan" : "Sekolah",
+      "pagu_fokus_belanja" :  "-",
+      "lokasi" : "Kab/Kota",
+      "keterangan" : "-"
+    }
+  ]
+}

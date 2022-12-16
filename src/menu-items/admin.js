@@ -25,7 +25,7 @@ const admin = {
       type: 'item',
       icon: icons.IconUserCheck,
       breadcrumbs: false,
-      url: '/pengguna'
+      url: '/dashboard/pengguna'
     }
   ]
 };

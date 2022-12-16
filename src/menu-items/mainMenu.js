@@ -34,7 +34,7 @@ const mainMenu = {
       id: 'program',
       title: <FormattedMessage id="program" defaultMessage="Program" />,
       type: 'item',
-      url: '/sample-page',
+      url: '/dashboard/program',
       icon: icons.IconApps,
       breadcrumbs: true
     },
@@ -42,28 +42,25 @@ const mainMenu = {
       id: 'kegiatan',
       title: <FormattedMessage id="Kegiatan" defaultMessage="Kegiatan" />,
       type: 'item',
-      url: 'www.google.com',
+      url: '/dashboard/kegiatan',
       icon: icons.IconBox,
-      external: true,
-      target: true
+      breadcrumbs: true
     },
     {
       id: 'subkegiatan',
       title: <FormattedMessage id="subkegiatan" defaultMessage="Sub Kegiatan" />,
       type: 'item',
-      url: 'www.google.com',
+      url: '/dashboard/sub-kegiatan',
       icon: icons.IconSitemap,
-      external: true,
-      target: true
+      breadcrumbs: true
     },
     {
       id: 'instansi',
       title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
       type: 'item',
-      url: 'www.google.com',
+      url: '/dashboard/instansi',
       icon: icons.IconBuildingSkyscraper,
-      external: true,
-      target: true
+      breadcrumbs: true
     }
   ]
 };
