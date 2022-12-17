@@ -75,7 +75,7 @@ export function filterPrograms(filter) {
 export function getKegiatanById(id) {
   return async () => {
     try {
-      const response = await axios.post('http://localhost:3500/kegiatan', { id });
+      const response = await axios.post(`${process.env.BASE_URL_API}/kegiatan`, { id });
       dispatch(slice.actions.getKegiatanByIdSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

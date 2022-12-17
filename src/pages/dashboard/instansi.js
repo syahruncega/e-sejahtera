@@ -5,11 +5,20 @@ import { Typography } from '@mui/material';
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
+import { FormattedMessage } from 'react-intl';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const InstansiPage = () => (
-  <Page title="Instansi">
+  <Page
+    title="Instansi"
+    navigation={[
+      {
+        title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
+        url: '/dashboard/instansi'
+      }
+    ]}
+  >
     <MainCard title="Sample Card">
       <Typography variant="body2">
         Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad

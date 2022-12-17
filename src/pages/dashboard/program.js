@@ -7,7 +7,6 @@ import { useTheme } from '@mui/material/styles';
 import {
   CardContent,
   Checkbox,
-  Fab,
   Grid,
   IconButton,
   InputAdornment,
@@ -27,9 +26,6 @@ import {
   Typography
 } from '@mui/material';
 
-// third-party
-import { format } from 'date-fns';
-
 // project imports
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
@@ -45,6 +41,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
+import { FormattedMessage } from 'react-intl';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -311,7 +308,15 @@ const ProgramPage = () => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Page title="Program">
+    <Page
+      title="Program"
+      navigation={[
+        {
+          title: <FormattedMessage id="program" defaultMessage="Program" />,
+          url: '/dashboard/program'
+        }
+      ]}
+    >
       <MainCard content={false}>
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center" spacing={2}>

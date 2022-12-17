@@ -5,11 +5,20 @@ import { Typography } from '@mui/material';
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
+import { FormattedMessage } from 'react-intl';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const PenggunaPage = () => (
-  <Page title="Pengguna">
+  <Page
+    title="Pengguna"
+    navigation={[
+      {
+        title: <FormattedMessage id="pengguna" defaultMessage="Pengguna" />,
+        url: '/dashboard/pengguna'
+      }
+    ]}
+  >
     <MainCard title="Sample Card">
       <Typography variant="body2">
         Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif ad

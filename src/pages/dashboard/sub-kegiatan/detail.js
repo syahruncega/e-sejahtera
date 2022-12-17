@@ -27,9 +27,6 @@ import {
   Typography
 } from '@mui/material';
 
-// third-party
-import { format } from 'date-fns';
-
 // project imports
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
@@ -46,6 +43,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { useRouter } from 'next/router';
+import { FormattedMessage } from 'react-intl';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -331,7 +329,19 @@ const DetailSubKegiatanPage = () => {
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    <Page title="Detail Sub Kegiatan">
+    <Page
+      title="Detail Sub Kegiatan"
+      navigation={[
+        {
+          title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
+          url: '/dashboard/sub-kegiatan'
+        },
+        {
+          title: <FormattedMessage id="detail-sub-kegiatan" defaultMessage="Detail Sub Kegiatan" />,
+          url: router.asPath
+        }
+      ]}
+    >
       <MainCard content={false}>
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center" spacing={2}>

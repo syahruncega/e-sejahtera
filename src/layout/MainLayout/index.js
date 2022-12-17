@@ -10,9 +10,6 @@ import Header from './Header';
 import Sidebar from './Sidebar';
 import HorizontalBar from './HorizontalBar';
 import AuthGuard from 'utils/route-guard/AuthGuard';
-import Breadcrumbs from 'components/ui-component/extended/Breadcrumbs';
-
-import navigation from 'menu-items';
 import { LAYOUT_CONST } from 'constant';
 import useConfig from 'hooks/useConfig';
 import { drawerWidth } from 'store/constant';
@@ -20,7 +17,6 @@ import { openDrawer } from 'store/slices/menu';
 import { useDispatch, useSelector } from 'store';
 
 // assets
-import { IconChevronRight } from '@tabler/icons';
 
 // styles
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(({ theme, open, layout }) => ({
@@ -137,7 +133,7 @@ const MainLayout = ({ children }) => {
         <Main theme={theme} open={drawerOpen} layout={layout}>
           <Container maxWidth={container ? 'lg' : false} {...(!container && { sx: { px: { xs: 0 } } })}>
             {/* breadcrumb */}
-            <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign />
+            {/* <Breadcrumbs separator={IconChevronRight} navigation={navigation} icon title rightAlign /> */}
             {children}
           </Container>
         </Main>

@@ -30,6 +30,13 @@ const mainMenu = {
       icon: icons.IconDashboard
     },
     {
+      id: 'instansi',
+      title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
+      type: 'item',
+      url: '/dashboard/instansi',
+      icon: icons.IconBuildingSkyscraper
+    },
+    {
       id: 'program',
       title: <FormattedMessage id="program" defaultMessage="Program" />,
       type: 'item',
@@ -50,13 +57,6 @@ const mainMenu = {
       url: '/dashboard/sub-kegiatan',
       icon: icons.IconSitemap,
       breadcrumbs: false
-    },
-    {
-      id: 'instansi',
-      title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
-      type: 'item',
-      url: '/dashboard/instansi',
-      icon: icons.IconBuildingSkyscraper
     }
   ]
 };

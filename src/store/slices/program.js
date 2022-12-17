@@ -75,7 +75,7 @@ export function filterProgram(filter) {
 export function getProgramById(id) {
   return async () => {
     try {
-      const response = await axios.post('http://localhost:3500/program', { id });
+      const response = await axios.post(`${process.env.BASE_URL_API}/program`, { id });
       dispatch(slice.actions.getProgramByIdSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
