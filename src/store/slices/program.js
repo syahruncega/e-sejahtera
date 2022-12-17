@@ -53,7 +53,7 @@ export default slice.reducer;
 export function getProgram() {
   return async () => {
     try {
-      const response = await axios.get('http://localhost:3500/program');
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/program`);
       dispatch(slice.actions.getProgramSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -75,7 +75,7 @@ export function filterProgram(filter) {
 export function getProgramById(id) {
   return async () => {
     try {
-      const response = await axios.post(`${process.env.BASE_URL_API}/program`, { id });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/program`, { id });
       dispatch(slice.actions.getProgramByIdSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

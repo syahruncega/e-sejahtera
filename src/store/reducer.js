@@ -8,6 +8,7 @@ import programReducer from './slices/program';
 import kegiatanReducer from './slices/kegiatan';
 import subKegiatanReducer from './slices/sub-kegiatan';
 import detailSubKegiatanReducer from './slices/detail-sub-kegiatan';
+import lokasiReducer from './slices/lokasi';
 
 // ==============================|| COMBINE REDUCER ||============================== //
 
@@ -17,7 +18,8 @@ const reducer = combineReducers({
   program: programReducer,
   kegiatan: kegiatanReducer,
   subKegiatan: subKegiatanReducer,
-  detailSubKegiatan: detailSubKegiatanReducer
+  detailSubKegiatan: detailSubKegiatanReducer,
+  lokasi: lokasiReducer
 });
 
 export default reducer;

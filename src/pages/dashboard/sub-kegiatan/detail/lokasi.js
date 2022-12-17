@@ -32,7 +32,7 @@ import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { useDispatch, useSelector } from 'store';
-import { getDetailSubKegiatan } from 'store/slices/detail-sub-kegiatan';
+import { getLokasi } from 'store/slices/lokasi';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -44,6 +44,7 @@ import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { useRouter } from 'next/router';
 import { FormattedMessage } from 'react-intl';
+import FormLokasi from 'components/form/FormLokasi';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -72,45 +73,21 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
   {
-    id: 'fokusBelanja',
+    id: 'kabupatenKota',
     numeric: false,
-    label: 'Fokus Belanja',
+    label: 'Kabupaten / Kota',
     align: 'left'
   },
   {
-    id: 'indikator',
+    id: 'kecamatan',
     numeric: false,
-    label: 'Indikator',
+    label: 'Kecamatan',
     align: 'left'
   },
   {
-    id: 'target',
-    numeric: true,
-    label: 'Target',
-    align: 'left'
-  },
-  {
-    id: 'satuan',
+    id: 'desaKelurahan',
     numeric: false,
-    label: 'Satuan',
-    align: 'left'
-  },
-  {
-    id: 'paguFokusBelanja',
-    numeric: true,
-    label: 'Pagu',
-    align: 'left'
-  },
-  {
-    id: 'lokasi',
-    numeric: false,
-    label: 'Lokasi',
-    align: 'left'
-  },
-  {
-    id: 'keterangan',
-    numeric: false,
-    label: 'Keterangan',
+    label: 'Desa / Kelurahan',
     align: 'left'
   }
 ];
@@ -235,7 +212,7 @@ const DetailSubKegiatanPage = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [search, setSearch] = React.useState('');
   const [rows, setRows] = React.useState([]);
-  const { detailSubKegiatan } = useSelector((state) => state.detailSubKegiatan);
+  const { lokasi } = useSelector((state) => state.lokasi);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -248,11 +225,11 @@ const DetailSubKegiatanPage = () => {
   };
 
   React.useEffect(() => {
-    setRows(detailSubKegiatan);
-  }, [detailSubKegiatan]);
+    setRows(lokasi);
+  }, [lokasi]);
 
   React.useEffect(() => {
-    dispatch(getDetailSubKegiatan(router.query));
+    dispatch(getLokasi(router.query));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -261,10 +238,10 @@ const DetailSubKegiatanPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = detailSubKegiatan.filter((row) => {
+      const newRows = lokasi.filter((row) => {
         let matches = true;
 
-        const properties = ['fokus_belanja', 'indikator', 'target', 'satuan', 'pagu_fokus_belanja', 'lokasi', 'keterangan'];
+        const properties = ['kabupaten_kotan', 'kecamatan', 'desa_keluarahan'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -280,7 +257,7 @@ const DetailSubKegiatanPage = () => {
       });
       setRows(newRows);
     } else {
-      getDetailSubKegiatan(router.query);
+      getLokasi(router.query);
     }
   };
 
@@ -330,7 +307,7 @@ const DetailSubKegiatanPage = () => {
 
   return (
     <Page
-      title="Detail Sub Kegiatan"
+      title="Lokasi"
       navigation={[
         {
           title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
@@ -338,6 +315,10 @@ const DetailSubKegiatanPage = () => {
         },
         {
           title: <FormattedMessage id="detail-sub-kegiatan" defaultMessage="Detail Sub Kegiatan" />,
+          url: '/dashboard/sub-kegiatan/detail?id_sub_kegiatan=2'
+        },
+        {
+          title: <FormattedMessage id="lokasi-detail-sub-kegiatan" defaultMessage="Lokasi" />,
           url: router.asPath
         }
       ]}
@@ -355,7 +336,7 @@ const DetailSubKegiatanPage = () => {
                   )
                 }}
                 onChange={handleSearch}
-                placeholder="Cari Detail Sub Kegaiatan"
+                placeholder="Cari Lokasi"
                 value={search}
                 size="small"
               />
@@ -378,11 +359,7 @@ const DetailSubKegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <Tooltip title="Tambah Detail Sub Kegiatan">
-                <Fab color="primary" size="small" sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}>
-                  <AddIcon fontSize="small" />
-                </Fab>
-              </Tooltip>
+              <FormLokasi />
             </Grid>
           </Grid>
         </CardContent>
@@ -421,23 +398,17 @@ const DetailSubKegiatanPage = () => {
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
                         <Typography
-                          component={Link}
-                          href={`/app/e-commerce/product-details/${row.id}`}
                           variant="subtitle1"
                           sx={{
                             color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
                             textDecoration: 'none'
                           }}
                         >
-                          {row.fokus_belanja}
+                          Morowali
                         </Typography>
                       </TableCell>
-                      <TableCell>{row.indikator}</TableCell>
-                      <TableCell align="right">{`${row.target}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
-                      <TableCell>{row.satuan}</TableCell>
-                      <TableCell align="right">Rp{`${row.pagu_fokus_belanja}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
-                      <TableCell>{row.lokasi}</TableCell>
-                      <TableCell>{row.keterangan}</TableCell>
+                      <TableCell>Bungkut Tengah</TableCell>
+                      <TableCell>Tofoiso</TableCell>
                       <TableCell align="center" sx={{ pr: 3 }}>
                         <IconButton onClick={handleMenuClick} size="large">
                           <MoreHorizOutlinedIcon
@@ -468,8 +439,8 @@ const DetailSubKegiatanPage = () => {
                             }
                           }}
                         >
-                          <MenuItem onClick={handleClose}> Edit</MenuItem>
-                          <MenuItem onClick={handleClose}> Delete</MenuItem>
+                          <MenuItem onClick={handleClose}> Ubah</MenuItem>
+                          <MenuItem onClick={handleClose}> Hapus</MenuItem>
                         </Menu>
                       </TableCell>
                     </TableRow>

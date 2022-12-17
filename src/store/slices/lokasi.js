@@ -9,13 +9,13 @@ import { dispatch } from '../index';
 
 const initialState = {
   error: null,
-  kegiatan: [],
-  singleKegiatan: null,
-  relatedKegiatan: []
+  lokasi: [],
+  singleLokasi: null,
+  relatedLokasi: []
 };
 
 const slice = createSlice({
-  name: 'kegiatan',
+  name: 'lokasi',
   initialState,
   reducers: {
     // HAS ERROR
@@ -23,24 +23,24 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET KEGIATAN
-    getKegiatanSuccess(state, action) {
-      state.kegiatan = action.payload;
+    // GET PROGRAMS
+    getLokasiSuccess(state, action) {
+      state.lokasi = action.payload;
     },
 
-    // FILTER KEGIATAN
-    filterKegiatanSuccess(state, action) {
-      state.kegiatan = action.payload;
+    // FILTER PROGRAMS
+    filterLokasiSuccess(state, action) {
+      state.lokasi = action.payload;
     },
 
     // GET PROGRAM BY ID
-    getKegiatanByIdSuccess(state, action) {
-      state.singleKegiatan = action.payload;
+    getLokasiByIdSuccess(state, action) {
+      state.singleLokasi = action.payload;
     },
 
-    // GET RELATED KEGIATAN
-    getRelatedKegiatanSuccess(state, action) {
-      state.relatedKegiatan = action.payload;
+    // GET RELATED PROGRAMS
+    getRelatedLokasiSuccess(state, action) {
+      state.relatedLokasi = action.payload;
     }
   }
 });
@@ -50,44 +50,44 @@ export default slice.reducer;
 
 // ----------------------------------------------------------------------
 
-export function getKegiatan() {
+export function getLokasi(params) {
   return async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatan`);
-      dispatch(slice.actions.getKegiatanSuccess(response.data));
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/lokasi`, { params });
+      dispatch(slice.actions.getLokasiSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
-export function filterPrograms(filter) {
+export function filterLokasi(filter) {
   return async () => {
     try {
       const response = await axios.post('/api/product/filter', { filter });
-      dispatch(slice.actions.filterKegiatanSuccess(response.data));
+      dispatch(slice.actions.filterLokasiSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
-export function getKegiatanById(id) {
+export function getLokasiById(id) {
   return async () => {
     try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatan`, { id });
-      dispatch(slice.actions.getKegiatanByIdSuccess(response.data));
+      const response = await axios.post(`${process.env.BASE_URL_API}/lokasi`, { id });
+      dispatch(slice.actions.getLokasiByIdSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
   };
 }
 
-export function getRelatedKegiatan(id) {
+export function getRelatedLokasi(id) {
   return async () => {
     try {
       const response = await axios.post('/api/product/related', { id });
-      dispatch(slice.actions.getRelatedKegiatanSuccess(response.data));
+      dispatch(slice.actions.getRelatedLokasiSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

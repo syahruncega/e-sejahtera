@@ -53,7 +53,7 @@ export default slice.reducer;
 export function getSubKegiatan() {
   return async () => {
     try {
-      const response = await axios.get('http://localhost:3500/sub_kegiatan');
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/sub_kegiatan`);
       dispatch(slice.actions.getSubKegiatanSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -75,7 +75,7 @@ export function filterSubKegiatan(filter) {
 export function getSubKegiatanById(id) {
   return async () => {
     try {
-      const response = await axios.post('http://localhost:3500/sub_kegiatan', { id });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/sub_kegiatan`, { id });
       dispatch(slice.actions.getSubKegiatanByIdSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

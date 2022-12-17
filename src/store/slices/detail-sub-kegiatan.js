@@ -53,7 +53,7 @@ export default slice.reducer;
 export function getDetailSubKegiatan(params) {
   return async () => {
     try {
-      const response = await axios.get('http://localhost:3500/detail_sub_kegiatan', { params });
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/detail_sub_kegiatan`, { params });
       dispatch(slice.actions.getDetailSubKegiatanSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -64,7 +64,7 @@ export function getDetailSubKegiatan(params) {
 export function filterDetailSubKegiatan(filter) {
   return async () => {
     try {
-      const response = await axios.post('http://localhost:3500/detail_sub_kegiatan', { filter });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/detail_sub_kegiatan`, { filter });
       dispatch(slice.actions.filterDetailSubKegiatanSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -75,7 +75,7 @@ export function filterDetailSubKegiatan(filter) {
 export function getDetailSubKegiatanById(id) {
   return async () => {
     try {
-      const response = await axios.post('http://localhost:3500/program', { id });
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/detail_sub_kegiatan`, { id });
       dispatch(slice.actions.getDetailSubKegiatanByIdSuccess(response.data));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

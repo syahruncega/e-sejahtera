@@ -830,12 +830,22 @@
       "pagu_fokus_belanja": "-",
       "lokasi": "Kab/Kota",
       "keterangan": "-"
+    }
+  ],
+  "lokasi": [
+    {
+      "id": 1,
+      "id_detail_sub_kegiatan": 1,
+      "kabupaten_kota": "Morowali",
+      "kecamatan": "Bungkut Tengah",
+      "desa_kelurahan": "Tofoiso"
     },
     {
-      "filter": {
-        "idSubKegiatan": "2"
-      },
-      "id": 47
+      "id": 1,
+      "id_detail_sub_kegiatan": 2,
+      "kabupaten_kota": "Morowali",
+      "kecamatan": "Bungkut Tengah",
+      "desa_kelurahan": "Tofoiso"
     }
   ]
 }
