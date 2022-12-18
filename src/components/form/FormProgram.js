@@ -9,7 +9,7 @@ import { useState } from 'react';
 import { Autocomplete, Fab, MenuItem, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 
-const FormLokasi = ({ isEdit, lokasi }) => {
+const FormProgram = ({ isEdit, program }) => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
@@ -25,7 +25,7 @@ const FormLokasi = ({ isEdit, lokasi }) => {
       {isEdit ? (
         <MenuItem onClick={handleClickOpen}> Ubah</MenuItem>
       ) : (
-        <Tooltip title="Tambah Lokasi">
+        <Tooltip title="Tambah Program">
           <Fab
             color="primary"
             size="small"
@@ -38,29 +38,17 @@ const FormLokasi = ({ isEdit, lokasi }) => {
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-        <DialogTitle> {isEdit ? 'Ubah Lokasi' : 'Tambah Lokasi'}</DialogTitle>
+        <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
         <DialogContent>
           <Autocomplete
             disablePortal
             id="combo-box-demo"
             options={['Palu', 'Morowali']}
             sx={{ width: 'auto', marginTop: 2 }}
-            renderInput={(params) => <TextField {...params} label="Kota/Kabupaten" />}
+            renderInput={(params) => <TextField {...params} label="Instansi" />}
           />
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={['Palu', 'Morowali']}
-            sx={{ width: 'auto', marginTop: 2 }}
-            renderInput={(params) => <TextField {...params} label="Kecamatan" />}
-          />
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={['Palu', 'Morowali']}
-            sx={{ width: 'auto', marginTop: 2 }}
-            renderInput={(params) => <TextField {...params} label="Desa/Keluarahan" />}
-          />
+          <TextField id="outlined-basic" label="Nama Program" variant="outlined" fullWidth sx={{ marginTop: 2 }} />
+          <TextField id="outlined-basic" label="Indikator Kinerja Program" variant="outlined" fullWidth sx={{ marginTop: 2 }} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Batal</Button>
@@ -71,9 +59,9 @@ const FormLokasi = ({ isEdit, lokasi }) => {
   );
 };
 
-FormLokasi.propTypes = {
+FormProgram.propTypes = {
   isEdit: PropTypes.bool,
-  lokasi: PropTypes.any
+  program: PropTypes.any
 };
 
-export default FormLokasi;
+export default FormProgram;

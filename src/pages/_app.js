@@ -19,6 +19,8 @@ import Snackbar from 'components/ui-component/extended/Snackbar';
 import { ConfigProvider } from 'contexts/ConfigContext';
 
 import { FirebaseProvider as AuthProvider } from '../contexts/FirebaseContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState } from 'react';
 
 const Noop = ({ children }) => <> {children} </>;
 
@@ -30,25 +32,28 @@ Noop.propTypes = {
 
 function App({ Component, pageProps }) {
   const getLayout = Component.getLayout ?? ((page) => page);
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <Provider store={store}>
-      <ConfigProvider>
-        <ThemeCustomization>
-          <RTLLayout>
-            <Locales>
-              <NavigationScroll>
-                <AuthProvider>
-                  <>
-                    {getLayout(<Component {...pageProps} />)}
-                    <Snackbar />
-                  </>
-                </AuthProvider>
-              </NavigationScroll>
-            </Locales>
-          </RTLLayout>
-        </ThemeCustomization>
-      </ConfigProvider>
+      <QueryClientProvider client={queryClient}>
+        <ConfigProvider>
+          <ThemeCustomization>
+            <RTLLayout>
+              <Locales>
+                <NavigationScroll>
+                  <AuthProvider>
+                    <>
+                      {getLayout(<Component {...pageProps} />)}
+                      <Snackbar />
+                    </>
+                  </AuthProvider>
+                </NavigationScroll>
+              </Locales>
+            </RTLLayout>
+          </ThemeCustomization>
+        </ConfigProvider>
+      </QueryClientProvider>
     </Provider>
   );
 }

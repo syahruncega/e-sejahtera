@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import Link from 'Link';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
   CardContent,
   Checkbox,
-  Fab,
   Grid,
   IconButton,
   InputAdornment,
@@ -31,7 +29,6 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { useDispatch, useSelector } from 'store';
 import { getLokasi } from 'store/slices/lokasi';
 
 // assets
@@ -40,11 +37,13 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-import { useRouter } from 'next/router';
 import { FormattedMessage } from 'react-intl';
-import FormLokasi from 'components/form/FormLokasi';
+import { useQuery } from '@tanstack/react-query';
+import { SyncOutlined } from '@mui/icons-material';
+import { Box } from '@mui/system';
+import FormProgram from 'components/form/FormProgram';
+import { useRouter } from 'next/router';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -200,10 +199,8 @@ EnhancedTableHead.propTypes = {
 
 // ==============================|| PRODUCT LIST ||============================== //
 
-const DetailSubKegiatanPage = () => {
+const LokasiDetailSubKegiatanPage = () => {
   const theme = useTheme();
-  const dispatch = useDispatch();
-  const router = useRouter();
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -211,10 +208,12 @@ const DetailSubKegiatanPage = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [search, setSearch] = React.useState('');
-  const [rows, setRows] = React.useState([]);
-  const { lokasi } = useSelector((state) => state.lokasi);
+  const [filteredData, setFilteredData] = React.useState([]);
+  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const { isLoading, isError, data: lokasi, error } = useQuery(['lokasi'], () => getLokasi(router.query));
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -224,15 +223,6 @@ const DetailSubKegiatanPage = () => {
     setAnchorEl(null);
   };
 
-  React.useEffect(() => {
-    setRows(lokasi);
-  }, [lokasi]);
-
-  React.useEffect(() => {
-    dispatch(getLokasi(router.query));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleSearch = (event) => {
     const newString = event.target.value;
     setSearch(newString || '');
@@ -241,7 +231,7 @@ const DetailSubKegiatanPage = () => {
       const newRows = lokasi.filter((row) => {
         let matches = true;
 
-        const properties = ['kabupaten_kotan', 'kecamatan', 'desa_keluarahan'];
+        const properties = ['kabupaten', 'indikator_kinerja_lokasi'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -255,9 +245,7 @@ const DetailSubKegiatanPage = () => {
         }
         return matches;
       });
-      setRows(newRows);
-    } else {
-      getLokasi(router.query);
+      setFilteredData(newRows);
     }
   };
 
@@ -269,7 +257,7 @@ const DetailSubKegiatanPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = rows.map((n) => n.name);
+      const newSelectedId = lokasi.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -303,22 +291,22 @@ const DetailSubKegiatanPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - lokasi.length) : 0;
 
   return (
     <Page
       title="Lokasi"
       navigation={[
         {
-          title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
+          title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
           url: '/dashboard/sub-kegiatan'
         },
         {
-          title: <FormattedMessage id="detail-sub-kegiatan" defaultMessage="Detail Sub Kegiatan" />,
-          url: '/dashboard/sub-kegiatan/detail?id_sub_kegiatan=2'
+          title: <FormattedMessage id="detailsubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
+          url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=${isLoading ? '' : lokasi[0].detail_sub_kegiatan.sub_kegiatanId}`
         },
         {
-          title: <FormattedMessage id="lokasi-detail-sub-kegiatan" defaultMessage="Lokasi" />,
+          title: <FormattedMessage id="lokasiDetailSubKegiatan" defaultMessage="Lokasi" />,
           url: router.asPath
         }
       ]}
@@ -336,7 +324,7 @@ const DetailSubKegiatanPage = () => {
                   )
                 }}
                 onChange={handleSearch}
-                placeholder="Cari Lokasi"
+                placeholder="Cari Program"
                 value={search}
                 size="small"
               />
@@ -359,123 +347,143 @@ const DetailSubKegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <FormLokasi />
+              <FormProgram />
             </Grid>
           </Grid>
         </CardContent>
 
         {/* table */}
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              theme={theme}
-              selected={selected}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  if (typeof row === 'number') return null;
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+        {isLoading ? (
+          <>Loading</>
+        ) : (
+          <>
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={search ? filteredData.length : lokasi.length}
+                  theme={theme}
+                  selected={selected}
+                />
+                <TableBody>
+                  {stableSort(search ? filteredData : lokasi, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      if (typeof row === 'number') return null;
+                      const isItemSelected = isSelected(row.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
-                      <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
-                        <Typography
-                          variant="subtitle1"
-                          sx={{
-                            color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
-                            textDecoration: 'none'
-                          }}
-                        >
-                          Morowali
-                        </Typography>
-                      </TableCell>
-                      <TableCell>Bungkut Tengah</TableCell>
-                      <TableCell>Tofoiso</TableCell>
-                      <TableCell align="center" sx={{ pr: 3 }}>
-                        <IconButton onClick={handleMenuClick} size="large">
-                          <MoreHorizOutlinedIcon
-                            fontSize="small"
-                            aria-controls="menu-popular-card-1"
-                            aria-haspopup="true"
-                            sx={{ color: 'grey.500' }}
-                          />
-                        </IconButton>
-                        <Menu
-                          id="menu-popular-card-1"
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={Boolean(anchorEl)}
-                          onClose={handleClose}
-                          variant="selectedMenu"
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right'
-                          }}
-                          transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right'
-                          }}
-                          sx={{
-                            '& .MuiMenu-paper': {
-                              boxShadow: theme.customShadows.z1
-                            }
-                          }}
-                        >
-                          <MenuItem onClick={handleClose}> Ubah</MenuItem>
-                          <MenuItem onClick={handleClose}> Hapus</MenuItem>
-                        </Menu>
-                      </TableCell>
+                      return (
+                        <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
+                          <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                'aria-labelledby': labelId
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
+                            <Typography
+                              variant="subtitle1"
+                              sx={{
+                                color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
+                                textDecoration: 'none'
+                              }}
+                            >
+                              {row.kota_kabupaten.nama}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>{row.kecamatan.nama}</TableCell>
+                          <TableCell>{row.kelurahan.nama}</TableCell>
+                          <TableCell align="center" sx={{ pr: 3 }}>
+                            <Box sx={{ display: 'flex' }}>
+                              <Tooltip title="Update Pagu">
+                                <IconButton onClick={() => {}} size="medium">
+                                  <SyncOutlined
+                                    fontSize="small"
+                                    aria-controls="menu-popular-card-1"
+                                    aria-haspopup="true"
+                                    sx={{ color: 'grey.500' }}
+                                  />
+                                </IconButton>
+                              </Tooltip>
+                              <>
+                                <IconButton onClick={handleMenuClick} size="medium">
+                                  <MoreHorizOutlinedIcon
+                                    fontSize="small"
+                                    aria-controls="menu-popular-card-1"
+                                    aria-haspopup="true"
+                                    sx={{ color: 'grey.500' }}
+                                  />
+                                </IconButton>
+                                <Menu
+                                  id="menu-popular-card-1"
+                                  anchorEl={anchorEl}
+                                  keepMounted
+                                  open={Boolean(anchorEl)}
+                                  onClose={handleClose}
+                                  variant="selectedMenu"
+                                  anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right'
+                                  }}
+                                  transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right'
+                                  }}
+                                  sx={{
+                                    '& .MuiMenu-paper': {
+                                      boxShadow: theme.customShadows.z1
+                                    }
+                                  }}
+                                >
+                                  <FormProgram isEdit lokasi={row} />
+                                  <MenuItem onClick={handleClose}> Hapus</MenuItem>
+                                </Menu>
+                              </>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: 53 * emptyRows
+                      }}
+                    >
+                      <TableCell colSpan={6} />
                     </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-        {/* table pagination */}
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            {/* table pagination */}
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={search ? filteredData.length : lokasi.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
       </MainCard>
     </Page>
   );
 };
 
-DetailSubKegiatanPage.getLayout = function getLayout(page) {
+LokasiDetailSubKegiatanPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default DetailSubKegiatanPage;
+export default LokasiDetailSubKegiatanPage;

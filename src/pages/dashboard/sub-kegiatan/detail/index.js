@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import Link from 'Link';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
-  Button,
   CardContent,
   Checkbox,
-  Fab,
   Grid,
   IconButton,
   InputAdornment,
@@ -32,7 +29,6 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { useDispatch, useSelector } from 'store';
 import { getDetailSubKegiatan } from 'store/slices/detail-sub-kegiatan';
 
 // assets
@@ -41,10 +37,16 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
-import { useRouter } from 'next/router';
 import { FormattedMessage } from 'react-intl';
+import { useQuery } from '@tanstack/react-query';
+import { SyncOutlined } from '@mui/icons-material';
+import { Box } from '@mui/system';
+import FormKegiatan from 'components/form/FormKegiatan';
+import { useRouter } from 'next/router';
+import Link from 'Link';
+import AddIcon from '@mui/icons-material/AddTwoTone';
+import FormDetailSubKegiatan from 'components/form/FormDetailSubKegiatan';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -73,7 +75,7 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
   {
-    id: 'fokusBelanja',
+    id: 'fokusBelanjs',
     numeric: false,
     label: 'Fokus Belanja',
     align: 'left'
@@ -97,7 +99,7 @@ const headCells = [
     align: 'left'
   },
   {
-    id: 'paguFokusBelanja',
+    id: 'pagu',
     numeric: true,
     label: 'Pagu',
     align: 'left'
@@ -226,8 +228,6 @@ EnhancedTableHead.propTypes = {
 
 const DetailSubKegiatanPage = () => {
   const theme = useTheme();
-  const dispatch = useDispatch();
-  const router = useRouter();
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -235,10 +235,12 @@ const DetailSubKegiatanPage = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [search, setSearch] = React.useState('');
-  const [rows, setRows] = React.useState([]);
-  const { detailSubKegiatan } = useSelector((state) => state.detailSubKegiatan);
+  const [filteredData, setFilteredData] = React.useState([]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const router = useRouter();
+
+  const { isLoading, isError, data: detailSubKegiatan, error } = useQuery(['detailSubKegiatan'], () => getDetailSubKegiatan(router.query));
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -248,15 +250,6 @@ const DetailSubKegiatanPage = () => {
     setAnchorEl(null);
   };
 
-  React.useEffect(() => {
-    setRows(detailSubKegiatan);
-  }, [detailSubKegiatan]);
-
-  React.useEffect(() => {
-    dispatch(getDetailSubKegiatan(router.query));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const handleSearch = (event) => {
     const newString = event.target.value;
     setSearch(newString || '');
@@ -265,7 +258,7 @@ const DetailSubKegiatanPage = () => {
       const newRows = detailSubKegiatan.filter((row) => {
         let matches = true;
 
-        const properties = ['fokus_belanja', 'indikator', 'target', 'satuan', 'pagu_fokus_belanja', 'lokasi', 'keterangan'];
+        const properties = ['fokus_belanja', 'indikator'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -279,9 +272,7 @@ const DetailSubKegiatanPage = () => {
         }
         return matches;
       });
-      setRows(newRows);
-    } else {
-      getDetailSubKegiatan(router.query);
+      setFilteredData(newRows);
     }
   };
 
@@ -293,7 +284,7 @@ const DetailSubKegiatanPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = rows.map((n) => n.name);
+      const newSelectedId = detailSubKegiatan.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -327,18 +318,18 @@ const DetailSubKegiatanPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - detailSubKegiatan.length) : 0;
 
   return (
     <Page
       title="Detail Sub Kegiatan"
       navigation={[
         {
-          title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
-          url: '/dashboard/sub-kegiatan'
+          title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
+          url: '/dashboard/sub-detailSubKegiatan'
         },
         {
-          title: <FormattedMessage id="detail-sub-kegiatan" defaultMessage="Detail Sub Kegiatan" />,
+          title: <FormattedMessage id="detailSubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
           url: router.asPath
         }
       ]}
@@ -356,7 +347,7 @@ const DetailSubKegiatanPage = () => {
                   )
                 }}
                 onChange={handleSearch}
-                placeholder="Cari Detail Sub Kegaiatan"
+                placeholder="Cari Detail Sub Kegiatan"
                 value={search}
                 size="small"
               />
@@ -379,137 +370,137 @@ const DetailSubKegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <Tooltip title="Tambah Detail Sub Kegiatan">
-                <Fab color="primary" size="small" sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}>
-                  <AddIcon fontSize="small" />
-                </Fab>
-              </Tooltip>
+              <FormDetailSubKegiatan />
             </Grid>
           </Grid>
         </CardContent>
 
         {/* table */}
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              theme={theme}
-              selected={selected}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  if (typeof row === 'number') return null;
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+        {isLoading ? (
+          <>Loading</>
+        ) : (
+          <>
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={search ? filteredData.length : detailSubKegiatan.length}
+                  theme={theme}
+                  selected={selected}
+                />
+                <TableBody>
+                  {stableSort(search ? filteredData : detailSubKegiatan, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      if (typeof row === 'number') return null;
+                      const isItemSelected = isSelected(row.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
-                      <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
-                        <Typography
-                          component={Link}
-                          href={`/app/e-commerce/product-details/${row.id}`}
-                          variant="subtitle1"
-                          sx={{
-                            color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
-                            textDecoration: 'none'
-                          }}
-                        >
-                          {row.fokus_belanja}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{row.indikator}</TableCell>
-                      <TableCell align="right">{`${row.target}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
-                      <TableCell>{row.satuan}</TableCell>
-                      <TableCell align="right">Rp{`${row.pagu_fokus_belanja}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
-                      <TableCell>
-                        <Tooltip title="Tambah Lokasi">
-                          <IconButton
-                            aria-label="delete"
-                            size="small"
-                            LinkComponent={Link}
-                            href={`/dashboard/sub-kegiatan/detail/lokasi?id_detail_sub_kegiatan=${row.id}`}
-                          >
-                            <AddIcon fontSize="inherit" />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                      <TableCell>{row.keterangan}</TableCell>
-                      <TableCell align="center" sx={{ pr: 3 }}>
-                        <IconButton onClick={handleMenuClick} size="large">
-                          <MoreHorizOutlinedIcon
-                            fontSize="small"
-                            aria-controls="menu-popular-card-1"
-                            aria-haspopup="true"
-                            sx={{ color: 'grey.500' }}
-                          />
-                        </IconButton>
-                        <Menu
-                          id="menu-popular-card-1"
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={Boolean(anchorEl)}
-                          onClose={handleClose}
-                          variant="selectedMenu"
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right'
-                          }}
-                          transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right'
-                          }}
-                          sx={{
-                            '& .MuiMenu-paper': {
-                              boxShadow: theme.customShadows.z1
-                            }
-                          }}
-                        >
-                          <MenuItem onClick={handleClose}> Edit</MenuItem>
-                          <MenuItem onClick={handleClose}> Delete</MenuItem>
-                        </Menu>
-                      </TableCell>
+                      return (
+                        <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
+                          <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                'aria-labelledby': labelId
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
+                            <Typography
+                              variant="subtitle1"
+                              sx={{
+                                color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
+                                textDecoration: 'none'
+                              }}
+                            >
+                              {row.fokus_belanja}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>{row.indikator}</TableCell>
+                          <TableCell align="right">{`${row.target}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
+                          <TableCell>{row.satuan}</TableCell>
+                          <TableCell align="right">Rp{`${row.pagu_fokus_belanja}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
+                          <TableCell>
+                            <Tooltip title="Tambah Lokasi">
+                              <IconButton
+                                aria-label="delete"
+                                size="small"
+                                LinkComponent={Link}
+                                href={`/dashboard/sub-kegiatan/detail/lokasi?detail_sub_kegiatanId=${row.id}`}
+                              >
+                                <AddIcon fontSize="inherit" />
+                              </IconButton>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell>{row.keterangan}</TableCell>
+                          <TableCell align="center" sx={{ pr: 3 }}>
+                            <IconButton onClick={handleMenuClick} size="medium">
+                              <MoreHorizOutlinedIcon
+                                fontSize="small"
+                                aria-controls="menu-popular-card-1"
+                                aria-haspopup="true"
+                                sx={{ color: 'grey.500' }}
+                              />
+                            </IconButton>
+                            <Menu
+                              id="menu-popular-card-1"
+                              anchorEl={anchorEl}
+                              keepMounted
+                              open={Boolean(anchorEl)}
+                              onClose={handleClose}
+                              variant="selectedMenu"
+                              anchorOrigin={{
+                                vertical: 'bottom',
+                                horizontal: 'right'
+                              }}
+                              transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right'
+                              }}
+                              sx={{
+                                '& .MuiMenu-paper': {
+                                  boxShadow: theme.customShadows.z1
+                                }
+                              }}
+                            >
+                              <FormDetailSubKegiatan isEdit detailSubKegiatan={row} />
+                              <MenuItem onClick={handleClose}> Hapus</MenuItem>
+                            </Menu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: 53 * emptyRows
+                      }}
+                    >
+                      <TableCell colSpan={6} />
                     </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-        {/* table pagination */}
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            {/* table pagination */}
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={search ? filteredData.length : detailSubKegiatan.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
       </MainCard>
     </Page>
   );
