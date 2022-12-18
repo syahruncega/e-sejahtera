@@ -1,95 +1,12 @@
-// third-party
-import { createSlice } from '@reduxjs/toolkit';
-
 // project imports
 import axios from 'utils/axios';
-import { dispatch } from '../index';
 
-// ----------------------------------------------------------------------
-
-const initialState = {
-  error: null,
-  kegiatan: [],
-  singleKegiatan: null,
-  relatedKegiatan: []
-};
-
-const slice = createSlice({
-  name: 'kegiatan',
-  initialState,
-  reducers: {
-    // HAS ERROR
-    hasError(state, action) {
-      state.error = action.payload;
-    },
-
-    // GET KEGIATAN
-    getKegiatanSuccess(state, action) {
-      state.kegiatan = action.payload;
-    },
-
-    // FILTER KEGIATAN
-    filterKegiatanSuccess(state, action) {
-      state.kegiatan = action.payload;
-    },
-
-    // GET PROGRAM BY ID
-    getKegiatanByIdSuccess(state, action) {
-      state.singleKegiatan = action.payload;
-    },
-
-    // GET RELATED KEGIATAN
-    getRelatedKegiatanSuccess(state, action) {
-      state.relatedKegiatan = action.payload;
-    }
-  }
-});
-
-// Reducer
-export default slice.reducer;
-
-// ----------------------------------------------------------------------
-
-export function getKegiatan() {
-  return async () => {
-    try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatan`);
-      dispatch(slice.actions.getKegiatanSuccess(response.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+export async function getKegiatan(params) {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatans?_expand=program`, { params });
+  return response.data;
 }
 
-export function filterPrograms(filter) {
-  return async () => {
-    try {
-      const response = await axios.post('/api/product/filter', { filter });
-      dispatch(slice.actions.filterKegiatanSuccess(response.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-
-export function getKegiatanById(id) {
-  return async () => {
-    try {
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatan`, { id });
-      dispatch(slice.actions.getKegiatanByIdSuccess(response.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
-}
-
-export function getRelatedKegiatan(id) {
-  return async () => {
-    try {
-      const response = await axios.post('/api/product/related', { id });
-      dispatch(slice.actions.getRelatedKegiatanSuccess(response.data));
-    } catch (error) {
-      dispatch(slice.actions.hasError(error));
-    }
-  };
+export async function getKegiatanById(id) {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatan/${id}`);
+  return response.data;
 }

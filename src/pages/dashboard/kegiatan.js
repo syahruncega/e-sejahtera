@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import * as React from 'react';
-import Link from 'Link';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -30,7 +29,6 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { useDispatch, useSelector } from 'store';
 import { getKegiatan } from 'store/slices/kegiatan';
 
 // assets
@@ -39,9 +37,12 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/AddTwoTone';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
+import { useQuery } from '@tanstack/react-query';
+import { SyncOutlined } from '@mui/icons-material';
+import { Box } from '@mui/system';
+import FormKegiatan from 'components/form/FormKegiatan';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -70,9 +71,15 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
   {
+    id: 'namaProgram',
+    numeric: false,
+    label: 'Program',
+    align: 'left'
+  },
+  {
     id: 'namaKegiatan',
     numeric: false,
-    label: 'Nama Kegiatan',
+    label: 'Kegiatan',
     align: 'left'
   },
   {
@@ -199,7 +206,6 @@ EnhancedTableHead.propTypes = {
 
 const KegiatanPage = () => {
   const theme = useTheme();
-  const dispatch = useDispatch();
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -207,10 +213,11 @@ const KegiatanPage = () => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [search, setSearch] = React.useState('');
-  const [rows, setRows] = React.useState([]);
-  const { kegiatan } = useSelector((state) => state.kegiatan);
+  const [filteredData, setFilteredData] = React.useState([]);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const { isLoading, isError, data: kegiatan, error } = useQuery(['kegiatan'], getKegiatan);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -219,15 +226,6 @@ const KegiatanPage = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  React.useEffect(() => {
-    setRows(kegiatan);
-  }, [kegiatan]);
-
-  React.useEffect(() => {
-    dispatch(getKegiatan());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const handleSearch = (event) => {
     const newString = event.target.value;
@@ -251,9 +249,7 @@ const KegiatanPage = () => {
         }
         return matches;
       });
-      setRows(newRows);
-    } else {
-      getKegiatan();
+      setFilteredData(newRows);
     }
   };
 
@@ -265,7 +261,7 @@ const KegiatanPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = rows.map((n) => n.name);
+      const newSelectedId = kegiatan.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -299,7 +295,7 @@ const KegiatanPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - kegiatan.length) : 0;
 
   return (
     <Page
@@ -347,122 +343,140 @@ const KegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              {/* <Tooltip title="Tambah Kegiatan">
-                <Fab color="primary" size="small" sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}>
-                  <AddIcon fontSize="small" />
-                </Fab>
-              </Tooltip> */}
+              <FormKegiatan />
             </Grid>
           </Grid>
         </CardContent>
 
         {/* table */}
-        <TableContainer>
-          <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-              theme={theme}
-              selected={selected}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  if (typeof row === 'number') return null;
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+        {isLoading ? (
+          <>Loading</>
+        ) : (
+          <>
+            <TableContainer>
+              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                <EnhancedTableHead
+                  numSelected={selected.length}
+                  order={order}
+                  orderBy={orderBy}
+                  onSelectAllClick={handleSelectAllClick}
+                  onRequestSort={handleRequestSort}
+                  rowCount={search ? filteredData.length : kegiatan.length}
+                  theme={theme}
+                  selected={selected}
+                />
+                <TableBody>
+                  {stableSort(search ? filteredData : kegiatan, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                      if (typeof row === 'number') return null;
+                      const isItemSelected = isSelected(row.name);
+                      const labelId = `enhanced-table-checkbox-${index}`;
 
-                  return (
-                    <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
-                      <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
-                        <Typography
-                          component={Link}
-                          href={`/app/e-commerce/product-details/${row.id}`}
-                          variant="subtitle1"
-                          sx={{
-                            color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
-                            textDecoration: 'none'
-                          }}
-                        >
-                          {row.nama_kegiatan}
-                        </Typography>
-                      </TableCell>
-                      <TableCell>{row.indikator_kinerja_kegiatan}</TableCell>
-                      <TableCell align="right">Rp{`${row.pagu_kegiatan}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
-                      <TableCell align="center" sx={{ pr: 3 }}>
-                        <IconButton onClick={handleMenuClick} size="large">
-                          <MoreHorizOutlinedIcon
-                            fontSize="small"
-                            aria-controls="menu-popular-card-1"
-                            aria-haspopup="true"
-                            sx={{ color: 'grey.500' }}
-                          />
-                        </IconButton>
-                        <Menu
-                          id="menu-popular-card-1"
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={Boolean(anchorEl)}
-                          onClose={handleClose}
-                          variant="selectedMenu"
-                          anchorOrigin={{
-                            vertical: 'bottom',
-                            horizontal: 'right'
-                          }}
-                          transformOrigin={{
-                            vertical: 'top',
-                            horizontal: 'right'
-                          }}
-                          sx={{
-                            '& .MuiMenu-paper': {
-                              boxShadow: theme.customShadows.z1
-                            }
-                          }}
-                        >
-                          <MenuItem onClick={handleClose}> Edit</MenuItem>
-                          <MenuItem onClick={handleClose}> Delete</MenuItem>
-                        </Menu>
-                      </TableCell>
+                      return (
+                        <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
+                          <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
+                            <Checkbox
+                              color="primary"
+                              checked={isItemSelected}
+                              inputProps={{
+                                'aria-labelledby': labelId
+                              }}
+                            />
+                          </TableCell>
+                          <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
+                            {row.program.nama_program}
+                          </TableCell>
+                          <TableCell>
+                            <Typography
+                              variant="subtitle1"
+                              sx={{
+                                color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
+                                textDecoration: 'none'
+                              }}
+                            >
+                              {row.nama_kegiatan}
+                            </Typography>
+                          </TableCell>
+                          <TableCell>{row.indikator_kinerja_kegiatan}</TableCell>
+                          {/* <TableCell align="right">Rp{`${row.pagu_kegiatan}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell> */}
+                          <TableCell align="right">Rp0</TableCell>
+                          <TableCell align="center" sx={{ pr: 3 }}>
+                            <Box sx={{ display: 'flex' }}>
+                              <Tooltip title="Update Pagu">
+                                <IconButton onClick={() => {}} size="medium">
+                                  <SyncOutlined
+                                    fontSize="small"
+                                    aria-controls="menu-popular-card-1"
+                                    aria-haspopup="true"
+                                    sx={{ color: 'grey.500' }}
+                                  />
+                                </IconButton>
+                              </Tooltip>
+                              <>
+                                <IconButton onClick={handleMenuClick} size="medium">
+                                  <MoreHorizOutlinedIcon
+                                    fontSize="small"
+                                    aria-controls="menu-popular-card-1"
+                                    aria-haspopup="true"
+                                    sx={{ color: 'grey.500' }}
+                                  />
+                                </IconButton>
+                                <Menu
+                                  id="menu-popular-card-1"
+                                  anchorEl={anchorEl}
+                                  keepMounted
+                                  open={Boolean(anchorEl)}
+                                  onClose={handleClose}
+                                  variant="selectedMenu"
+                                  anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'right'
+                                  }}
+                                  transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right'
+                                  }}
+                                  sx={{
+                                    '& .MuiMenu-paper': {
+                                      boxShadow: theme.customShadows.z1
+                                    }
+                                  }}
+                                >
+                                  <FormKegiatan isEdit kegiatan={row} />
+                                  <MenuItem onClick={handleClose}> Hapus</MenuItem>
+                                </Menu>
+                              </>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow
+                      style={{
+                        height: 53 * emptyRows
+                      }}
+                    >
+                      <TableCell colSpan={6} />
                     </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: 53 * emptyRows
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
 
-        {/* table pagination */}
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+            {/* table pagination */}
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={search ? filteredData.length : kegiatan.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        )}
       </MainCard>
     </Page>
   );
