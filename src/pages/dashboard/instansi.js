@@ -197,7 +197,7 @@ const InstansiPage = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const { isLoading, isError, data: instansi, error } = useQuery(['instansi'], getInstansi, { useErrorBoundary: true });
+  const { isLoading, isError, data: instansi, error } = useQuery(['instansi'], getInstansi);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);

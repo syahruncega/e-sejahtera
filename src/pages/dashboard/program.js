@@ -40,9 +40,10 @@ import SearchIcon from '@mui/icons-material/Search';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { SyncDisabledOutlined, SyncOutlined } from '@mui/icons-material';
+import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import FormProgram from 'components/form/FormProgram';
+import { getInstansi } from 'store/slices/instansi';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -219,6 +220,8 @@ const ProgramPage = () => {
 
   const { isLoading, isError, data: program, error } = useQuery(['program'], getProgram);
 
+  const fetchInstansi = useQuery(['instansi'], getInstansi);
+
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -343,7 +346,7 @@ const ProgramPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <FormProgram />
+              <FormProgram dataInstansi={fetchInstansi.data} />
             </Grid>
           </Grid>
         </CardContent>
@@ -441,7 +444,7 @@ const ProgramPage = () => {
                                     }
                                   }}
                                 >
-                                  <FormProgram isEdit program={row} />
+                                  <FormProgram isEdit program={row} dataInstansi={fetchInstansi.data} />
                                   <MenuItem onClick={handleClose}> Hapus</MenuItem>
                                 </Menu>
                               </>

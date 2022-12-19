@@ -8,15 +8,36 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
 import { Autocomplete, Fab, MenuItem, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
+import * as yup from 'yup';
+import { useFormik } from 'formik';
 
-const FormProgram = ({ isEdit, program }) => {
+const validationSchema = yup.object({
+  instansiId: yup.string().required('Instansi wajib diisi'),
+  nama_program: yup.string().required('Nama Program wajib diisi'),
+  indikator_kinerja_program: yup.string().required('Indikator Kinerja Program wajib diisi')
+});
+
+const FormProgram = ({ isEdit, program, dataInstansi }) => {
   const [open, setOpen] = useState(false);
+
+  const formik = useFormik({
+    initialValues: {
+      instansiId: '',
+      nama_program: '',
+      indikator_kinerja_program: ''
+    },
+    validationSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values, null, 2));
+    }
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
+    formik.resetForm();
     setOpen(false);
   };
 
@@ -38,22 +59,57 @@ const FormProgram = ({ isEdit, program }) => {
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
-        <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
-        <DialogContent>
-          <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            options={['Palu', 'Morowali']}
-            sx={{ width: 'auto', marginTop: 2 }}
-            renderInput={(params) => <TextField {...params} label="Instansi" />}
-          />
-          <TextField id="outlined-basic" label="Nama Program" variant="outlined" fullWidth sx={{ marginTop: 2 }} />
-          <TextField id="outlined-basic" label="Indikator Kinerja Program" variant="outlined" fullWidth sx={{ marginTop: 2 }} />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Batal</Button>
-          <Button onClick={handleClose}>Simpan</Button>
-        </DialogActions>
+        <form onSubmit={formik.handleSubmit}>
+          <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
+          <DialogContent>
+            <Autocomplete
+              disablePortal
+              name="instansiId"
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) => option.nama_instansi}
+              onChange={(e, value) => {
+                formik.setFieldValue('instansiId', value !== null ? value.id : '');
+              }}
+              options={dataInstansi || []}
+              sx={{ width: 'auto', marginTop: 2 }}
+              renderInput={(params) => (
+                <TextField
+                  label="Instansi"
+                  value={formik.values.instansiId}
+                  helperText={formik.touched.instansiId && formik.errors.instansiId}
+                  error={formik.touched.instansiId && Boolean(formik.errors.instansiId)}
+                  {...params}
+                />
+              )}
+            />
+            <TextField
+              name="nama_program"
+              label="Nama Program"
+              variant="outlined"
+              fullWidth
+              sx={{ marginTop: 2 }}
+              value={formik.values.nama_program}
+              onChange={formik.handleChange}
+              error={formik.touched.nama_program && Boolean(formik.errors.nama_program)}
+              helperText={formik.touched.nama_program && formik.errors.nama_program}
+            />
+            <TextField
+              name="indikator_kinerja_program"
+              label="Indikator Kinerja Program"
+              variant="outlined"
+              fullWidth
+              sx={{ marginTop: 2 }}
+              value={formik.values.indikator_kinerja_program}
+              onChange={formik.handleChange}
+              error={formik.touched.indikator_kinerja_program && Boolean(formik.errors.indikator_kinerja_program)}
+              helperText={formik.touched.indikator_kinerja_program && formik.errors.indikator_kinerja_program}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Batal</Button>
+            <Button type="submit">Simpan</Button>
+          </DialogActions>
+        </form>
       </Dialog>
     </>
   );
@@ -61,7 +117,8 @@ const FormProgram = ({ isEdit, program }) => {
 
 FormProgram.propTypes = {
   isEdit: PropTypes.bool,
-  program: PropTypes.any
+  program: PropTypes.any,
+  dataInstansi: PropTypes.array
 };
 
 export default FormProgram;

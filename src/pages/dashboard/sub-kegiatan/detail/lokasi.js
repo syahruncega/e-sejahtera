@@ -4,6 +4,8 @@ import * as React from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
+  Alert,
+  AlertTitle,
   CardContent,
   Checkbox,
   Grid,
@@ -312,6 +314,10 @@ const LokasiDetailSubKegiatanPage = () => {
       ]}
     >
       <MainCard content={false}>
+        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 4, marginTop: 2 }}>
+          <AlertTitle>Sub Kegiatan:</AlertTitle>
+          kfjsdfls
+        </Alert>
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
             <Grid item xs={12} sm={6}>

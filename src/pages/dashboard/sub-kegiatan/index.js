@@ -45,6 +45,7 @@ import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import FormSubKegiatan from 'components/form/FormSubKegiatan';
 import AddIcon from '@mui/icons-material/AddTwoTone';
+import { getProgram } from 'store/slices/program';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -226,6 +227,7 @@ const SubKegiatanPage = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const { isLoading, isError, data: subKegiatan, error } = useQuery(['subKegiatan'], getSubKegiatan);
+  const fetchPorgram = useQuery(['program'], getProgram);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -351,7 +353,7 @@ const SubKegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <FormSubKegiatan />
+              <FormSubKegiatan dataProgram={fetchPorgram.data} />
             </Grid>
           </Grid>
         </CardContent>
@@ -467,7 +469,7 @@ const SubKegiatanPage = () => {
                                     }
                                   }}
                                 >
-                                  <FormSubKegiatan isEdit subKegiatan={row} />
+                                  <FormSubKegiatan isEdit subKegiatan={row} dataProgram={fetchPorgram.data} />
                                   <MenuItem onClick={handleClose}> Hapus</MenuItem>
                                 </Menu>
                               </>

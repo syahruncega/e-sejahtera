@@ -4,6 +4,8 @@ import * as React from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
+  Alert,
+  AlertTitle,
   CardContent,
   Checkbox,
   Grid,
@@ -40,13 +42,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { SyncOutlined } from '@mui/icons-material';
-import { Box } from '@mui/system';
-import FormKegiatan from 'components/form/FormKegiatan';
 import { useRouter } from 'next/router';
 import Link from 'Link';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import FormDetailSubKegiatan from 'components/form/FormDetailSubKegiatan';
+import { getSubKegiatanById } from 'store/slices/sub-kegiatan';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -240,6 +240,7 @@ const DetailSubKegiatanPage = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const router = useRouter();
 
+  const fetchSubKegiatanById = useQuery(['subKegiatanById'], () => getSubKegiatanById(router.query.sub_kegiatanId));
   const { isLoading, isError, data: detailSubKegiatan, error } = useQuery(['detailSubKegiatan'], () => getDetailSubKegiatan(router.query));
 
   const handleMenuClick = (event) => {
@@ -335,6 +336,10 @@ const DetailSubKegiatanPage = () => {
       ]}
     >
       <MainCard content={false}>
+        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 4, marginTop: 2 }}>
+          <AlertTitle>Sub Kegiatan:</AlertTitle>
+          {fetchSubKegiatanById.data?.nama_sub_kegiatan || ''}
+        </Alert>
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
             <Grid item xs={12} sm={6}>

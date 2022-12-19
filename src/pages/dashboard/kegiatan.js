@@ -43,6 +43,7 @@ import { useQuery } from '@tanstack/react-query';
 import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import FormKegiatan from 'components/form/FormKegiatan';
+import { getProgram } from 'store/slices/program';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -218,6 +219,7 @@ const KegiatanPage = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const { isLoading, isError, data: kegiatan, error } = useQuery(['kegiatan'], getKegiatan);
+  const fetchPorgram = useQuery(['program'], getProgram);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -343,7 +345,7 @@ const KegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <FormKegiatan />
+              <FormKegiatan dataProgram={fetchPorgram.data} />
             </Grid>
           </Grid>
         </CardContent>
@@ -443,7 +445,7 @@ const KegiatanPage = () => {
                                     }
                                   }}
                                 >
-                                  <FormKegiatan isEdit kegiatan={row} />
+                                  <FormKegiatan isEdit kegiatan={row} dataProgram={fetchPorgram.data} />
                                   <MenuItem onClick={handleClose}> Hapus</MenuItem>
                                 </Menu>
                               </>

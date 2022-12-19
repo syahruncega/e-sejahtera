@@ -7,6 +7,6 @@ export async function getSubKegiatan(params) {
 }
 
 export async function getSubKegiatanById(id) {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/sub_kegiatans/${id}`);
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/sub_kegiatans/${id}?_expand=kegiatan`);
   return response.data;
 }
