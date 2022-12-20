@@ -6,8 +6,10 @@ import { useTheme } from '@mui/material/styles';
 import {
   Alert,
   AlertTitle,
+  Box,
   CardContent,
   Checkbox,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -336,7 +338,7 @@ const DetailSubKegiatanPage = () => {
       ]}
     >
       <MainCard content={false}>
-        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 4, marginTop: 2 }}>
+        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
           <AlertTitle>Sub Kegiatan:</AlertTitle>
           {fetchSubKegiatanById.data?.nama_sub_kegiatan || ''}
         </Alert>
@@ -382,7 +384,9 @@ const DetailSubKegiatanPage = () => {
 
         {/* table */}
         {isLoading ? (
-          <>Loading</>
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+            <CircularProgress />
+          </Box>
         ) : (
           <>
             <TableContainer>

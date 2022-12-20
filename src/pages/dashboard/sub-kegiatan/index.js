@@ -7,6 +7,7 @@ import { useTheme } from '@mui/material/styles';
 import {
   CardContent,
   Checkbox,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -360,7 +361,9 @@ const SubKegiatanPage = () => {
 
         {/* table */}
         {isLoading ? (
-          <>Loading</>
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+            <CircularProgress />
+          </Box>
         ) : (
           <>
             <TableContainer>

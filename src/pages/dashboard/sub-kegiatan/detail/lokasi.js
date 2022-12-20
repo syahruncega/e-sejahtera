@@ -8,6 +8,7 @@ import {
   AlertTitle,
   CardContent,
   Checkbox,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -42,10 +43,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import FormProgram from 'components/form/FormProgram';
 import { useRouter } from 'next/router';
+import { getDetailSubKegiatanById } from 'store/slices/detail-sub-kegiatan';
+import FormLokasi from 'components/form/FormLokasi';
+import axios from 'axios';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -216,6 +219,11 @@ const LokasiDetailSubKegiatanPage = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const { isLoading, isError, data: lokasi, error } = useQuery(['lokasi'], () => getLokasi(router.query));
+  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatanById'], () => getDetailSubKegiatanById(router.query.detail_sub_kegiatanId));
+  const fetchKabupaten = useQuery(['kabupaten'], async () => {
+    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kabupaten_kotas?provinsiId=72`);
+    return response.data;
+  });
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -233,7 +241,7 @@ const LokasiDetailSubKegiatanPage = () => {
       const newRows = lokasi.filter((row) => {
         let matches = true;
 
-        const properties = ['kabupaten', 'indikator_kinerja_lokasi'];
+        const properties = ['id'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -305,7 +313,8 @@ const LokasiDetailSubKegiatanPage = () => {
         },
         {
           title: <FormattedMessage id="detailsubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
-          url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=${isLoading ? '' : lokasi[0].detail_sub_kegiatan.sub_kegiatanId}`
+          // url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=${isLoading ? '' : lokasi[0].detail_sub_kegiatan.sub_kegiatanId}`
+          url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=2`
         },
         {
           title: <FormattedMessage id="lokasiDetailSubKegiatan" defaultMessage="Lokasi" />,
@@ -314,9 +323,9 @@ const LokasiDetailSubKegiatanPage = () => {
       ]}
     >
       <MainCard content={false}>
-        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 4, marginTop: 2 }}>
-          <AlertTitle>Sub Kegiatan:</AlertTitle>
-          kfjsdfls
+        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
+          <AlertTitle>Fokus Belanja:</AlertTitle>
+          {fetchDetailSubKegiatan.data?.fokus_belanja}
         </Alert>
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -330,7 +339,7 @@ const LokasiDetailSubKegiatanPage = () => {
                   )
                 }}
                 onChange={handleSearch}
-                placeholder="Cari Program"
+                placeholder="Cari Lokasi"
                 value={search}
                 size="small"
               />
@@ -353,14 +362,16 @@ const LokasiDetailSubKegiatanPage = () => {
               </Tooltip>
 
               {/* product add & dialog */}
-              <FormProgram />
+              <FormLokasi dataKabupatenKota={fetchKabupaten?.data} />
             </Grid>
           </Grid>
         </CardContent>
 
         {/* table */}
         {isLoading ? (
-          <>Loading</>
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+            <CircularProgress />
+          </Box>
         ) : (
           <>
             <TableContainer>
@@ -402,57 +413,45 @@ const LokasiDetailSubKegiatanPage = () => {
                                 textDecoration: 'none'
                               }}
                             >
-                              {row.kota_kabupaten.nama}
+                              {row.kabupaten_kota.nama}
                             </Typography>
                           </TableCell>
                           <TableCell>{row.kecamatan.nama}</TableCell>
                           <TableCell>{row.kelurahan.nama}</TableCell>
                           <TableCell align="center" sx={{ pr: 3 }}>
                             <Box sx={{ display: 'flex' }}>
-                              <Tooltip title="Update Pagu">
-                                <IconButton onClick={() => {}} size="medium">
-                                  <SyncOutlined
-                                    fontSize="small"
-                                    aria-controls="menu-popular-card-1"
-                                    aria-haspopup="true"
-                                    sx={{ color: 'grey.500' }}
-                                  />
-                                </IconButton>
-                              </Tooltip>
-                              <>
-                                <IconButton onClick={handleMenuClick} size="medium">
-                                  <MoreHorizOutlinedIcon
-                                    fontSize="small"
-                                    aria-controls="menu-popular-card-1"
-                                    aria-haspopup="true"
-                                    sx={{ color: 'grey.500' }}
-                                  />
-                                </IconButton>
-                                <Menu
-                                  id="menu-popular-card-1"
-                                  anchorEl={anchorEl}
-                                  keepMounted
-                                  open={Boolean(anchorEl)}
-                                  onClose={handleClose}
-                                  variant="selectedMenu"
-                                  anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right'
-                                  }}
-                                  transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                  }}
-                                  sx={{
-                                    '& .MuiMenu-paper': {
-                                      boxShadow: theme.customShadows.z1
-                                    }
-                                  }}
-                                >
-                                  <FormProgram isEdit lokasi={row} />
-                                  <MenuItem onClick={handleClose}> Hapus</MenuItem>
-                                </Menu>
-                              </>
+                              <IconButton onClick={handleMenuClick} size="medium">
+                                <MoreHorizOutlinedIcon
+                                  fontSize="small"
+                                  aria-controls="menu-popular-card-1"
+                                  aria-haspopup="true"
+                                  sx={{ color: 'grey.500' }}
+                                />
+                              </IconButton>
+                              <Menu
+                                id="menu-popular-card-1"
+                                anchorEl={anchorEl}
+                                keepMounted
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                                variant="selectedMenu"
+                                anchorOrigin={{
+                                  vertical: 'bottom',
+                                  horizontal: 'right'
+                                }}
+                                transformOrigin={{
+                                  vertical: 'top',
+                                  horizontal: 'right'
+                                }}
+                                sx={{
+                                  '& .MuiMenu-paper': {
+                                    boxShadow: theme.customShadows.z1
+                                  }
+                                }}
+                              >
+                                <FormLokasi dataKabupatenKota={fetchKabupaten?.data} isEdit lokasi={row} />
+                                <MenuItem onClick={handleClose}> Hapus</MenuItem>
+                              </Menu>
                             </Box>
                           </TableCell>
                         </TableRow>

@@ -4,8 +4,10 @@ import * as React from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
+  Box,
   CardContent,
   Checkbox,
+  CircularProgress,
   Grid,
   IconButton,
   InputAdornment,
@@ -330,7 +332,9 @@ const InstansiPage = () => {
 
         {/* table */}
         {isLoading && !isError ? (
-          <>Loading</>
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+            <CircularProgress />
+          </Box>
         ) : (
           <>
             <TableContainer>
