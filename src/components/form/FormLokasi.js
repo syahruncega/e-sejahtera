@@ -1,17 +1,17 @@
-import PropTypes, { number } from 'prop-types';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState, useId } from 'react';
+import { useState } from 'react';
 import { Autocomplete, Fab, MenuItem, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import axios from 'axios';
 import { useRouter } from 'next/router';
+import { getDesaKelurahan, getKecamatan } from 'store/slices/lokasi';
 
 const validationSchema = yup.object({
   detail_sub_kegiatanId: yup.number().required('Detail Sub Kegiatan wajib diisi'),
@@ -80,10 +80,8 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
               onChange={async (e, value) => {
                 if (value !== null) {
                   formik.setFieldValue('kabupaten_kotaId', value.id);
-                  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kecamatans`, {
-                    params: { kabupaten_kotaId: value.id }
-                  });
-                  setDataKecamatan(response.data);
+                  const kecamatan = await getKecamatan(value.id);
+                  setDataKecamatan(kecamatan);
                   formik.setFieldValue('kecamatanId', '');
                   formik.setFieldValue('kelurahanId', '');
                   setKeyKecamatan(!keyKecamatan);
@@ -116,10 +114,8 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
               onChange={async (e, value) => {
                 if (value !== null) {
                   formik.setFieldValue('kecamatanId', value.id);
-                  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kelurahans`, {
-                    params: { kecamatanId: value.id }
-                  });
-                  setDataKelurahan(response.data);
+                  const desaKelurahan = await getDesaKelurahan(value.id);
+                  setDataKelurahan(desaKelurahan);
                   formik.setFieldValue('kelurahanId', '');
                   setKeyKelurahan(!keyKelurahan);
                 } else {

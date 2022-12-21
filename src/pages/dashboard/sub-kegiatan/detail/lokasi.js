@@ -32,7 +32,7 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { getLokasi } from 'store/slices/lokasi';
+import { getKabupaten, getLokasi } from 'store/slices/lokasi';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -44,11 +44,9 @@ import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { Box } from '@mui/system';
-import FormProgram from 'components/form/FormProgram';
 import { useRouter } from 'next/router';
 import { getDetailSubKegiatanById } from 'store/slices/detail-sub-kegiatan';
 import FormLokasi from 'components/form/FormLokasi';
-import axios from 'axios';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -218,12 +216,9 @@ const LokasiDetailSubKegiatanPage = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const { isLoading, isError, data: lokasi, error } = useQuery(['lokasi'], () => getLokasi(router.query));
+  const fetchLokasi = useQuery(['lokasi'], () => getLokasi({ params: router.query }));
   const fetchDetailSubKegiatan = useQuery(['detailSubKegiatanById'], () => getDetailSubKegiatanById(router.query.detail_sub_kegiatanId));
-  const fetchKabupaten = useQuery(['kabupaten'], async () => {
-    const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kabupaten_kotas?provinsiId=72`);
-    return response.data;
-  });
+  const fetchKabupaten = useQuery(['kabupaten'], async () => getKabupaten('72'));
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -238,7 +233,7 @@ const LokasiDetailSubKegiatanPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = lokasi.filter((row) => {
+      const newRows = fetchLokasi.data.filter((row) => {
         let matches = true;
 
         const properties = ['id'];
@@ -267,7 +262,7 @@ const LokasiDetailSubKegiatanPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = lokasi.map((n) => n.name);
+      const newSelectedId = fetchLokasi.data.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -301,79 +296,95 @@ const LokasiDetailSubKegiatanPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - lokasi.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - fetchLokasi.data.length) : 0;
+
+  const pageProps = {
+    title: 'Lokasi',
+    navigation: [
+      {
+        title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
+        url: '/dashboard/sub-kegiatan'
+      },
+      {
+        title: <FormattedMessage id="detailsubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
+        url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=${fetchDetailSubKegiatan.isLoading ? '' : fetchDetailSubKegiatan.data.id}`
+      },
+      {
+        title: <FormattedMessage id="lokasiDetailSubKegiatan" defaultMessage="Lokasi" />,
+        url: router.asPath
+      }
+    ]
+  };
+
+  // Error
+  if (fetchLokasi.isError) {
+    return (
+      <Page {...pageProps}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {fetchLokasi.error.message}
+        </Alert>
+      </Page>
+    );
+  }
 
   return (
-    <Page
-      title="Lokasi"
-      navigation={[
-        {
-          title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
-          url: '/dashboard/sub-kegiatan'
-        },
-        {
-          title: <FormattedMessage id="detailsubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
-          // url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=${isLoading ? '' : lokasi[0].detail_sub_kegiatan.sub_kegiatanId}`
-          url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=2`
-        },
-        {
-          title: <FormattedMessage id="lokasiDetailSubKegiatan" defaultMessage="Lokasi" />,
-          url: router.asPath
-        }
-      ]}
-    >
+    <Page {...pageProps}>
       <MainCard content={false}>
-        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
-          <AlertTitle>Fokus Belanja:</AlertTitle>
-          {fetchDetailSubKegiatan.data?.fokus_belanja}
-        </Alert>
-        <CardContent>
-          <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  )
-                }}
-                onChange={handleSearch}
-                placeholder="Cari Lokasi"
-                value={search}
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-              <Tooltip title="Copy">
-                <IconButton size="large">
-                  <FileCopyIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Print">
-                <IconButton size="large">
-                  <PrintIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Filter">
-                <IconButton size="large">
-                  <FilterListIcon />
-                </IconButton>
-              </Tooltip>
-
-              {/* product add & dialog */}
-              <FormLokasi dataKabupatenKota={fetchKabupaten?.data} />
-            </Grid>
-          </Grid>
-        </CardContent>
-
-        {/* table */}
-        {isLoading ? (
-          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+        {fetchLokasi.isLoading && (
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
-        ) : (
+        )}
+
+        {!fetchLokasi.isLoading && (
           <>
+            <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
+              <AlertTitle>Fokus Belanja:</AlertTitle>
+              {fetchDetailSubKegiatan.data?.fokus_belanja}
+            </Alert>
+            <CardContent>
+              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearch}
+                    placeholder="Cari Lokasi"
+                    value={search}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                  <Tooltip title="Copy">
+                    <IconButton size="large">
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Print">
+                    <IconButton size="large">
+                      <PrintIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Filter">
+                    <IconButton size="large">
+                      <FilterListIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  {/* product add & dialog */}
+                  <FormLokasi dataKabupatenKota={fetchKabupaten?.data} />
+                </Grid>
+              </Grid>
+            </CardContent>
+
+            {/* table */}
+
             <TableContainer>
               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -382,12 +393,12 @@ const LokasiDetailSubKegiatanPage = () => {
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
-                  rowCount={search ? filteredData.length : lokasi.length}
+                  rowCount={search ? filteredData.length : fetchLokasi.data.length}
                   theme={theme}
                   selected={selected}
                 />
                 <TableBody>
-                  {stableSort(search ? filteredData : lokasi, getComparator(order, orderBy))
+                  {stableSort(search ? filteredData : fetchLokasi.data, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
@@ -474,7 +485,7 @@ const LokasiDetailSubKegiatanPage = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={search ? filteredData.length : lokasi.length}
+              count={search ? filteredData.length : fetchLokasi.data.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

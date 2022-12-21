@@ -1,8 +1,7 @@
-// project imports
-import axios from 'utils/axios';
+import axios from 'axios';
 
-export async function getKegiatan(params) {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatans?_expand=program`, { params });
+export async function getKegiatan({ signal, params }) {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatans?_expand=program`, { signal, params });
   return response.data;
 }
 

@@ -4,6 +4,8 @@ import * as React from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
+  Alert,
+  AlertTitle,
   CardContent,
   Checkbox,
   CircularProgress,
@@ -219,7 +221,7 @@ const KegiatanPage = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const { isLoading, isError, data: kegiatan, error } = useQuery(['kegiatan'], getKegiatan);
+  const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
   const fetchPorgram = useQuery(['program'], getProgram);
 
   const handleMenuClick = (event) => {
@@ -235,7 +237,7 @@ const KegiatanPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = kegiatan.filter((row) => {
+      const newRows = fetchKegiatan.data.filter((row) => {
         let matches = true;
 
         const properties = ['nama_kegiatan', 'indikator_kinerja_kegiatan', 'pagu_kegiatan'];
@@ -264,7 +266,7 @@ const KegiatanPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = kegiatan.map((n) => n.name);
+      const newSelectedId = fetchKegiatan.data.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -298,66 +300,84 @@ const KegiatanPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - kegiatan.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - fetchKegiatan.data.length) : 0;
 
+  const pageProps = {
+    title: 'Kegiatan',
+    navigation: [
+      {
+        title: <FormattedMessage id="kegiatan" defaultMessage="Kegiatan" />,
+        url: '/dashboard/kegiatan'
+      }
+    ]
+  };
+
+  // Error
+  if (fetchKegiatan.isError) {
+    return (
+      <Page {...pageProps}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {fetchKegiatan.error.message}
+        </Alert>
+      </Page>
+    );
+  }
+
+  // Success
   return (
-    <Page
-      title="Kegiatan"
-      navigation={[
-        {
-          title: <FormattedMessage id="kegiatan" defaultMessage="Kegiatan" />,
-          url: '/dashboard/kegiatan'
-        }
-      ]}
-    >
+    <Page {...pageProps}>
       <MainCard content={false}>
-        <CardContent>
-          <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  )
-                }}
-                onChange={handleSearch}
-                placeholder="Cari Kegiatan"
-                value={search}
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-              <Tooltip title="Copy">
-                <IconButton size="large">
-                  <FileCopyIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Print">
-                <IconButton size="large">
-                  <PrintIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Filter">
-                <IconButton size="large">
-                  <FilterListIcon />
-                </IconButton>
-              </Tooltip>
-
-              {/* product add & dialog */}
-              <FormKegiatan dataProgram={fetchPorgram.data} />
-            </Grid>
-          </Grid>
-        </CardContent>
-
-        {/* table */}
-        {isLoading ? (
-          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+        {fetchKegiatan.isLoading && (
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
-        ) : (
+        )}
+
+        {!fetchKegiatan.isLoading && (
           <>
+            <CardContent>
+              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearch}
+                    placeholder="Cari Kegiatan"
+                    value={search}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                  <Tooltip title="Copy">
+                    <IconButton size="large">
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Print">
+                    <IconButton size="large">
+                      <PrintIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Filter">
+                    <IconButton size="large">
+                      <FilterListIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  {/* product add & dialog */}
+                  <FormKegiatan dataProgram={fetchPorgram.data} />
+                </Grid>
+              </Grid>
+            </CardContent>
+
+            {/* table */}
+
             <TableContainer>
               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -366,12 +386,12 @@ const KegiatanPage = () => {
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
-                  rowCount={search ? filteredData.length : kegiatan.length}
+                  rowCount={search ? filteredData.length : fetchKegiatan.data.length}
                   theme={theme}
                   selected={selected}
                 />
                 <TableBody>
-                  {stableSort(search ? filteredData : kegiatan, getComparator(order, orderBy))
+                  {stableSort(search ? filteredData : fetchKegiatan.data, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
@@ -404,8 +424,7 @@ const KegiatanPage = () => {
                             </Typography>
                           </TableCell>
                           <TableCell>{row.indikator_kinerja_kegiatan}</TableCell>
-                          {/* <TableCell align="right">Rp{`${row.pagu_kegiatan}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell> */}
-                          <TableCell align="right">Rp0</TableCell>
+                          <TableCell align="right">Rp{`${row.pagu}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell align="center" sx={{ pr: 3 }}>
                             <Box sx={{ display: 'flex' }}>
                               <Tooltip title="Update Pagu">
@@ -474,7 +493,7 @@ const KegiatanPage = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={search ? filteredData.length : kegiatan.length}
+              count={search ? filteredData.length : fetchKegiatan.data.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

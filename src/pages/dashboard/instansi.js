@@ -4,6 +4,8 @@ import * as React from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
+  Alert,
+  AlertTitle,
   Box,
   CardContent,
   Checkbox,
@@ -199,7 +201,7 @@ const InstansiPage = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const { isLoading, isError, data: instansi, error } = useQuery(['instansi'], getInstansi);
+  const fetchInstansi = useQuery(['instansi'], getInstansi);
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -214,7 +216,7 @@ const InstansiPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = instansi.filter((row) => {
+      const newRows = fetchInstansi.data.filter((row) => {
         let matches = true;
 
         const properties = ['nama_instansi'];
@@ -243,7 +245,7 @@ const InstansiPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = instansi.map((n) => n.name);
+      const newSelectedId = fetchInstansi.data.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -277,66 +279,78 @@ const InstansiPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - instansi.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - fetchInstansi.data.length) : 0;
 
+  const pageProps = {
+    title: 'Instansi',
+    navigation: [{ title: <FormattedMessage id="instansi" defaultMessage="Instansi" />, url: '/dashboard/instansi' }]
+  };
+
+  // Error
+  if (fetchInstansi.isError) {
+    return (
+      <Page {...pageProps}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {fetchInstansi.error.message}
+        </Alert>
+      </Page>
+    );
+  }
+
+  // Success
   return (
-    <Page
-      title="Instansi"
-      navigation={[
-        {
-          title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
-          url: '/dashboard/instansi'
-        }
-      ]}
-    >
+    <Page {...pageProps}>
       <MainCard content={false}>
-        <CardContent>
-          <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  )
-                }}
-                onChange={handleSearch}
-                placeholder="Cari Instansi"
-                value={search}
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-              <Tooltip title="Copy">
-                <IconButton size="large">
-                  <FileCopyIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Print">
-                <IconButton size="large">
-                  <PrintIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Filter">
-                <IconButton size="large">
-                  <FilterListIcon />
-                </IconButton>
-              </Tooltip>
-
-              {/* product add & dialog */}
-              <FormInstansi />
-            </Grid>
-          </Grid>
-        </CardContent>
-
-        {/* table */}
-        {isLoading && !isError ? (
-          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+        {fetchInstansi.isLoading && (
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
-        ) : (
+        )}
+
+        {!fetchInstansi.isLoading && (
           <>
+            <CardContent>
+              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearch}
+                    placeholder="Cari Instansi"
+                    value={search}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                  <Tooltip title="Copy">
+                    <IconButton size="large">
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Print">
+                    <IconButton size="large">
+                      <PrintIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Filter">
+                    <IconButton size="large">
+                      <FilterListIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  {/* product add & dialog */}
+                  <FormInstansi />
+                </Grid>
+              </Grid>
+            </CardContent>
+            {/* table */}
+
             <TableContainer>
               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -345,12 +359,12 @@ const InstansiPage = () => {
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
-                  rowCount={search ? filteredData.length : instansi.length}
+                  rowCount={search ? filteredData.length : fetchInstansi.data.length}
                   theme={theme}
                   selected={selected}
                 />
                 <TableBody>
-                  {stableSort(search ? filteredData : instansi, getComparator(order, orderBy))
+                  {stableSort(search ? filteredData : fetchInstansi.data, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
@@ -432,7 +446,7 @@ const InstansiPage = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={search ? filteredData.length : instansi.length}
+              count={search ? filteredData.length : fetchInstansi.data.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

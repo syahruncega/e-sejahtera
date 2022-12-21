@@ -1,7 +1,7 @@
-import axios from 'utils/axios';
+import axios from 'axios';
 
-export async function getProgram() {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/programs?_expand=instansi`);
+export async function getProgram({ signal, params }) {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/programs?_expand=instansi`, { signal, params });
   return response.data;
 }
 

@@ -4,6 +4,8 @@ import * as React from 'react';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import {
+  Alert,
+  AlertTitle,
   CardContent,
   Checkbox,
   CircularProgress,
@@ -219,7 +221,7 @@ const ProgramPage = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const { isLoading, isError, data: program, error } = useQuery(['program'], getProgram);
+  const fetchProgram = useQuery(['program'], getProgram);
 
   const fetchInstansi = useQuery(['instansi'], getInstansi);
 
@@ -236,7 +238,7 @@ const ProgramPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = program.filter((row) => {
+      const newRows = fetchProgram.data.filter((row) => {
         let matches = true;
 
         const properties = ['nama_program', 'indikator_kinerja_program'];
@@ -265,7 +267,7 @@ const ProgramPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = program.map((n) => n.name);
+      const newSelectedId = fetchProgram.data.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -299,66 +301,80 @@ const ProgramPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - program.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - fetchProgram.data.length) : 0;
+
+  const pageProps = {
+    title: 'Program',
+    navigation: [
+      {
+        title: <FormattedMessage id="program" defaultMessage="Program" />,
+        url: '/dashboard/program'
+      }
+    ]
+  };
+
+  if (fetchProgram.isError) {
+    return (
+      <Page {...pageProps}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {fetchProgram.error.message}
+        </Alert>
+      </Page>
+    );
+  }
 
   return (
-    <Page
-      title="Program"
-      navigation={[
-        {
-          title: <FormattedMessage id="program" defaultMessage="Program" />,
-          url: '/dashboard/program'
-        }
-      ]}
-    >
+    <Page {...pageProps}>
       <MainCard content={false}>
-        <CardContent>
-          <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  )
-                }}
-                onChange={handleSearch}
-                placeholder="Cari Program"
-                value={search}
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-              <Tooltip title="Copy">
-                <IconButton size="large">
-                  <FileCopyIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Print">
-                <IconButton size="large">
-                  <PrintIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Filter">
-                <IconButton size="large">
-                  <FilterListIcon />
-                </IconButton>
-              </Tooltip>
-
-              {/* product add & dialog */}
-              <FormProgram dataInstansi={fetchInstansi.data} />
-            </Grid>
-          </Grid>
-        </CardContent>
-
-        {/* table */}
-        {isLoading ? (
-          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+        {fetchProgram.isLoading && (
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
-        ) : (
+        )}
+
+        {!fetchProgram.isLoading && (
           <>
+            <CardContent>
+              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearch}
+                    placeholder="Cari Program"
+                    value={search}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                  <Tooltip title="Copy">
+                    <IconButton size="large">
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Print">
+                    <IconButton size="large">
+                      <PrintIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Filter">
+                    <IconButton size="large">
+                      <FilterListIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  {/* product add & dialog */}
+                  <FormProgram dataInstansi={fetchInstansi.data} />
+                </Grid>
+              </Grid>
+            </CardContent>
+            {/* table */}
             <TableContainer>
               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -367,12 +383,12 @@ const ProgramPage = () => {
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
-                  rowCount={search ? filteredData.length : program.length}
+                  rowCount={search ? filteredData.length : fetchProgram.data.length}
                   theme={theme}
                   selected={selected}
                 />
                 <TableBody>
-                  {stableSort(search ? filteredData : program, getComparator(order, orderBy))
+                  {stableSort(search ? filteredData : fetchProgram.data, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
@@ -403,8 +419,7 @@ const ProgramPage = () => {
                           </TableCell>
                           <TableCell>{row.nama_program}</TableCell>
                           <TableCell>{row.indikator_kinerja_program}</TableCell>
-                          {/* <TableCell align="right">Rp{`${row.pagu_program}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell> */}
-                          <TableCell align="right">Rp0</TableCell>
+                          <TableCell align="right">Rp{`${row.pagu}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell align="center" sx={{ pr: 3 }}>
                             <Box sx={{ display: 'flex' }}>
                               <Tooltip title="Update Pagu">
@@ -468,12 +483,11 @@ const ProgramPage = () => {
                 </TableBody>
               </Table>
             </TableContainer>
-
             {/* table pagination */}
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={search ? filteredData.length : program.length}
+              count={search ? filteredData.length : fetchProgram.data.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

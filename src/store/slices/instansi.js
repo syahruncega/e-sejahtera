@@ -1,8 +1,7 @@
-// project imports
-import axios from 'utils/axios';
+import axios from 'axios';
 
-export async function getInstansi(params) {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/instansis`, { params });
+export async function getInstansi({ signal, params }) {
+  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/instansis`, { signal, params });
   return response.data;
 }
 

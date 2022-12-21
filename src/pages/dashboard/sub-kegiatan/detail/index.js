@@ -243,7 +243,7 @@ const DetailSubKegiatanPage = () => {
   const router = useRouter();
 
   const fetchSubKegiatanById = useQuery(['subKegiatanById'], () => getSubKegiatanById(router.query.sub_kegiatanId));
-  const { isLoading, isError, data: detailSubKegiatan, error } = useQuery(['detailSubKegiatan'], () => getDetailSubKegiatan(router.query));
+  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatan'], () => getDetailSubKegiatan({ params: router.query }));
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -258,7 +258,7 @@ const DetailSubKegiatanPage = () => {
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = detailSubKegiatan.filter((row) => {
+      const newRows = fetchDetailSubKegiatan.data.filter((row) => {
         let matches = true;
 
         const properties = ['fokus_belanja', 'indikator'];
@@ -287,7 +287,7 @@ const DetailSubKegiatanPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = detailSubKegiatan.map((n) => n.name);
+      const newSelectedId = fetchDetailSubKegiatan.data.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -321,74 +321,90 @@ const DetailSubKegiatanPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - detailSubKegiatan.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - fetchDetailSubKegiatan.data.length) : 0;
+
+  const pageProps = {
+    title: 'Detail Sub Kegiatan',
+    navigation: [
+      {
+        title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
+        url: '/dashboard/sub-detailSubKegiatan'
+      },
+      {
+        title: <FormattedMessage id="detailSubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
+        url: router.asPath
+      }
+    ]
+  };
+
+  // Error
+  if (fetchDetailSubKegiatan.isError) {
+    return (
+      <Page {...pageProps}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          {fetchDetailSubKegiatan.error.message}
+        </Alert>
+      </Page>
+    );
+  }
 
   return (
-    <Page
-      title="Detail Sub Kegiatan"
-      navigation={[
-        {
-          title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
-          url: '/dashboard/sub-detailSubKegiatan'
-        },
-        {
-          title: <FormattedMessage id="detailSubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
-          url: router.asPath
-        }
-      ]}
-    >
+    <Page {...pageProps}>
       <MainCard content={false}>
-        <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
-          <AlertTitle>Sub Kegiatan:</AlertTitle>
-          {fetchSubKegiatanById.data?.nama_sub_kegiatan || ''}
-        </Alert>
-        <CardContent>
-          <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon fontSize="small" />
-                    </InputAdornment>
-                  )
-                }}
-                onChange={handleSearch}
-                placeholder="Cari Detail Sub Kegiatan"
-                value={search}
-                size="small"
-              />
-            </Grid>
-            <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-              <Tooltip title="Copy">
-                <IconButton size="large">
-                  <FileCopyIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Print">
-                <IconButton size="large">
-                  <PrintIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Filter">
-                <IconButton size="large">
-                  <FilterListIcon />
-                </IconButton>
-              </Tooltip>
-
-              {/* product add & dialog */}
-              <FormDetailSubKegiatan />
-            </Grid>
-          </Grid>
-        </CardContent>
-
-        {/* table */}
-        {isLoading ? (
-          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginBottom: 4 }}>
+        {fetchDetailSubKegiatan.isLoading && (
+          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
-        ) : (
+        )}
+        {!fetchDetailSubKegiatan.isLoading && (
           <>
+            <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
+              <AlertTitle>Sub Kegiatan:</AlertTitle>
+              {fetchSubKegiatanById.data?.nama_sub_kegiatan || ''}
+            </Alert>
+            <CardContent>
+              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={handleSearch}
+                    placeholder="Cari Detail Sub Kegiatan"
+                    value={search}
+                    size="small"
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                  <Tooltip title="Copy">
+                    <IconButton size="large">
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Print">
+                    <IconButton size="large">
+                      <PrintIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Filter">
+                    <IconButton size="large">
+                      <FilterListIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  {/* product add & dialog */}
+                  <FormDetailSubKegiatan />
+                </Grid>
+              </Grid>
+            </CardContent>
+
+            {/* table */}
+
             <TableContainer>
               <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
                 <EnhancedTableHead
@@ -397,12 +413,12 @@ const DetailSubKegiatanPage = () => {
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
-                  rowCount={search ? filteredData.length : detailSubKegiatan.length}
+                  rowCount={search ? filteredData.length : fetchDetailSubKegiatan.data.length}
                   theme={theme}
                   selected={selected}
                 />
                 <TableBody>
-                  {stableSort(search ? filteredData : detailSubKegiatan, getComparator(order, orderBy))
+                  {stableSort(search ? filteredData : fetchDetailSubKegiatan.data, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
@@ -434,7 +450,7 @@ const DetailSubKegiatanPage = () => {
                           <TableCell>{row.indikator}</TableCell>
                           <TableCell align="right">{`${row.target}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell>{row.satuan}</TableCell>
-                          <TableCell align="right">Rp{`${row.pagu_fokus_belanja}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
+                          <TableCell align="right">Rp{`${row.pagu}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell>
                             <Tooltip title="Tambah Lokasi">
                               <IconButton
@@ -502,7 +518,7 @@ const DetailSubKegiatanPage = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={search ? filteredData.length : detailSubKegiatan.length}
+              count={search ? filteredData.length : fetchDetailSubKegiatan.data.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}
