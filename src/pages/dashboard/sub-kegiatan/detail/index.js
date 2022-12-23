@@ -243,7 +243,7 @@ const DetailSubKegiatanPage = () => {
   const router = useRouter();
 
   const fetchSubKegiatanById = useQuery(['subKegiatanById'], () => getSubKegiatanById(router.query.sub_kegiatanId));
-  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatan'], () => getDetailSubKegiatan({ params: router.query }));
+  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatan'], () => getDetailSubKegiatan({ params: { _expand: 'sub_kegiatan' } }));
 
   const handleMenuClick = (event) => {
     setAnchorEl(event.currentTarget);

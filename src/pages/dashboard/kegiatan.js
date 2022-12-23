@@ -221,7 +221,7 @@ const KegiatanPage = () => {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
+  const fetchKegiatan = useQuery(['kegiatan'], () => getKegiatan({ params: { _expand: 'program' } }));
   const fetchPorgram = useQuery(['program'], getProgram);
 
   const handleMenuClick = (event) => {

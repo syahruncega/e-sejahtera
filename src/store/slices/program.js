@@ -1,11 +1,11 @@
-import axios from 'axios';
+import axiosService from 'utils/axios';
 
 export async function getProgram({ signal, params }) {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/programs?_expand=instansi`, { signal, params });
+  const response = await axiosService.get(`/programs?_expand=instansi`, { signal, params });
   return response.data;
 }
 
 export async function getProgramById(id) {
-  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/program/${id}`);
+  const response = await axiosService.get(`/programs/${id}`);
   return response.data;
 }

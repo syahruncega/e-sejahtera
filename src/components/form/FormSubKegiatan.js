@@ -11,6 +11,7 @@ import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import axios from 'axios';
+import axiosService from 'utils/axios';
 
 const validationSchema = yup.object({
   programId: yup.string().required('Program wajib diisi'),
@@ -75,7 +76,7 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataProgram }) => {
               onChange={async (e, value) => {
                 if (value !== null) {
                   formik.setFieldValue('programId', value.id);
-                  const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL_API}/kegiatans`, {
+                  const response = await axiosService.get(`/kegiatans`, {
                     params: { programId: value.id }
                   });
                   setDataKegiatan(response.data);
