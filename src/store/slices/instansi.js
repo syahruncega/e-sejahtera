@@ -1,11 +1,27 @@
 import axiosService from 'utils/axios';
 
+const ENDPOINT = 'instansis';
+
 export async function getInstansi({ signal, params }) {
-  const response = await axiosService.get('/instansis', { signal, params });
+  const response = await axiosService.get(`/${ENDPOINT}`, { signal, params });
   return response.data;
 }
 
-export async function getLokasiById(id) {
-  const response = await axiosService.get(`/instansis/${id}`);
+export async function getInstansiById(id) {
+  const response = await axiosService.get(`/${ENDPOINT}/${id}`);
   return response.data;
+}
+
+export async function createInstansi(newInstansi) {
+  const response = await axiosService.post(`/${ENDPOINT}`, newInstansi);
+  return response.data;
+}
+
+export async function updateInstansi(id, newInstansi) {
+  const response = await axiosService.put(`/${ENDPOINT}/${id}`, newInstansi);
+  return response.data;
+}
+
+export async function deleteInstansi(id) {
+  await axiosService.delete(`/${ENDPOINT}/${id}`);
 }

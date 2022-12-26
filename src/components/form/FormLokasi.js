@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import { getDesaKelurahan, getKecamatan } from 'store/slices/lokasi';
+import { getDesaKelurahan, getKecamatan } from 'store/slices/detail-lokasi';
 
 const validationSchema = yup.object({
   detail_sub_kegiatanId: yup.number().required('Detail Sub Kegiatan wajib diisi'),

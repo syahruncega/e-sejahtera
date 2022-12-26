@@ -1,7 +1,7 @@
 import axiosService from 'utils/axios';
 
 export async function getKegiatan({ signal, params }) {
-  const response = await axiosService.get(`/kegiatans`, { signal, params });
+  const response = await axiosService.get(`/kegiatan`, { signal, params });
   return response.data;
 }
 

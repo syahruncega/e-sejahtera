@@ -13,8 +13,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -40,11 +38,11 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { getInstansi } from 'store/slices/instansi';
+import { deleteInstansi, getInstansi } from 'store/slices/instansi';
 import FormInstansi from 'components/form/FormInstansi';
+import DeleteDialog from 'components/dialog/DeleteDialog';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -164,7 +162,7 @@ function EnhancedTableHead({ onSelectAllClick, order, orderBy, numSelected, rowC
             </TableCell>
           ))}
         {numSelected <= 0 && (
-          <TableCell sortDirection={false} align="center" sx={{ pr: 3 }}>
+          <TableCell sortDirection={false} align="left" sx={{ pr: 3 }}>
             <Typography variant="subtitle1" sx={{ color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900' }}>
               Aksi
             </Typography>
@@ -199,17 +197,7 @@ const InstansiPage = () => {
   const [search, setSearch] = React.useState('');
   const [filteredData, setFilteredData] = React.useState([]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
   const fetchInstansi = useQuery(['instansi'], getInstansi);
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleSearch = (event) => {
     const newString = event.target.value;
@@ -300,162 +288,141 @@ const InstansiPage = () => {
 
   // Success
   return (
-    <Page {...pageProps}>
-      <MainCard content={false}>
-        {fetchInstansi.isLoading && (
-          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
-            <CircularProgress />
-          </Box>
-        )}
+    <>
+      <Page {...pageProps}>
+        <MainCard content={false}>
+          {fetchInstansi.isLoading && (
+            <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
+              <CircularProgress />
+            </Box>
+          )}
 
-        {!fetchInstansi.isLoading && (
-          <>
-            <CardContent>
-              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon fontSize="small" />
-                        </InputAdornment>
-                      )
-                    }}
-                    onChange={handleSearch}
-                    placeholder="Cari Instansi"
-                    value={search}
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                  <Tooltip title="Copy">
-                    <IconButton size="large">
-                      <FileCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Print">
-                    <IconButton size="large">
-                      <PrintIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Filter">
-                    <IconButton size="large">
-                      <FilterListIcon />
-                    </IconButton>
-                  </Tooltip>
-
-                  {/* product add & dialog */}
-                  <FormInstansi />
-                </Grid>
-              </Grid>
-            </CardContent>
-            {/* table */}
-
-            <TableContainer>
-              <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
-                <EnhancedTableHead
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={search ? filteredData.length : fetchInstansi.data.length}
-                  theme={theme}
-                  selected={selected}
-                />
-                <TableBody>
-                  {stableSort(search ? filteredData : fetchInstansi.data, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      if (typeof row === 'number') return null;
-                      const isItemSelected = isSelected(row.name);
-                      const labelId = `enhanced-table-checkbox-${index}`;
-
-                      return (
-                        <TableRow hover role="checkbox" aria-checked={isItemSelected} tabIndex={-1} key={index} selected={isItemSelected}>
-                          <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
-                            <Checkbox
-                              color="primary"
-                              checked={isItemSelected}
-                              inputProps={{
-                                'aria-labelledby': labelId
-                              }}
-                            />
-                          </TableCell>
-                          <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
-                            <Typography
-                              sx={{
-                                color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
-                                textDecoration: 'none'
-                              }}
-                            >
-                              {row.nama_instansi}
-                            </Typography>
-                          </TableCell>
-                          <TableCell align="center" sx={{ pr: 3 }}>
-                            <IconButton onClick={handleMenuClick} size="large">
-                              <MoreHorizOutlinedIcon
-                                fontSize="small"
-                                aria-controls="menu-popular-card-1"
-                                aria-haspopup="true"
-                                sx={{ color: 'grey.500' }}
-                              />
-                            </IconButton>
-                            <Menu
-                              id="menu-popular-card-1"
-                              anchorEl={anchorEl}
-                              keepMounted
-                              open={Boolean(anchorEl)}
-                              onClose={handleClose}
-                              variant="selectedMenu"
-                              anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right'
-                              }}
-                              transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right'
-                              }}
-                              sx={{
-                                '& .MuiMenu-paper': {
-                                  boxShadow: theme.customShadows.z1
-                                }
-                              }}
-                            >
-                              <FormInstansi isEdit instansi={row} />
-                              <MenuItem onClick={handleClose}> Hapus</MenuItem>
-                            </Menu>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow
-                      style={{
-                        height: 53 * emptyRows
+          {!fetchInstansi.isLoading && (
+            <>
+              <CardContent>
+                <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField
+                      InputProps={{
+                        startAdornment: (
+                          <InputAdornment position="start">
+                            <SearchIcon fontSize="small" />
+                          </InputAdornment>
+                        )
                       }}
-                    >
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                      onChange={handleSearch}
+                      placeholder="Cari Instansi"
+                      value={search}
+                      size="small"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                    <Tooltip title="Copy">
+                      <IconButton size="large">
+                        <FileCopyIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Print">
+                      <IconButton size="large">
+                        <PrintIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Filter">
+                      <IconButton size="large">
+                        <FilterListIcon />
+                      </IconButton>
+                    </Tooltip>
 
-            {/* table pagination */}
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={search ? filteredData.length : fetchInstansi.data.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </>
-        )}
-      </MainCard>
-    </Page>
+                    {/* product add & dialog */}
+                    <FormInstansi />
+                  </Grid>
+                </Grid>
+              </CardContent>
+              {/* table */}
+
+              <TableContainer>
+                <Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle">
+                  <EnhancedTableHead
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={search ? filteredData.length : fetchInstansi.data.length}
+                    theme={theme}
+                    selected={selected}
+                  />
+                  <TableBody>
+                    {stableSort(search ? filteredData : fetchInstansi.data, getComparator(order, orderBy))
+                      .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                      .map((row, index) => {
+                        if (typeof row === 'number') return null;
+                        const isItemSelected = isSelected(row.name);
+                        const labelId = `enhanced-table-checkbox-${index}`;
+
+                        return (
+                          <TableRow
+                            hover
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row.id}
+                            selected={isItemSelected}
+                          >
+                            <TableCell padding="checkbox" sx={{ pl: 3 }} onClick={(event) => handleClick(event, row.id)}>
+                              <Checkbox
+                                color="primary"
+                                checked={isItemSelected}
+                                inputProps={{
+                                  'aria-labelledby': labelId
+                                }}
+                              />
+                            </TableCell>
+                            <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
+                              <Typography
+                                sx={{
+                                  color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900',
+                                  textDecoration: 'none'
+                                }}
+                              >
+                                {row.nama_instansi}
+                              </Typography>
+                            </TableCell>
+                            <TableCell align="center" sx={{ pr: 3, display: 'flex' }}>
+                              <FormInstansi isEdit instansi={row} />
+                              <DeleteDialog id={row.id} deleteFunc={deleteInstansi} mutationKey="instansi" />
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow
+                        style={{
+                          height: 53 * emptyRows
+                        }}
+                      >
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+
+              {/* table pagination */}
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={search ? filteredData.length : fetchInstansi.data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+              />
+            </>
+          )}
+        </MainCard>
+      </Page>
+    </>
   );
 };
 

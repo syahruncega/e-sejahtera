@@ -32,7 +32,7 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { getKabupaten, getLokasi } from 'store/slices/lokasi';
+import { getKabupaten, getLokasi } from 'store/slices/detail-lokasi';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';

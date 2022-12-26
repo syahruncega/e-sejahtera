@@ -1,7 +1,7 @@
 import axiosService from 'utils/axios';
 
 export async function getDetailSubKegiatan({ signal, params }) {
-  const response = await axiosService.get(`/detail_sub_kegiatans`, {
+  const response = await axiosService.get(`/detail-sub-kegiatans`, {
     signal,
     params
   });
@@ -9,6 +9,6 @@ export async function getDetailSubKegiatan({ signal, params }) {
 }
 
 export async function getDetailSubKegiatanById(id) {
-  const response = await axiosService.get(`/detail_sub_kegiatans/${id}`);
+  const response = await axiosService.get(`/detail-sub-kegiatans/${id}`);
   return response.data;
 }
