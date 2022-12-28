@@ -6,39 +6,87 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Fab, MenuItem, Tooltip } from '@mui/material';
+import { Fab, IconButton, MenuItem, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
+import { EditOutlined } from '@mui/icons-material';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createDetailSubKegiatan, updateDetailSubKegiatan } from 'store/slices/detail-sub-kegiatan';
+import { toast } from 'react-hot-toast';
 
 const validationSchema = yup.object({
-  sub_kegiatanId: yup.string().required('Sub Kegiatan Id wajib diisi'),
-  fokus_belanja: yup.string().required('Fokus Belanja wajib diisi'),
+  subKegiatanId: yup.number().required('Sub Kegiatan Id wajib diisi'),
+  fokusBelanja: yup.string().required('Fokus Belanja wajib diisi'),
   indikator: yup.string().required('Indikator wajib diisi'),
-  target: yup.string().required('Target wajib diisi'),
+  target: yup.number().required('Target wajib diisi').typeError('Target harus berupa angka'),
   satuan: yup.string().required('Satuan wajib diisi'),
-  pagu_fokus_belanja: yup.string().required('Pagu Fokus Belanja wajib diisi'),
+  paguFokusBelanja: yup.number().required('Pagu Fokus Belanja wajib diisi').typeError('Pagu Fokus Belanja harus berupa angka'),
   keterangan: yup.string().required('Keterangan wajib diisi')
 });
 
 const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const queryCreateDetailSubKegiatan = useMutation({
+    mutationFn: (newDetailSubKegiatan) => createDetailSubKegiatan(newDetailSubKegiatan),
+
+    onSuccess: (newDetailSubKegiatan) => {
+      queryClient.invalidateQueries(['detailSubKegiatan']);
+      // queryClient.setQueriesData(['detailSubKegiatan'], (oldData) => [newDetailSubKegiatan, ...(oldData ?? [])]);
+      setOpen(false);
+      // eslint-disable-next-line no-use-before-define
+      formik.resetForm();
+    }
+  });
+
+  const queryUpdateDetailSubKegiatan = useMutation({
+    mutationFn: (newDetailSubKegiatan) => updateDetailSubKegiatan(detailSubKegiatan.id, newDetailSubKegiatan),
+    onSuccess: (newDetailSubKegiatan) => {
+      queryClient.invalidateQueries(['detailSubKegiatan']);
+      // queryClient.setQueriesData(['detailSubKegiatan'], (oldData) => {
+      //   const filteredOldData = oldData.filter((values) => values.id !== newDetailSubKegiatan.id);
+      //   return [newDetailSubKegiatan, ...(filteredOldData ?? [])];
+      // });
+
+      setOpen(false);
+    }
+  });
 
   const formik = useFormik({
     initialValues: {
-      sub_kegiatanId: router.query.sub_kegiatanId,
-      fokus_belanja: '',
-      indikator: '',
-      target: '',
-      satuan: '',
-      pagu_fokus_belanja: '',
-      keterangan: ''
+      subKegiatanId: Number(router.query.subKegiatanId),
+      fokusBelanja: isEdit ? detailSubKegiatan.fokusBelanja : '',
+      indikator: isEdit ? detailSubKegiatan.indikator : '',
+      target: isEdit ? detailSubKegiatan.target : '',
+      satuan: isEdit ? detailSubKegiatan.satuan : '',
+      paguFokusBelanja: isEdit ? detailSubKegiatan.paguFokusBelanja : '',
+      keterangan: isEdit ? detailSubKegiatan.keterangan : ''
     },
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      toast.promise(
+        isEdit
+          ? queryUpdateDetailSubKegiatan.mutateAsync({
+              ...values,
+              target: Number(values.target),
+              paguFokusBelanja: Number(values.paguFokusBelanja)
+            })
+          : queryCreateDetailSubKegiatan.mutateAsync({
+              ...values,
+              target: Number(values.target),
+              paguFokusBelanja: Number(values.paguFokusBelanja)
+            }),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Data program berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -54,7 +102,11 @@ const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
   return (
     <>
       {isEdit ? (
-        <MenuItem onClick={handleClickOpen}> Ubah</MenuItem>
+        <Tooltip title="Ubah">
+          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          </IconButton>
+        </Tooltip>
       ) : (
         <Tooltip title="Tambah Detail Sub Kegiatan">
           <Fab
@@ -73,15 +125,15 @@ const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
           <DialogTitle> {isEdit ? 'Ubah Detail Sub Kegiatan' : 'Tambah Detail Sub Kegiatan'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="fokus_belanja"
+              name="fokusBelanja"
               label="Fokus Belanja"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.fokus_belanja}
+              value={formik.values.fokusBelanja}
               onChange={formik.handleChange}
-              error={formik.touched.fokus_belanja && Boolean(formik.errors.fokus_belanja)}
-              helperText={formik.touched.fokus_belanja && formik.errors.fokus_belanja}
+              error={formik.touched.fokusBelanja && Boolean(formik.errors.fokusBelanja)}
+              helperText={formik.touched.fokusBelanja && formik.errors.fokusBelanja}
             />
             <TextField
               name="indikator"
@@ -99,6 +151,7 @@ const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
               label="Target"
               variant="outlined"
               fullWidth
+              inputProps={{ inputMode: 'numeric' }}
               sx={{ marginTop: 2 }}
               value={formik.values.target}
               onChange={formik.handleChange}
@@ -107,7 +160,7 @@ const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
             />
             <TextField
               name="satuan"
-              label="Target"
+              label="Satuan"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
@@ -117,15 +170,15 @@ const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
               helperText={formik.touched.satuan && formik.errors.satuan}
             />
             <TextField
-              name="pagu_fokus_belanja"
+              name="paguFokusBelanja"
               label="Pagu Fokus Belanja"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.pagu_fokus_belanja}
+              value={formik.values.paguFokusBelanja}
               onChange={formik.handleChange}
-              error={formik.touched.pagu_fokus_belanja && Boolean(formik.errors.pagu_fokus_belanja)}
-              helperText={formik.touched.pagu_fokus_belanja && formik.errors.pagu_fokus_belanja}
+              error={formik.touched.paguFokusBelanja && Boolean(formik.errors.paguFokusBelanja)}
+              helperText={formik.touched.paguFokusBelanja && formik.errors.paguFokusBelanja}
             />
             <TextField
               name="keterangan"

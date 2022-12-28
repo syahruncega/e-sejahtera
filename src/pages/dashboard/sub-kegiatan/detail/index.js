@@ -13,8 +13,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -33,7 +31,7 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { getDetailSubKegiatan } from 'store/slices/detail-sub-kegiatan';
+import { deleteDetailSubKegiatan, getDetailSubKegiatan } from 'store/slices/detail-sub-kegiatan';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -41,7 +39,6 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
@@ -49,6 +46,7 @@ import Link from 'Link';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import FormDetailSubKegiatan from 'components/form/FormDetailSubKegiatan';
 import { getSubKegiatanById } from 'store/slices/sub-kegiatan';
+import DeleteDialog from 'components/dialog/DeleteDialog';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -77,7 +75,7 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
   {
-    id: 'fokusBelanjs',
+    id: 'fokusBelanja',
     numeric: false,
     label: 'Fokus Belanja',
     align: 'left'
@@ -90,7 +88,7 @@ const headCells = [
   },
   {
     id: 'target',
-    numeric: true,
+    numeric: false,
     label: 'Target',
     align: 'left'
   },
@@ -204,7 +202,7 @@ function EnhancedTableHead({ onSelectAllClick, order, orderBy, numSelected, rowC
             </TableCell>
           ))}
         {numSelected <= 0 && (
-          <TableCell sortDirection={false} align="center" sx={{ pr: 3 }}>
+          <TableCell sortDirection={false} align="left" sx={{ pr: 3 }}>
             <Typography variant="subtitle1" sx={{ color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900' }}>
               Aksi
             </Typography>
@@ -235,23 +233,14 @@ const DetailSubKegiatanPage = () => {
   const [orderBy, setOrderBy] = React.useState('calories');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(25);
   const [search, setSearch] = React.useState('');
   const [filteredData, setFilteredData] = React.useState([]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
   const router = useRouter();
 
-  const fetchSubKegiatanById = useQuery(['subKegiatanById'], () => getSubKegiatanById(router.query.sub_kegiatanId));
-  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatan'], () => getDetailSubKegiatan({ params: { _expand: 'sub_kegiatan' } }));
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const fetchSubKegiatanById = useQuery(['subKegiatanById'], () => getSubKegiatanById(router.query.subKegiatanId));
+  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatan'], getDetailSubKegiatan);
 
   const handleSearch = (event) => {
     const newString = event.target.value;
@@ -261,7 +250,7 @@ const DetailSubKegiatanPage = () => {
       const newRows = fetchDetailSubKegiatan.data.filter((row) => {
         let matches = true;
 
-        const properties = ['fokus_belanja', 'indikator'];
+        const properties = ['fokusBelanja', 'indikator', 'paguFokusBelanja'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -361,7 +350,7 @@ const DetailSubKegiatanPage = () => {
           <>
             <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
               <AlertTitle>Sub Kegiatan:</AlertTitle>
-              {fetchSubKegiatanById.data?.nama_sub_kegiatan || ''}
+              {fetchSubKegiatanById.data?.namaSubKegiatan || ''}
             </Alert>
             <CardContent>
               <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -422,7 +411,7 @@ const DetailSubKegiatanPage = () => {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
-                      const isItemSelected = isSelected(row.name);
+                      const isItemSelected = isSelected(row.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
                       return (
@@ -444,13 +433,13 @@ const DetailSubKegiatanPage = () => {
                                 textDecoration: 'none'
                               }}
                             >
-                              {row.fokus_belanja}
+                              {row.fokusBelanja}
                             </Typography>
                           </TableCell>
                           <TableCell>{row.indikator}</TableCell>
                           <TableCell align="right">{`${row.target}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell>{row.satuan}</TableCell>
-                          <TableCell align="right">Rp{`${row.pagu}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
+                          <TableCell align="right">Rp{`${row.paguFokusBelanja}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell>
                             <Tooltip title="Tambah Lokasi">
                               <IconButton
@@ -465,38 +454,10 @@ const DetailSubKegiatanPage = () => {
                           </TableCell>
                           <TableCell>{row.keterangan}</TableCell>
                           <TableCell align="center" sx={{ pr: 3 }}>
-                            <IconButton onClick={handleMenuClick} size="medium">
-                              <MoreHorizOutlinedIcon
-                                fontSize="small"
-                                aria-controls="menu-popular-card-1"
-                                aria-haspopup="true"
-                                sx={{ color: 'grey.500' }}
-                              />
-                            </IconButton>
-                            <Menu
-                              id="menu-popular-card-1"
-                              anchorEl={anchorEl}
-                              keepMounted
-                              open={Boolean(anchorEl)}
-                              onClose={handleClose}
-                              variant="selectedMenu"
-                              anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'right'
-                              }}
-                              transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right'
-                              }}
-                              sx={{
-                                '& .MuiMenu-paper': {
-                                  boxShadow: theme.customShadows.z1
-                                }
-                              }}
-                            >
+                            <Box sx={{ display: 'flex' }}>
                               <FormDetailSubKegiatan isEdit detailSubKegiatan={row} />
-                              <MenuItem onClick={handleClose}> Hapus</MenuItem>
-                            </Menu>
+                              <DeleteDialog id={row.id} deleteFunc={deleteDetailSubKegiatan} mutationKey="detailSubKegiatan" />
+                            </Box>
                           </TableCell>
                         </TableRow>
                       );
@@ -516,7 +477,7 @@ const DetailSubKegiatanPage = () => {
 
             {/* table pagination */}
             <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
+              rowsPerPageOptions={[25, 50, 100]}
               component="div"
               count={search ? filteredData.length : fetchDetailSubKegiatan.data.length}
               rowsPerPage={rowsPerPage}

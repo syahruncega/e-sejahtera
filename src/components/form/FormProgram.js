@@ -46,7 +46,7 @@ const FormProgram = ({ isEdit, program, dataInstansi }) => {
     mutationFn: (newProgram) => updateProgram(program.id, newProgram),
     onSuccess: (newProgram) => {
       queryClient.invalidateQueries(['program']);
-      // queryClient.setQueriesData(['instansi'], (oldData) => {
+      // queryClient.setQueriesData(['program'], (oldData) => {
       //   const filteredOldData = oldData.filter((values) => values.id !== newProgram.id);
       //   return [newProgram, ...(filteredOldData ?? [])];
       // });

@@ -6,35 +6,76 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Autocomplete, Fab, MenuItem, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, MenuItem, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import axios from 'axios';
 import axiosService from 'utils/axios';
+import { EditOutlined } from '@mui/icons-material';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createSubKegiatan, updateSubKegiatan } from 'store/slices/sub-kegiatan';
+import { toast } from 'react-hot-toast';
 
 const validationSchema = yup.object({
-  programId: yup.string().required('Program wajib diisi'),
   kegiatanId: yup.string().required('Kegiatan wajib diisi'),
-  nama_sub_kegiatan: yup.string().required('Nama Program wajib diisi'),
-  indikator_kinerja_sub_kegiatan: yup.string().required('Indikator Kinerja Program wajib diisi')
+  namaSubKegiatan: yup.string().required('Nama Sub Kegiatan wajib diisi'),
+  indikatorKinerjaSubKegiatan: yup.string().required('Indikator Kinerja Program wajib diisi')
 });
 
-const FormSubKegiatan = ({ isEdit, subKegiatan, dataProgram }) => {
+const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
   const [open, setOpen] = useState(false);
-  const [dataKegiatan, setDataKegiatan] = useState([]);
+  // const [dataKegiatan, setDataKegiatan] = useState([]);
   const [keyBool, setKeyBool] = useState(false);
+
+  const [kegiatanId, setKegiatanId] = useState(isEdit ? dataKegiatan.find((val) => val.id === subKegiatan.kegiatanId) : null);
+
+  const queryClient = useQueryClient();
+
+  const queryCreateSubKegiatan = useMutation({
+    mutationFn: (newSubKegiatan) => createSubKegiatan(newSubKegiatan),
+
+    onSuccess: (newSubKegiatan) => {
+      queryClient.invalidateQueries(['subKegiatan']);
+      // queryClient.setQueriesData(['subKegiatan'], (oldData) => [newSubKegiatan, ...(oldData ?? [])]);
+      setOpen(false);
+      setKegiatanId(null);
+      // eslint-disable-next-line no-use-before-define
+      formik.resetForm();
+    }
+  });
+
+  const queryUpdateSubKegiatan = useMutation({
+    mutationFn: (newSubKegiatan) => updateSubKegiatan(subKegiatan.id, newSubKegiatan),
+    onSuccess: (newSubKegiatan) => {
+      queryClient.invalidateQueries(['subKegiatan']);
+      // queryClient.setQueriesData(['subKegiatan'], (oldData) => {
+      //   const filteredOldData = oldData.filter((values) => values.id !== newSubKegiatan.id);
+      //   return [newSubKegiatan, ...(filteredOldData ?? [])];
+      // });
+
+      setOpen(false);
+    }
+  });
 
   const formik = useFormik({
     initialValues: {
-      programId: '',
-      kegiatanId: '',
-      nama_sub_kegiatan: '',
-      indikator_kinerja_sub_kegiatan: ''
+      kegiatanId: isEdit ? subKegiatan.kegiatanId : '',
+      namaSubKegiatan: isEdit ? subKegiatan.namaSubKegiatan : '',
+      indikatorKinerjaSubKegiatan: isEdit ? subKegiatan.indikatorKinerjaSubKegiatan : ''
     },
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      toast.promise(
+        isEdit
+          ? queryUpdateSubKegiatan.mutateAsync({ ...values, paguSubKegiatan: subKegiatan.paguSubKegiatan })
+          : queryCreateSubKegiatan.mutateAsync({ ...values, paguSubKegiatan: 1 }),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Data sub kegiatan berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -50,7 +91,11 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataProgram }) => {
   return (
     <>
       {isEdit ? (
-        <MenuItem onClick={handleClickOpen}> Ubah</MenuItem>
+        <Tooltip title="Ubah">
+          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          </IconButton>
+        </Tooltip>
       ) : (
         <Tooltip title="Tambah Sub Kegiatan">
           <Fab
@@ -68,24 +113,24 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataProgram }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Sub Kegiatan' : 'Tambah Sub Kegiatan'}</DialogTitle>
           <DialogContent>
-            <Autocomplete
+            {/* <Autocomplete
               disablePortal
               name="programId"
+              value={programId}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.nama_program}
+              getOptionLabel={(option) => option.namaProgram}
               onChange={async (e, value) => {
                 if (value !== null) {
-                  formik.setFieldValue('programId', value.id);
-                  const response = await axiosService.get(`/kegiatans`, {
+                  const response = await axiosService.get(`/kegiatan`, {
                     params: { programId: value.id }
                   });
                   setDataKegiatan(response.data);
                   formik.setFieldValue('kegiatanId', '');
                   setKeyBool(!keyBool);
                 } else {
-                  formik.setFieldValue('programId', '');
                   setDataKegiatan([]);
                 }
+                setProgramId(value);
               }}
               options={dataProgram || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -98,20 +143,23 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataProgram }) => {
                   {...params}
                 />
               )}
-            />
+            /> */}
             <Autocomplete
               key={keyBool}
               disablePortal
               name="kegiatanId"
-              disabled={!(dataKegiatan.length > 0)}
+              value={kegiatanId}
+              // disabled={!(dataKegiatan.length > 0)}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.nama_kegiatan}
+              getOptionLabel={(option) => option.namaKegiatan}
               onChange={async (e, value) => {
-                if (value !== null) {
-                  formik.setFieldValue('kegiatanId', value.id);
-                } else {
-                  formik.setFieldValue('kegiatanId', '');
-                }
+                // if (value !== null) {
+                //   formik.setFieldValue('kegiatanId', value.id);
+                // } else {
+                //   formik.setFieldValue('kegiatanId', '');
+                // }
+                formik.setFieldValue('kegiatanId', value !== null ? value.id : '');
+                setKegiatanId(value);
               }}
               options={dataKegiatan || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -126,26 +174,26 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataProgram }) => {
               )}
             />
             <TextField
-              name="nama_sub_kegiatan"
+              name="namaSubKegiatan"
               label="Nama Sub Kegiatan"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.nama_sub_kegiatan}
+              value={formik.values.namaSubKegiatan}
               onChange={formik.handleChange}
-              error={formik.touched.nama_sub_kegiatan && Boolean(formik.errors.nama_sub_kegiatan)}
-              helperText={formik.touched.nama_sub_kegiatan && formik.errors.nama_sub_kegiatan}
+              error={formik.touched.namaSubKegiatan && Boolean(formik.errors.namaSubKegiatan)}
+              helperText={formik.touched.namaSubKegiatan && formik.errors.namaSubKegiatan}
             />
             <TextField
-              name="indikator_kinerja_sub_kegiatan"
+              name="indikatorKinerjaSubKegiatan"
               label="Indikator Kinerja Kegiatan"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.indikator_kinerja_sub_kegiatan}
+              value={formik.values.indikatorKinerjaSubKegiatan}
               onChange={formik.handleChange}
-              error={formik.touched.indikator_kinerja_sub_kegiatan && Boolean(formik.errors.indikator_kinerja_sub_kegiatan)}
-              helperText={formik.touched.indikator_kinerja_sub_kegiatan && formik.errors.indikator_kinerja_sub_kegiatan}
+              error={formik.touched.indikatorKinerjaSubKegiatan && Boolean(formik.errors.indikatorKinerjaSubKegiatan)}
+              helperText={formik.touched.indikatorKinerjaSubKegiatan && formik.errors.indikatorKinerjaSubKegiatan}
             />
           </DialogContent>
           <DialogActions>
@@ -161,7 +209,7 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataProgram }) => {
 FormSubKegiatan.propTypes = {
   isEdit: PropTypes.bool,
   subKegiatan: PropTypes.any,
-  dataProgram: PropTypes.array
+  dataKegiatan: PropTypes.array
 };
 
 export default FormSubKegiatan;
