@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Fab, IconButton, MenuItem, Tooltip } from '@mui/material';
+import { Fab, IconButton, InputAdornment, MenuItem, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -174,6 +174,7 @@ const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
               label="Pagu Fokus Belanja"
               variant="outlined"
               fullWidth
+              InputProps={{ inputMode: 'numeric', startAdornment: <InputAdornment position="start">Rp</InputAdornment> }}
               sx={{ marginTop: 2 }}
               value={formik.values.paguFokusBelanja}
               onChange={formik.handleChange}

@@ -32,7 +32,7 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { getKabupaten, getLokasi } from 'store/slices/detail-lokasi';
+import { getKabupatenKota, getDetailLokasi, deleteDetailLokasi } from 'store/slices/detail-lokasi';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -40,13 +40,13 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { Box } from '@mui/system';
 import { useRouter } from 'next/router';
 import { getDetailSubKegiatanById } from 'store/slices/detail-sub-kegiatan';
-import FormLokasi from 'components/form/FormLokasi';
+import DeleteDialog from 'components/dialog/DeleteDialog';
+import FormDetailLokasi from 'components/form/FormDetailLokasi';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -178,7 +178,7 @@ function EnhancedTableHead({ onSelectAllClick, order, orderBy, numSelected, rowC
             </TableCell>
           ))}
         {numSelected <= 0 && (
-          <TableCell sortDirection={false} align="center" sx={{ pr: 3 }}>
+          <TableCell sortDirection={false} align="left" sx={{ pr: 3 }}>
             <Typography variant="subtitle1" sx={{ color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900' }}>
               Aksi
             </Typography>
@@ -214,26 +214,16 @@ const LokasiDetailSubKegiatanPage = () => {
   const [filteredData, setFilteredData] = React.useState([]);
   const router = useRouter();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const fetchLokasi = useQuery(['lokasi'], () => getLokasi({ params: router.query }));
-  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatanById'], () => getDetailSubKegiatanById(router.query.detail_sub_kegiatanId));
-  const fetchKabupaten = useQuery(['kabupaten'], async () => getKabupaten('72'));
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const fetchDetailLokasi = useQuery(['detailLokasi'], () => getDetailLokasi({ params: router.query }));
+  const fetchDetailSubKegiatan = useQuery(['detailSubKegiatanById'], () => getDetailSubKegiatanById(router.query.detailSubKegiatanId));
+  const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
 
   const handleSearch = (event) => {
     const newString = event.target.value;
     setSearch(newString || '');
 
     if (newString) {
-      const newRows = fetchLokasi.data.filter((row) => {
+      const newRows = fetchDetailLokasi.data.filter((row) => {
         let matches = true;
 
         const properties = ['id'];
@@ -262,7 +252,7 @@ const LokasiDetailSubKegiatanPage = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelectedId = fetchLokasi.data.map((n) => n.name);
+      const newSelectedId = fetchDetailLokasi.data.map((n) => n.name);
       setSelected(newSelectedId);
       return;
     }
@@ -296,10 +286,10 @@ const LokasiDetailSubKegiatanPage = () => {
   };
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - fetchLokasi.data.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - fetchDetailLokasi.data.length) : 0;
 
   const pageProps = {
-    title: 'Lokasi',
+    title: 'Detail Lokasi',
     navigation: [
       {
         title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
@@ -310,19 +300,19 @@ const LokasiDetailSubKegiatanPage = () => {
         url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=${fetchDetailSubKegiatan.isLoading ? '' : fetchDetailSubKegiatan.data.id}`
       },
       {
-        title: <FormattedMessage id="lokasiDetailSubKegiatan" defaultMessage="Lokasi" />,
+        title: <FormattedMessage id="lokasiDetailSubKegiatan" defaultMessage="Detail Lokasi" />,
         url: router.asPath
       }
     ]
   };
 
   // Error
-  if (fetchLokasi.isError) {
+  if (fetchDetailLokasi.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchLokasi.error.message}
+          {fetchDetailLokasi.error.message}
         </Alert>
       </Page>
     );
@@ -331,17 +321,17 @@ const LokasiDetailSubKegiatanPage = () => {
   return (
     <Page {...pageProps}>
       <MainCard content={false}>
-        {fetchLokasi.isLoading && (
+        {fetchDetailLokasi.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
         )}
 
-        {!fetchLokasi.isLoading && (
+        {!fetchDetailLokasi.isLoading && (
           <>
             <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
               <AlertTitle>Fokus Belanja:</AlertTitle>
-              {fetchDetailSubKegiatan.data?.fokus_belanja}
+              {fetchDetailSubKegiatan.data?.fokusBelanja}
             </Alert>
             <CardContent>
               <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -378,7 +368,7 @@ const LokasiDetailSubKegiatanPage = () => {
                   </Tooltip>
 
                   {/* product add & dialog */}
-                  <FormLokasi dataKabupatenKota={fetchKabupaten?.data} />
+                  <FormDetailLokasi dataKabupatenKota={fetchKabupatenKota?.data} />
                 </Grid>
               </Grid>
             </CardContent>
@@ -393,16 +383,16 @@ const LokasiDetailSubKegiatanPage = () => {
                   orderBy={orderBy}
                   onSelectAllClick={handleSelectAllClick}
                   onRequestSort={handleRequestSort}
-                  rowCount={search ? filteredData.length : fetchLokasi.data.length}
+                  rowCount={search ? filteredData.length : fetchDetailLokasi.data.length}
                   theme={theme}
                   selected={selected}
                 />
                 <TableBody>
-                  {stableSort(search ? filteredData : fetchLokasi.data, getComparator(order, orderBy))
+                  {stableSort(search ? filteredData : fetchDetailLokasi.data, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
-                      const isItemSelected = isSelected(row.name);
+                      const isItemSelected = isSelected(row.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
                       return (
@@ -424,45 +414,15 @@ const LokasiDetailSubKegiatanPage = () => {
                                 textDecoration: 'none'
                               }}
                             >
-                              {row.kabupaten_kota.nama}
+                              {row.kabupatenKota.nama}
                             </Typography>
                           </TableCell>
                           <TableCell>{row.kecamatan.nama}</TableCell>
                           <TableCell>{row.kelurahan.nama}</TableCell>
                           <TableCell align="center" sx={{ pr: 3 }}>
                             <Box sx={{ display: 'flex' }}>
-                              <IconButton onClick={handleMenuClick} size="medium">
-                                <MoreHorizOutlinedIcon
-                                  fontSize="small"
-                                  aria-controls="menu-popular-card-1"
-                                  aria-haspopup="true"
-                                  sx={{ color: 'grey.500' }}
-                                />
-                              </IconButton>
-                              <Menu
-                                id="menu-popular-card-1"
-                                anchorEl={anchorEl}
-                                keepMounted
-                                open={Boolean(anchorEl)}
-                                onClose={handleClose}
-                                variant="selectedMenu"
-                                anchorOrigin={{
-                                  vertical: 'bottom',
-                                  horizontal: 'right'
-                                }}
-                                transformOrigin={{
-                                  vertical: 'top',
-                                  horizontal: 'right'
-                                }}
-                                sx={{
-                                  '& .MuiMenu-paper': {
-                                    boxShadow: theme.customShadows.z1
-                                  }
-                                }}
-                              >
-                                <FormLokasi dataKabupatenKota={fetchKabupaten?.data} isEdit lokasi={row} />
-                                <MenuItem onClick={handleClose}> Hapus</MenuItem>
-                              </Menu>
+                              <FormDetailLokasi isEdit detailLokasi={row} dataKabupatenKota={fetchKabupatenKota.data} />
+                              <DeleteDialog id={row.id} deleteFunc={deleteDetailLokasi} mutationKey="detailLokasi" />
                             </Box>
                           </TableCell>
                         </TableRow>
@@ -485,7 +445,7 @@ const LokasiDetailSubKegiatanPage = () => {
             <TablePagination
               rowsPerPageOptions={[5, 10, 25]}
               component="div"
-              count={search ? filteredData.length : fetchLokasi.data.length}
+              count={search ? filteredData.length : fetchDetailLokasi.data.length}
               rowsPerPage={rowsPerPage}
               page={page}
               onPageChange={handleChangePage}

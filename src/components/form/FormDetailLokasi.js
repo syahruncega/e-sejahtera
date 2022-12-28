@@ -6,39 +6,80 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Autocomplete, Fab, MenuItem, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import { getDesaKelurahan, getKecamatan } from 'store/slices/detail-lokasi';
+import { createDetailLokasi, getDesaKelurahan, getKecamatan, updateDetailLokasi } from 'store/slices/detail-lokasi';
+import { EditOutlined } from '@mui/icons-material';
+import { toast } from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const validationSchema = yup.object({
-  detail_sub_kegiatanId: yup.number().required('Detail Sub Kegiatan wajib diisi'),
-  kabupaten_kotaId: yup.number().required('Kabupaten wajib diisi'),
+  detailSubKegiatanId: yup.number().required('Detail Sub Kegiatan wajib diisi'),
+  kabupatenKotaId: yup.number().required('Kabupaten wajib diisi'),
   kecamatanId: yup.number().nullable().optional(),
   kelurahanId: yup.number().nullable().optional()
 });
 
-const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
+const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
   const [open, setOpen] = useState(false);
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(false);
   const [keyKelurahan, setKeyKelurahan] = useState(false);
   const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const [kabupatenKotaId, setKabupatenKotaId] = useState(isEdit ? detailLokasi.kabupatenKota : null);
+  const [kecamatanId, setKecamatanId] = useState(isEdit ? detailLokasi.kecamatan : null);
+  const [kelurahanId, setKelurahanId] = useState(isEdit ? detailLokasi.kelurahan : null);
+
+  const queryCreateDetailLokasi = useMutation({
+    mutationFn: (newDetailLokasi) => createDetailLokasi(newDetailLokasi),
+
+    onSuccess: (newDetailLokasi) => {
+      queryClient.invalidateQueries(['detailLokasi']);
+      // queryClient.setQueriesData(['detailLokasi'], (oldData) => [newDetailLokasi, ...(oldData ?? [])]);
+      setOpen(false);
+      setKabupatenKotaId(null);
+      // eslint-disable-next-line no-use-before-define
+      formik.resetForm();
+    }
+  });
+
+  const queryUpdateDetailLokasi = useMutation({
+    mutationFn: (newDetailLokasi) => updateDetailLokasi(detailLokasi.id, newDetailLokasi),
+    onSuccess: (newDetailLokasi) => {
+      queryClient.invalidateQueries(['detailLokasi']);
+      // queryClient.setQueriesData(['detailLokasi'], (oldData) => {
+      //   const filteredOldData = oldData.filter((values) => values.id !== newDetailLokasi.id);
+      //   return [newDetailLokasi, ...(filteredOldData ?? [])];
+      // });
+
+      setOpen(false);
+    }
+  });
 
   const formik = useFormik({
     initialValues: {
-      detail_sub_kegiatanId: Number.parseInt(router.query.detail_sub_kegiatanId, 10),
-      kabupaten_kotaId: '',
+      detailSubKegiatanId: Number(router.query.detailSubKegiatanId),
+      kabupatenKotaId: '',
       kecamatanId: '',
       kelurahanId: ''
     },
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-      // console.log(values);
+      toast.promise(
+        isEdit ? queryUpdateDetailLokasi.mutateAsync(values) : queryCreateDetailLokasi.mutateAsync(values),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Data detail lokasi berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -54,9 +95,13 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
   return (
     <>
       {isEdit ? (
-        <MenuItem onClick={handleClickOpen}> Ubah</MenuItem>
+        <Tooltip title="Ubah">
+          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          </IconButton>
+        </Tooltip>
       ) : (
-        <Tooltip title="Tambah Lokasi">
+        <Tooltip title="Tambah Detail Lokasi">
           <Fab
             color="primary"
             size="small"
@@ -70,36 +115,39 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle> {isEdit ? 'Ubah Lokasi' : 'Tambah Lokasi'}</DialogTitle>
+          <DialogTitle> {isEdit ? 'Ubah Detail Lokasi' : 'Tambah Detail Lokasi'}</DialogTitle>
           <DialogContent>
             <Autocomplete
               disablePortal
-              name="kabupaten_kotaId"
+              name="kabupatenKotaId"
+              value={kabupatenKotaId}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
               onChange={async (e, value) => {
                 if (value !== null) {
-                  formik.setFieldValue('kabupaten_kotaId', value.id);
+                  formik.setFieldValue('kabupatenKotaId', value.id);
                   const kecamatan = await getKecamatan(value.id);
+                  console.log(kecamatan);
                   setDataKecamatan(kecamatan);
                   formik.setFieldValue('kecamatanId', '');
                   formik.setFieldValue('kelurahanId', '');
                   setKeyKecamatan(!keyKecamatan);
                   setKeyKelurahan(!keyKelurahan);
                 } else {
-                  formik.setFieldValue('kabupaten_kotaId', '');
+                  formik.setFieldValue('kabupatenKotaId', '');
                   setDataKecamatan([]);
                   setDataKelurahan([]);
                 }
+                setKabupatenKotaId(value);
               }}
               options={dataKabupatenKota || []}
               sx={{ width: 'auto', marginTop: 2 }}
               renderInput={(params) => (
                 <TextField
                   label="Kabupaten"
-                  value={formik.values.kabupaten_kotaId}
-                  helperText={formik.touched.kabupaten_kotaId && formik.errors.kabupaten_kotaId}
-                  error={formik.touched.kabupaten_kotaId && Boolean(formik.errors.kabupaten_kotaId)}
+                  value={formik.values.kabupatenKotaId}
+                  helperText={formik.touched.kabupatenKotaId && formik.errors.kabupatenKotaId}
+                  error={formik.touched.kabupatenKotaId && Boolean(formik.errors.kabupatenKotaId)}
                   {...params}
                 />
               )}
@@ -108,7 +156,8 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
               disablePortal
               key={`kecamatan${keyKecamatan}`}
               name="kecamatanId"
-              disabled={!(dataKecamatan.length > 0)}
+              value={kecamatanId}
+              disabled={!(dataKecamatan.length > 0) && kecamatanId === null}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
               onChange={async (e, value) => {
@@ -122,6 +171,7 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
                   formik.setFieldValue('kecamatanId', '');
                   setKeyKelurahan([]);
                 }
+                setKecamatanId(value);
               }}
               options={dataKecamatan || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -139,7 +189,8 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
               disablePortal
               key={`kelurahan${keyKelurahan}`}
               name="kelurahanId"
-              disabled={!(dataKelurahan.length > 0)}
+              value={kelurahanId}
+              disabled={!(dataKelurahan.length > 0) && kelurahanId === null}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
               onChange={async (e, value) => {
@@ -148,6 +199,7 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
                 } else {
                   formik.setFieldValue('kelurahanId', '');
                 }
+                setKelurahanId(value);
               }}
               options={dataKelurahan || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -172,10 +224,10 @@ const FormLokasi = ({ isEdit, lokasi, dataKabupatenKota }) => {
   );
 };
 
-FormLokasi.propTypes = {
+FormDetailLokasi.propTypes = {
   isEdit: PropTypes.bool,
-  lokasi: PropTypes.any,
+  detailLokasi: PropTypes.any,
   dataKabupatenKota: PropTypes.array
 };
 
-export default FormLokasi;
+export default FormDetailLokasi;

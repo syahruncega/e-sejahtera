@@ -25,7 +25,7 @@ const validationSchema = yup.object({
 const FormProgram = ({ isEdit, program, dataInstansi }) => {
   const [open, setOpen] = useState(false);
 
-  const [instansiId, setInstansiId] = useState(isEdit ? dataInstansi.find((val) => val.id === program.instansiId) : null);
+  const [instansiId, setInstansiId] = useState(isEdit ? program.instansi : null);
 
   const queryClient = useQueryClient();
 

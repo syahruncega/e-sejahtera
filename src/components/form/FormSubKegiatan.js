@@ -27,7 +27,7 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
   // const [dataKegiatan, setDataKegiatan] = useState([]);
   const [keyBool, setKeyBool] = useState(false);
 
-  const [kegiatanId, setKegiatanId] = useState(isEdit ? dataKegiatan.find((val) => val.id === subKegiatan.kegiatanId) : null);
+  const [kegiatanId, setKegiatanId] = useState(isEdit ? subKegiatan.kegiatan : null);
 
   const queryClient = useQueryClient();
 

@@ -446,7 +446,7 @@ const DetailSubKegiatanPage = () => {
                                 aria-label="delete"
                                 size="small"
                                 LinkComponent={Link}
-                                href={`/dashboard/sub-kegiatan/detail/lokasi?detail_sub_kegiatanId=${row.id}`}
+                                href={`/dashboard/sub-kegiatan/detail/lokasi?detailSubKegiatanId=${row.id}`}
                               >
                                 <AddIcon fontSize="inherit" />
                               </IconButton>
