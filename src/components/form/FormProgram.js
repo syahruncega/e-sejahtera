@@ -6,29 +6,74 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Autocomplete, Fab, MenuItem, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createProgram, updateProgram } from 'store/slices/program';
+import { toast } from 'react-hot-toast';
+import { LoadingButton } from '@mui/lab';
+import { EditOutlined } from '@mui/icons-material';
 
 const validationSchema = yup.object({
   instansiId: yup.string().required('Instansi wajib diisi'),
-  nama_program: yup.string().required('Nama Program wajib diisi'),
-  indikator_kinerja_program: yup.string().required('Indikator Kinerja Program wajib diisi')
+  namaProgram: yup.string().required('Nama Program wajib diisi'),
+  indikatorKinerjaProgram: yup.string().required('Indikator Kinerja Program wajib diisi')
 });
 
 const FormProgram = ({ isEdit, program, dataInstansi }) => {
   const [open, setOpen] = useState(false);
 
+  const [instansiId, setInstansiId] = useState(isEdit ? dataInstansi.find((val) => val.id === program.instansiId) : null);
+
+  const queryClient = useQueryClient();
+
+  const queryCreateProgram = useMutation({
+    mutationFn: (newProgram) => createProgram(newProgram),
+
+    onSuccess: (newProgram) => {
+      queryClient.invalidateQueries(['program']);
+      // queryClient.setQueriesData(['program'], (oldData) => [newProgram, ...(oldData ?? [])]);
+      setOpen(false);
+      setInstansiId(null);
+      // eslint-disable-next-line no-use-before-define
+      formik.resetForm();
+    }
+  });
+
+  const queryUpdateProgram = useMutation({
+    mutationFn: (newProgram) => updateProgram(program.id, newProgram),
+    onSuccess: (newProgram) => {
+      queryClient.invalidateQueries(['program']);
+      // queryClient.setQueriesData(['instansi'], (oldData) => {
+      //   const filteredOldData = oldData.filter((values) => values.id !== newProgram.id);
+      //   return [newProgram, ...(filteredOldData ?? [])];
+      // });
+
+      setOpen(false);
+    }
+  });
+
   const formik = useFormik({
     initialValues: {
-      instansiId: '',
-      nama_program: '',
-      indikator_kinerja_program: ''
+      instansiId: isEdit ? program.instansiId : '',
+      namaProgram: isEdit ? program.namaProgram : '',
+      indikatorKinerjaProgram: isEdit ? program.indikatorKinerjaProgram : ''
     },
     validationSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+      toast.promise(
+        isEdit
+          ? queryUpdateProgram.mutateAsync({ ...values, paguProgram: program.paguProgram })
+          : queryCreateProgram.mutateAsync({ ...values, paguProgram: 1 }),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Data program berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -44,7 +89,11 @@ const FormProgram = ({ isEdit, program, dataInstansi }) => {
   return (
     <>
       {isEdit ? (
-        <MenuItem onClick={handleClickOpen}> Ubah</MenuItem>
+        <Tooltip title="Ubah">
+          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          </IconButton>
+        </Tooltip>
       ) : (
         <Tooltip title="Tambah Program">
           <Fab
@@ -65,10 +114,12 @@ const FormProgram = ({ isEdit, program, dataInstansi }) => {
             <Autocomplete
               disablePortal
               name="instansiId"
+              value={instansiId}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.nama_instansi}
+              getOptionLabel={(option) => option.namaInstansi}
               onChange={(e, value) => {
                 formik.setFieldValue('instansiId', value !== null ? value.id : '');
+                setInstansiId(value);
               }}
               options={dataInstansi || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -83,31 +134,33 @@ const FormProgram = ({ isEdit, program, dataInstansi }) => {
               )}
             />
             <TextField
-              name="nama_program"
+              name="namaProgram"
               label="Nama Program"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.nama_program}
+              value={formik.values.namaProgram}
               onChange={formik.handleChange}
-              error={formik.touched.nama_program && Boolean(formik.errors.nama_program)}
-              helperText={formik.touched.nama_program && formik.errors.nama_program}
+              error={formik.touched.namaProgram && Boolean(formik.errors.namaProgram)}
+              helperText={formik.touched.namaProgram && formik.errors.namaProgram}
             />
             <TextField
-              name="indikator_kinerja_program"
+              name="indikatorKinerjaProgram"
               label="Indikator Kinerja Program"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.indikator_kinerja_program}
+              value={formik.values.indikatorKinerjaProgram}
               onChange={formik.handleChange}
-              error={formik.touched.indikator_kinerja_program && Boolean(formik.errors.indikator_kinerja_program)}
-              helperText={formik.touched.indikator_kinerja_program && formik.errors.indikator_kinerja_program}
+              error={formik.touched.indikatorKinerjaProgram && Boolean(formik.errors.indikatorKinerjaProgram)}
+              helperText={formik.touched.indikatorKinerjaProgram && formik.errors.indikatorKinerjaProgram}
             />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Batal</Button>
-            <Button type="submit">Simpan</Button>
+            <LoadingButton loading={queryCreateProgram.isLoading || queryUpdateProgram.isLoading} type="submit">
+              Simpan
+            </LoadingButton>
           </DialogActions>
         </form>
       </Dialog>

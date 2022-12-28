@@ -12,8 +12,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -32,7 +30,7 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { getProgram } from 'store/slices/program';
+import { deleteProgram, getProgram } from 'store/slices/program';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -40,13 +38,13 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import FormProgram from 'components/form/FormProgram';
 import { getInstansi } from 'store/slices/instansi';
+import DeleteDialog from 'components/dialog/DeleteDialog';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -75,7 +73,7 @@ function stableSort(array, comparator) {
 // table header options
 const headCells = [
   {
-    id: 'instansi',
+    id: 'namaInstansi',
     numeric: false,
     label: 'Instansi',
     align: 'left'
@@ -87,13 +85,13 @@ const headCells = [
     align: 'left'
   },
   {
-    id: 'indikatorKinerja',
-    numeric: true,
+    id: 'indikatorKinerjaProgram',
+    numeric: false,
     label: 'Indikator Kinerja',
     align: 'left'
   },
   {
-    id: 'pagu',
+    id: 'paguProgram',
     numeric: true,
     label: 'Pagu',
     align: 'left'
@@ -184,7 +182,7 @@ function EnhancedTableHead({ onSelectAllClick, order, orderBy, numSelected, rowC
             </TableCell>
           ))}
         {numSelected <= 0 && (
-          <TableCell sortDirection={false} align="center" sx={{ pr: 3 }}>
+          <TableCell sortDirection={false} align="left" sx={{ pr: 3 }}>
             <Typography variant="subtitle1" sx={{ color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900' }}>
               Aksi
             </Typography>
@@ -219,19 +217,9 @@ const ProgramPage = () => {
   const [search, setSearch] = React.useState('');
   const [filteredData, setFilteredData] = React.useState([]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
   const fetchProgram = useQuery(['program'], getProgram);
 
   const fetchInstansi = useQuery(['instansi'], getInstansi);
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
 
   const handleSearch = (event) => {
     const newString = event.target.value;
@@ -241,7 +229,7 @@ const ProgramPage = () => {
       const newRows = fetchProgram.data.filter((row) => {
         let matches = true;
 
-        const properties = ['nama_program', 'indikator_kinerja_program'];
+        const properties = ['namaProgram', 'indikatorKinerjaProgram', 'paguProgram'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -392,7 +380,7 @@ const ProgramPage = () => {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
-                      const isItemSelected = isSelected(row.name);
+                      const isItemSelected = isSelected(row.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
                       return (
@@ -414,12 +402,12 @@ const ProgramPage = () => {
                                 textDecoration: 'none'
                               }}
                             >
-                              {row.instansi.nama_instansi}
+                              {row.instansi.namaInstansi}
                             </Typography>
                           </TableCell>
-                          <TableCell>{row.nama_program}</TableCell>
-                          <TableCell>{row.indikator_kinerja_program}</TableCell>
-                          <TableCell align="right">Rp{`${row.pagu}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
+                          <TableCell>{row.namaProgram}</TableCell>
+                          <TableCell>{row.indikatorKinerjaProgram}</TableCell>
+                          <TableCell align="right">Rp{`${row.paguProgram}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell align="center" sx={{ pr: 3 }}>
                             <Box sx={{ display: 'flex' }}>
                               <Tooltip title="Update Pagu">
@@ -432,40 +420,8 @@ const ProgramPage = () => {
                                   />
                                 </IconButton>
                               </Tooltip>
-                              <>
-                                <IconButton onClick={handleMenuClick} size="medium">
-                                  <MoreHorizOutlinedIcon
-                                    fontSize="small"
-                                    aria-controls="menu-popular-card-1"
-                                    aria-haspopup="true"
-                                    sx={{ color: 'grey.500' }}
-                                  />
-                                </IconButton>
-                                <Menu
-                                  id="menu-popular-card-1"
-                                  anchorEl={anchorEl}
-                                  keepMounted
-                                  open={Boolean(anchorEl)}
-                                  onClose={handleClose}
-                                  variant="selectedMenu"
-                                  anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right'
-                                  }}
-                                  transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                  }}
-                                  sx={{
-                                    '& .MuiMenu-paper': {
-                                      boxShadow: theme.customShadows.z1
-                                    }
-                                  }}
-                                >
-                                  <FormProgram isEdit program={row} dataInstansi={fetchInstansi.data} />
-                                  <MenuItem onClick={handleClose}> Hapus</MenuItem>
-                                </Menu>
-                              </>
+                              <FormProgram isEdit program={row} dataInstansi={fetchInstansi.data} />
+                              <DeleteDialog id={row.id} deleteFunc={deleteProgram} mutationKey="program" />
                             </Box>
                           </TableCell>
                         </TableRow>

@@ -17,7 +17,7 @@ import { EditOutlined } from '@mui/icons-material';
 import { createInstansi, updateInstansi } from 'store/slices/instansi';
 
 const validationSchema = yup.object({
-  nama_instansi: yup.string().required('Instansi wajib diisi')
+  namaInstansi: yup.string().required('Instansi wajib diisi')
 });
 
 const FormInstansi = ({ isEdit, instansi }) => {
@@ -29,7 +29,8 @@ const FormInstansi = ({ isEdit, instansi }) => {
     mutationFn: (newInstansi) => createInstansi(newInstansi),
 
     onSuccess: (newInstansi) => {
-      queryClient.setQueriesData(['instansi'], (oldData) => [newInstansi, ...(oldData ?? [])]);
+      // queryClient.setQueriesData(['instansi'], (oldData) => [newInstansi, ...(oldData ?? [])]);
+      queryClient.invalidateQueries('instansi');
       setOpen(false);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
@@ -39,17 +40,18 @@ const FormInstansi = ({ isEdit, instansi }) => {
   const queryUpdateInstansi = useMutation({
     mutationFn: (newInstansi) => updateInstansi(instansi.id, newInstansi),
     onSuccess: (newInstansi) => {
-      queryClient.setQueriesData(['instansi'], (oldData) => {
-        const filteredOldData = oldData.filter((values) => values.id !== newInstansi.id);
-        return [newInstansi, ...(filteredOldData ?? [])];
-      });
+      queryClient.invalidateQueries('instansi');
+      // queryClient.setQueriesData(['instansi'], (oldData) => {
+      //   const filteredOldData = oldData.filter((values) => values.id !== newInstansi.id);
+      //   return [newInstansi, ...(filteredOldData ?? [])];
+      // });
       setOpen(false);
     }
   });
 
   const formik = useFormik({
     initialValues: {
-      nama_instansi: isEdit ? instansi.nama_instansi : ''
+      namaInstansi: isEdit ? instansi.namaInstansi : ''
     },
     validationSchema,
     onSubmit: (values) => {
@@ -100,15 +102,15 @@ const FormInstansi = ({ isEdit, instansi }) => {
           <DialogTitle> {isEdit ? 'Ubah Instansi' : 'Tambah Instansi'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="nama_instansi"
+              name="namaInstansi"
               label="Nama Instansi"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.nama_instansi}
+              value={formik.values.namaInstansi}
               onChange={formik.handleChange}
-              error={formik.touched.nama_instansi && Boolean(formik.errors.nama_instansi)}
-              helperText={formik.touched.nama_instansi && formik.errors.nama_instansi}
+              error={formik.touched.namaInstansi && Boolean(formik.errors.namaInstansi)}
+              helperText={formik.touched.namaInstansi && formik.errors.namaInstansi}
             />
           </DialogContent>
           <DialogActions>

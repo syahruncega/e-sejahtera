@@ -1,6 +1,6 @@
 import axiosService from 'utils/axios';
 
-const ENDPOINT = 'instansis';
+const ENDPOINT = 'instansi';
 
 export async function getInstansi({ signal, params }) {
   const response = await axiosService.get(`/${ENDPOINT}`, { signal, params });
@@ -18,7 +18,7 @@ export async function createInstansi(newInstansi) {
 }
 
 export async function updateInstansi(id, newInstansi) {
-  const response = await axiosService.put(`/${ENDPOINT}/${id}`, newInstansi);
+  const response = await axiosService.patch(`/${ENDPOINT}/${id}`, newInstansi);
   return response.data;
 }
 

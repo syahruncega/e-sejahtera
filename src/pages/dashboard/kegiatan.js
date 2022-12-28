@@ -12,8 +12,6 @@ import {
   Grid,
   IconButton,
   InputAdornment,
-  Menu,
-  MenuItem,
   Table,
   TableBody,
   TableCell,
@@ -32,7 +30,7 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { getKegiatan } from 'store/slices/kegiatan';
+import { deleteKegiatan, getKegiatan } from 'store/slices/kegiatan';
 
 // assets
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -40,13 +38,13 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
 import FormKegiatan from 'components/form/FormKegiatan';
 import { getProgram } from 'store/slices/program';
+import DeleteDialog from 'components/dialog/DeleteDialog';
 
 // table sort
 function descendingComparator(a, b, orderBy) {
@@ -87,13 +85,13 @@ const headCells = [
     align: 'left'
   },
   {
-    id: 'indikatorKinerja',
-    numeric: true,
+    id: 'indikatorKinerjaKegiatan',
+    numeric: false,
     label: 'Indikator Kinerja',
     align: 'left'
   },
   {
-    id: 'pagu',
+    id: 'paguKegiatan',
     numeric: true,
     label: 'Pagu',
     align: 'left'
@@ -184,7 +182,7 @@ function EnhancedTableHead({ onSelectAllClick, order, orderBy, numSelected, rowC
             </TableCell>
           ))}
         {numSelected <= 0 && (
-          <TableCell sortDirection={false} align="center" sx={{ pr: 3 }}>
+          <TableCell sortDirection={false} align="left" sx={{ pr: 3 }}>
             <Typography variant="subtitle1" sx={{ color: theme.palette.mode === 'dark' ? theme.palette.grey[600] : 'grey.900' }}>
               Aksi
             </Typography>
@@ -219,18 +217,8 @@ const KegiatanPage = () => {
   const [search, setSearch] = React.useState('');
   const [filteredData, setFilteredData] = React.useState([]);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const fetchKegiatan = useQuery(['kegiatan'], () => getKegiatan({ params: { _expand: 'program' } }));
-  const fetchPorgram = useQuery(['program'], getProgram);
-
-  const handleMenuClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
+  const fetchProgram = useQuery(['program'], getProgram);
 
   const handleSearch = (event) => {
     const newString = event.target.value;
@@ -240,7 +228,7 @@ const KegiatanPage = () => {
       const newRows = fetchKegiatan.data.filter((row) => {
         let matches = true;
 
-        const properties = ['nama_kegiatan', 'indikator_kinerja_kegiatan', 'pagu_kegiatan'];
+        const properties = ['namaKegiatan', 'indikatorKinerjaKegiatan', 'paguKegiatan'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -371,7 +359,7 @@ const KegiatanPage = () => {
                   </Tooltip>
 
                   {/* product add & dialog */}
-                  <FormKegiatan dataProgram={fetchPorgram.data} />
+                  <FormKegiatan dataProgram={fetchProgram.data} />
                 </Grid>
               </Grid>
             </CardContent>
@@ -395,7 +383,7 @@ const KegiatanPage = () => {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
                       if (typeof row === 'number') return null;
-                      const isItemSelected = isSelected(row.name);
+                      const isItemSelected = isSelected(row.id);
                       const labelId = `enhanced-table-checkbox-${index}`;
 
                       return (
@@ -410,7 +398,7 @@ const KegiatanPage = () => {
                             />
                           </TableCell>
                           <TableCell component="th" id={labelId} scope="row" sx={{ cursor: 'pointer' }}>
-                            {row.program.nama_program}
+                            {row.program.namaProgram}
                           </TableCell>
                           <TableCell>
                             <Typography
@@ -420,11 +408,11 @@ const KegiatanPage = () => {
                                 textDecoration: 'none'
                               }}
                             >
-                              {row.nama_kegiatan}
+                              {row.namaKegiatan}
                             </Typography>
                           </TableCell>
-                          <TableCell>{row.indikator_kinerja_kegiatan}</TableCell>
-                          <TableCell align="right">Rp{`${row.pagu}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
+                          <TableCell>{row.indikatorKinerjaKegiatan}</TableCell>
+                          <TableCell align="right">Rp{`${row.paguKegiatan}`.replace(/\B(?=(\d{3})+(?!\d))/g, '.')}</TableCell>
                           <TableCell align="center" sx={{ pr: 3 }}>
                             <Box sx={{ display: 'flex' }}>
                               <Tooltip title="Update Pagu">
@@ -437,40 +425,8 @@ const KegiatanPage = () => {
                                   />
                                 </IconButton>
                               </Tooltip>
-                              <>
-                                <IconButton onClick={handleMenuClick} size="medium">
-                                  <MoreHorizOutlinedIcon
-                                    fontSize="small"
-                                    aria-controls="menu-popular-card-1"
-                                    aria-haspopup="true"
-                                    sx={{ color: 'grey.500' }}
-                                  />
-                                </IconButton>
-                                <Menu
-                                  id="menu-popular-card-1"
-                                  anchorEl={anchorEl}
-                                  keepMounted
-                                  open={Boolean(anchorEl)}
-                                  onClose={handleClose}
-                                  variant="selectedMenu"
-                                  anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'right'
-                                  }}
-                                  transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right'
-                                  }}
-                                  sx={{
-                                    '& .MuiMenu-paper': {
-                                      boxShadow: theme.customShadows.z1
-                                    }
-                                  }}
-                                >
-                                  <FormKegiatan isEdit kegiatan={row} dataProgram={fetchPorgram.data} />
-                                  <MenuItem onClick={handleClose}> Hapus</MenuItem>
-                                </Menu>
-                              </>
+                              <FormKegiatan isEdit kegiatan={row} dataProgram={fetchProgram.data} />
+                              <DeleteDialog id={row.id} deleteFunc={deleteKegiatan} mutationKey="kegiatan" />
                             </Box>
                           </TableCell>
                         </TableRow>

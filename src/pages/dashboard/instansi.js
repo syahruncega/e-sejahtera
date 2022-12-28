@@ -207,7 +207,7 @@ const InstansiPage = () => {
       const newRows = fetchInstansi.data.filter((row) => {
         let matches = true;
 
-        const properties = ['nama_instansi'];
+        const properties = ['namaInstansi'];
         let containsQuery = false;
 
         properties.forEach((property) => {
@@ -357,7 +357,7 @@ const InstansiPage = () => {
                       .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                       .map((row, index) => {
                         if (typeof row === 'number') return null;
-                        const isItemSelected = isSelected(row.name);
+                        const isItemSelected = isSelected(row.id);
                         const labelId = `enhanced-table-checkbox-${index}`;
 
                         return (
@@ -385,7 +385,7 @@ const InstansiPage = () => {
                                   textDecoration: 'none'
                                 }}
                               >
-                                {row.nama_instansi}
+                                {row.namaInstansi}
                               </Typography>
                             </TableCell>
                             <TableCell align="center" sx={{ pr: 3, display: 'flex' }}>
