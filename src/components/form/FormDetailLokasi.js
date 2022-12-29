@@ -44,6 +44,8 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
       // queryClient.setQueriesData(['detailLokasi'], (oldData) => [newDetailLokasi, ...(oldData ?? [])]);
       setOpen(false);
       setKabupatenKotaId(null);
+      setKecamatanId(null);
+      setKelurahanId(null);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
     }
@@ -70,7 +72,8 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
       kelurahanId: ''
     },
     validationSchema,
-    onSubmit: (values) => {
+    onSubmit: (val) => {
+      const values = { ...val, kecamatanId: val.kecamatanId || '-', kelurahanId: val.kelurahanId || '-' };
       toast.promise(
         isEdit ? queryUpdateDetailLokasi.mutateAsync(values) : queryCreateDetailLokasi.mutateAsync(values),
         {
@@ -127,7 +130,6 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
                 if (value !== null) {
                   formik.setFieldValue('kabupatenKotaId', value.id);
                   const kecamatan = await getKecamatan(value.id);
-                  console.log(kecamatan);
                   setDataKecamatan(kecamatan);
                   formik.setFieldValue('kecamatanId', '');
                   formik.setFieldValue('kelurahanId', '');
@@ -139,6 +141,8 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
                   setDataKelurahan([]);
                 }
                 setKabupatenKotaId(value);
+                setKecamatanId(null);
+                setKelurahanId(null);
               }}
               options={dataKabupatenKota || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -172,6 +176,7 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
                   setKeyKelurahan([]);
                 }
                 setKecamatanId(value);
+                setKelurahanId(null);
               }}
               options={dataKecamatan || []}
               sx={{ width: 'auto', marginTop: 2 }}
