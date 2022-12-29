@@ -15,6 +15,7 @@ import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
 import FileCopyTwoToneIcon from '@mui/icons-material/FileCopyOutlined';
 import PictureAsPdfTwoToneIcon from '@mui/icons-material/PictureAsPdfOutlined';
 import ArchiveTwoToneIcon from '@mui/icons-material/ArchiveOutlined';
+import { IconBuildingSkyscraper } from '@tabler/icons';
 
 // assets
 const EarningIcon = '/assets/images/icons/earning.svg';
@@ -63,7 +64,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const EarningCard = ({ isLoading }) => {
+const InstansiCardDashboard = ({ isLoading }) => {
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -96,7 +97,8 @@ const EarningCard = ({ isLoading }) => {
                         mt: 1
                       }}
                     >
-                      <Image src={EarningIcon} height={30} width={30} alt="Notification" />
+                      <IconBuildingSkyscraper color="white" />
+                      {/* <Image src={EarningIcon} height={30} width={30} alt="Notification" /> */}
                     </Avatar>
                   </Grid>
                   <Grid item>
@@ -150,9 +152,9 @@ const EarningCard = ({ isLoading }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$500.00</Typography>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>21</Typography>
                   </Grid>
-                  <Grid item>
+                  {/* <Grid item>
                     <Avatar
                       sx={{
                         cursor: 'pointer',
@@ -163,7 +165,7 @@ const EarningCard = ({ isLoading }) => {
                     >
                       <ArrowUpwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
                     </Avatar>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Grid>
               <Grid item sx={{ mb: 1.25 }}>
@@ -174,7 +176,7 @@ const EarningCard = ({ isLoading }) => {
                     color: theme.palette.mode === 'dark' ? theme.palette.text.secondary : theme.palette.secondary[200]
                   }}
                 >
-                  Total Earning
+                  Instansi
                 </Typography>
               </Grid>
             </Grid>
@@ -185,8 +187,8 @@ const EarningCard = ({ isLoading }) => {
   );
 };
 
-EarningCard.propTypes = {
+InstansiCardDashboard.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default EarningCard;
+export default InstansiCardDashboard;

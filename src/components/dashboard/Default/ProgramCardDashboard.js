@@ -16,6 +16,7 @@ import SkeletonTotalOrderCard from 'components/ui-component/cards/Skeleton/Earni
 // assets
 import LocalMallOutlinedIcon from '@mui/icons-material/LocalMallOutlined';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import { IconApps } from '@tabler/icons';
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? theme.palette.dark.dark : theme.palette.primary.dark,
@@ -112,7 +113,7 @@ const chartOptions = {
 
 // ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
 
-const TotalOrderLineChartCard = ({ isLoading }) => {
+const ProgramCardDashboard = ({ isLoading }) => {
   const theme = useTheme();
 
   const yearSeries = [
@@ -158,10 +159,10 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                         mt: 1
                       }}
                     >
-                      <LocalMallOutlinedIcon fontSize="inherit" />
+                      <IconApps />
                     </Avatar>
                   </Grid>
-                  <Grid item>
+                  {/* <Grid item>
                     <Button
                       disableElevation
                       variant={timeValue ? 'contained' : 'text'}
@@ -180,7 +181,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                     >
                       Year
                     </Button>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Grid>
               <Grid item sx={{ mb: 0.75 }}>
@@ -191,10 +192,10 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                         {timeValue ? (
                           <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$108</Typography>
                         ) : (
-                          <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>$961</Typography>
+                          <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>4</Typography>
                         )}
                       </Grid>
-                      <Grid item>
+                      {/* <Grid item>
                         <Avatar
                           sx={{
                             ...theme.typography.smallAvatar,
@@ -205,7 +206,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                         >
                           <ArrowDownwardIcon fontSize="inherit" sx={{ transform: 'rotate3d(1, 1, 1, 45deg)' }} />
                         </Avatar>
-                      </Grid>
+                      </Grid> */}
                       <Grid item xs={12}>
                         <Typography
                           sx={{
@@ -214,14 +215,14 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                             color: theme.palette.mode === 'dark' ? theme.palette.text.secondary : theme.palette.primary[200]
                           }}
                         >
-                          Total Order
+                          Program
                         </Typography>
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item xs={6}>
+                  {/* <Grid item xs={6}>
                     <ReactApexChart options={chartOptions} series={series} type="line" height={90} />
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Grid>
             </Grid>
@@ -232,8 +233,8 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
   );
 };
 
-TotalOrderLineChartCard.propTypes = {
+ProgramCardDashboard.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default TotalOrderLineChartCard;
+export default ProgramCardDashboard;

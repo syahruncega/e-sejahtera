@@ -6,11 +6,11 @@ import { Grid } from '@mui/material';
 // project imports
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
-import EarningCard from '../../components/dashboard/Default/EarningCard';
+import InstansiCardDashboard from '../../components/dashboard/Default/InstansiCardDashboard';
 import PopularCard from '../../components/dashboard/Default/PopularCard';
-import TotalOrderLineChartCard from '../../components/dashboard/Default/TotalOrderLineChartCard';
-import TotalIncomeDarkCard from '../../components/dashboard/Default/TotalIncomeDarkCard';
-import TotalIncomeLightCard from '../../components/dashboard/Default/TotalIncomeLightCard';
+import ProgramCardDashboard from '../../components/dashboard/Default/ProgramCardDashboard';
+import KegiatanCardDashboard from '../../components/dashboard/Default/KegiatanCardDashboard';
+import SubKegiatanCardDashboard from '../../components/dashboard/Default/SubKegiatanCardDashboard';
 import TotalGrowthBarChart from '../../components/dashboard/Default/TotalGrowthBarChart';
 import { gridSpacing } from '../../store/constant';
 
@@ -28,24 +28,24 @@ const Dashboard = () => {
         <Grid item xs={12}>
           <Grid container spacing={gridSpacing}>
             <Grid item lg={4} md={6} sm={6} xs={12}>
-              <EarningCard isLoading={isLoading} />
+              <InstansiCardDashboard isLoading={isLoading} />
             </Grid>
             <Grid item lg={4} md={6} sm={6} xs={12}>
-              <TotalOrderLineChartCard isLoading={isLoading} />
+              <ProgramCardDashboard isLoading={isLoading} />
             </Grid>
             <Grid item lg={4} md={12} sm={12} xs={12}>
               <Grid container spacing={gridSpacing}>
                 <Grid item sm={6} xs={12} md={6} lg={12}>
-                  <TotalIncomeDarkCard isLoading={isLoading} />
+                  <KegiatanCardDashboard isLoading={isLoading} />
                 </Grid>
                 <Grid item sm={6} xs={12} md={6} lg={12}>
-                  <TotalIncomeLightCard isLoading={isLoading} />
+                  <SubKegiatanCardDashboard isLoading={isLoading} />
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12} md={8}>
               <TotalGrowthBarChart isLoading={isLoading} />
@@ -54,7 +54,7 @@ const Dashboard = () => {
               <PopularCard isLoading={isLoading} />
             </Grid>
           </Grid>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Page>
   );
