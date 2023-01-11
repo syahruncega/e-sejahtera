@@ -28,20 +28,18 @@ import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { deleteInstansi, getInstansi } from 'store/slices/instansi';
 import FormInstansi from 'components/form/FormInstansi';
 import DeleteDialog from 'components/dialog/DeleteDialog';
 import { useMemo, useState } from 'react';
 import AppTable from 'components/AppTable';
 import useDebounce from 'hooks/useDebounce';
-import { getBidangUrusan } from 'store/slices/bidang-urusan';
+import { deleteBidangUrusan, getBidangUrusan } from 'store/slices/bidang-urusan';
 
-const InstansiPage = () => {
+const BidangUrusanPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchBidangUrusan = useQuery(['bidang-urusan'], getBidangUrusan);
-  const fetchInstansi = useQuery(['instansi'], getInstansi);
+  const fetchBidangUrusan = useQuery(['bidangUrusan'], getBidangUrusan);
 
   const columns = useMemo(
     () => [
@@ -51,9 +49,9 @@ const InstansiPage = () => {
         header: 'No'
       },
       {
-        id: 'namaInstansi',
-        accessorKey: 'namaInstansi',
-        header: 'Nama Instansi'
+        id: 'bidangUrusan',
+        accessorKey: 'bidangUrusan',
+        header: 'Bidang Urusan'
       },
 
       {
@@ -65,8 +63,8 @@ const InstansiPage = () => {
           }
         }) => (
           <div className="flex">
-            <FormInstansi isEdit instansi={data} dataBidangUrusan={fetchBidangUrusan.data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteInstansi} mutationKey="instansi" />
+            <FormInstansi isEdit instansi={data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteBidangUrusan} mutationKey="bidangUrusan" />
           </div>
         )
       }
@@ -76,17 +74,17 @@ const InstansiPage = () => {
   );
 
   const pageProps = {
-    title: 'Instansi',
-    navigation: [{ title: <FormattedMessage id="instansi" defaultMessage="Instansi" />, url: '/dashboard/instansi' }]
+    title: 'Bidang Urusan',
+    navigation: [{ title: <FormattedMessage id="bidangUrusan" defaultMessage="Bidang Urusan" />, url: '/dashboard/bidang-urusan' }]
   };
 
   // Error
-  if (fetchInstansi.isError) {
+  if (fetchBidangUrusan.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchInstansi.error.message}
+          {fetchBidangUrusan.error.message}
         </Alert>
       </Page>
     );
@@ -97,13 +95,13 @@ const InstansiPage = () => {
     <>
       <Page {...pageProps}>
         <MainCard content={false}>
-          {fetchInstansi.isLoading && (
+          {fetchBidangUrusan.isLoading && (
             <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
               <CircularProgress />
             </Box>
           )}
 
-          {!fetchInstansi.isLoading && (
+          {!fetchBidangUrusan.isLoading && (
             <>
               <CardContent>
                 <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -145,9 +143,9 @@ const InstansiPage = () => {
                 </Grid>
               </CardContent>
 
-              {!fetchInstansi.isLoading && (
+              {!fetchBidangUrusan.isLoading && (
                 <TableContainer>
-                  <AppTable columns={columns} initialData={fetchInstansi.data ?? []} globalFilter={debouncedValue} />
+                  <AppTable columns={columns} initialData={fetchBidangUrusan.data ?? []} globalFilter={debouncedValue} />
                 </TableContainer>
               )}
             </>
@@ -158,8 +156,8 @@ const InstansiPage = () => {
   );
 };
 
-InstansiPage.getLayout = function getLayout(page) {
+BidangUrusanPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default InstansiPage;
+export default BidangUrusanPage;

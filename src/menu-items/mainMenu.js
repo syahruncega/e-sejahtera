@@ -2,7 +2,7 @@
 import { FormattedMessage } from 'react-intl';
 
 // assets
-import { IconDashboard, IconApps, IconBox, IconHelp, IconSitemap, IconBuildingSkyscraper } from '@tabler/icons';
+import { IconDashboard, IconApps, IconBox, IconHelp, IconSitemap, IconBuildingSkyscraper, IconFocus2 } from '@tabler/icons';
 
 // constant
 const icons = {
@@ -11,7 +11,8 @@ const icons = {
   IconHelp,
   IconSitemap,
   IconBuildingSkyscraper,
-  IconBox
+  IconBox,
+  IconFocus2
 };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
@@ -28,6 +29,13 @@ const mainMenu = {
       type: 'item',
       url: '/dashboard',
       icon: icons.IconDashboard
+    },
+    {
+      id: 'bidang-urusan',
+      title: <FormattedMessage id="bidang-urusan" defaultMessage="Bidang Urusan" />,
+      type: 'item',
+      url: '/dashboard/bidang-urusan',
+      icon: icons.IconFocus2
     },
     {
       id: 'instansi',

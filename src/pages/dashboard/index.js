@@ -7,12 +7,11 @@ import { Grid } from '@mui/material';
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import InstansiCardDashboard from '../../components/dashboard/Default/InstansiCardDashboard';
-import PopularCard from '../../components/dashboard/Default/PopularCard';
 import ProgramCardDashboard from '../../components/dashboard/Default/ProgramCardDashboard';
 import KegiatanCardDashboard from '../../components/dashboard/Default/KegiatanCardDashboard';
 import SubKegiatanCardDashboard from '../../components/dashboard/Default/SubKegiatanCardDashboard';
-import TotalGrowthBarChart from '../../components/dashboard/Default/TotalGrowthBarChart';
 import { gridSpacing } from '../../store/constant';
+import P3KEBarChart from 'components/dashboard/P3KEBarChart';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -45,16 +44,9 @@ const Dashboard = () => {
             </Grid>
           </Grid>
         </Grid>
-        {/* <Grid item xs={12}>
-          <Grid container spacing={gridSpacing}>
-            <Grid item xs={12} md={8}>
-              <TotalGrowthBarChart isLoading={isLoading} />
-            </Grid>
-            <Grid item xs={12} md={4}>
-              <PopularCard isLoading={isLoading} />
-            </Grid>
-          </Grid>
-        </Grid> */}
+        <Grid item xs={12}>
+          <P3KEBarChart isLoading={isLoading} />
+        </Grid>
       </Grid>
     </Page>
   );

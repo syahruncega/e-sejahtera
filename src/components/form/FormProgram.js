@@ -19,7 +19,10 @@ import { EditOutlined } from '@mui/icons-material';
 const validationSchema = yup.object({
   instansiId: yup.string().required('Instansi wajib diisi'),
   namaProgram: yup.string().required('Nama Program wajib diisi'),
-  indikatorKinerjaProgram: yup.string().required('Indikator Kinerja Program wajib diisi')
+  indikatorKinerjaProgram: yup.string().required('Indikator Kinerja Program wajib diisi'),
+  sasaran: yup.string().required('Sasaran wajib diisi'),
+  indikatorSasaran: yup.string().required('Indikator Sasaran wajib diisi'),
+  kebijakan: yup.string().required('Kebijakan wajib diisi')
 });
 
 const FormProgram = ({ isEdit, program, dataInstansi }) => {
@@ -132,6 +135,40 @@ const FormProgram = ({ isEdit, program, dataInstansi }) => {
                   {...params}
                 />
               )}
+            />
+
+            <TextField
+              name="sasaran"
+              label="Sasaran"
+              variant="outlined"
+              fullWidth
+              sx={{ marginTop: 2 }}
+              value={formik.values.sasaran}
+              onChange={formik.handleChange}
+              error={formik.touched.sasaran && Boolean(formik.errors.sasaran)}
+              helperText={formik.touched.sasaran && formik.errors.sasaran}
+            />
+            <TextField
+              name="indikatorSasaran"
+              label="Indikator Sasaran"
+              variant="outlined"
+              fullWidth
+              sx={{ marginTop: 2 }}
+              value={formik.values.indikatorSasaran}
+              onChange={formik.handleChange}
+              error={formik.touched.indikatorSasaran && Boolean(formik.errors.indikatorSasaran)}
+              helperText={formik.touched.indikatorSasaran && formik.errors.indikatorSasaran}
+            />
+            <TextField
+              name="kebijakan"
+              label="Kebijakan"
+              variant="outlined"
+              fullWidth
+              sx={{ marginTop: 2 }}
+              value={formik.values.kebijakan}
+              onChange={formik.handleChange}
+              error={formik.touched.kebijakan && Boolean(formik.errors.kebijakan)}
+              helperText={formik.touched.kebijakan && formik.errors.kebijakan}
             />
             <TextField
               name="namaProgram"

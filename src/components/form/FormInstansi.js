@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Fab, IconButton, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -17,11 +17,13 @@ import { EditOutlined } from '@mui/icons-material';
 import { createInstansi, updateInstansi } from 'store/slices/instansi';
 
 const validationSchema = yup.object({
+  bidangUrusanId: yup.string().required('Bidang urusan wajib diisi'),
   namaInstansi: yup.string().required('Instansi wajib diisi')
 });
 
-const FormInstansi = ({ isEdit, instansi }) => {
+const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
   const [open, setOpen] = useState(false);
+  const [bidangUrusan, setBidangUrusan] = useState(isEdit ? instansi.bidangUrusan : null);
 
   const queryClient = useQueryClient();
 
@@ -51,7 +53,8 @@ const FormInstansi = ({ isEdit, instansi }) => {
 
   const formik = useFormik({
     initialValues: {
-      namaInstansi: isEdit ? instansi.namaInstansi : ''
+      namaInstansi: isEdit ? instansi.namaInstansi : '',
+      bidangUrusanId: isEdit ? instansi.bidangUrusanId : ''
     },
     validationSchema,
     onSubmit: (values) => {
@@ -101,6 +104,28 @@ const FormInstansi = ({ isEdit, instansi }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Instansi' : 'Tambah Instansi'}</DialogTitle>
           <DialogContent>
+            <Autocomplete
+              disablePortal
+              name="bidangUrusanId"
+              value={bidangUrusan}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) => option.namaBidangUrusan}
+              onChange={(e, value) => {
+                formik.setFieldValue('bidangUrusanId', value !== null ? value.id : '');
+                setBidangUrusan(value);
+              }}
+              options={dataBidangUrusan || []}
+              sx={{ width: 'auto', marginTop: 2 }}
+              renderInput={(params) => (
+                <TextField
+                  label="Bidang Urusan"
+                  value={formik.values.bidangUrusanId}
+                  helperText={formik.touched.bidangUrusanId && formik.errors.bidangUrusanId}
+                  error={formik.touched.bidangUrusanId && Boolean(formik.errors.bidangUrusanId)}
+                  {...params}
+                />
+              )}
+            />
             <TextField
               name="namaInstansi"
               label="Nama Instansi"
@@ -129,7 +154,8 @@ const FormInstansi = ({ isEdit, instansi }) => {
 
 FormInstansi.propTypes = {
   isEdit: PropTypes.bool,
-  instansi: PropTypes.any
+  instansi: PropTypes.any,
+  dataBidangUrusan: PropTypes.array
 };
 
 export default FormInstansi;
