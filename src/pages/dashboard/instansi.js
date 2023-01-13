@@ -40,8 +40,8 @@ const InstansiPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchBidangUrusan = useQuery(['bidang-urusan'], getBidangUrusan);
   const fetchInstansi = useQuery(['instansi'], getInstansi);
+  const fetchBidangUrusan = useQuery(['bidangUrusan'], getBidangUrusan);
 
   const columns = useMemo(
     () => [
@@ -55,7 +55,11 @@ const InstansiPage = () => {
         accessorKey: 'namaInstansi',
         header: 'Nama Instansi'
       },
-
+      {
+        id: 'bidangUrusan',
+        accessorKey: 'bidangUrusan.namaBidangUrusan',
+        header: 'Bidang Urusan'
+      },
       {
         id: 'aksi',
         header: 'Aksi',
@@ -140,7 +144,7 @@ const InstansiPage = () => {
                     </Tooltip>
 
                     {/* product add & dialog */}
-                    <FormInstansi />
+                    <FormInstansi dataBidangUrusan={fetchBidangUrusan.data} />
                   </Grid>
                 </Grid>
               </CardContent>

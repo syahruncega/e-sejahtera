@@ -34,6 +34,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
       // queryClient.setQueriesData(['instansi'], (oldData) => [newInstansi, ...(oldData ?? [])]);
       queryClient.invalidateQueries('instansi');
       setOpen(false);
+      setBidangUrusan(null);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
     }
@@ -79,8 +80,6 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
     setOpen(false);
   };
 
-  console.log(dataBidangUrusan);
-
   return (
     <>
       {isEdit ? (
@@ -106,7 +105,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Instansi' : 'Tambah Instansi'}</DialogTitle>
           <DialogContent>
-            {/* <Autocomplete
+            <Autocomplete
               disablePortal
               name="bidangUrusanId"
               value={bidangUrusan}
@@ -127,7 +126,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
                   {...params}
                 />
               )}
-            /> */}
+            />
             <TextField
               name="namaInstansi"
               label="Nama Instansi"

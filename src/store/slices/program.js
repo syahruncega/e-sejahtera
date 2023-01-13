@@ -4,6 +4,7 @@ const ENDPOINT = 'program';
 
 export async function getProgram({ signal, params }) {
   const response = await axiosService.get(`/${ENDPOINT}relasi`, { signal, params });
+  console.log(response.data);
   return response.data;
 }
 

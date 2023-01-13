@@ -54,6 +54,21 @@ const ProgramPage = () => {
         header: 'Nama Instansi'
       },
       {
+        id: 'sasaran',
+        accessorKey: 'sasaran',
+        header: 'Sasaran'
+      },
+      {
+        id: 'indikatorSasaran',
+        accessorKey: 'indikatorSasaran',
+        header: 'Indikator Sasaran'
+      },
+      {
+        id: 'kebijakan',
+        accessorKey: 'kebijakan',
+        header: 'Kebijakan'
+      },
+      {
         id: 'namaProgram',
         accessorKey: 'namaProgram',
         header: 'Nama Program'

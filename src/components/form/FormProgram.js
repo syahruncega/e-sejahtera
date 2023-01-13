@@ -62,6 +62,9 @@ const FormProgram = ({ isEdit, program, dataInstansi }) => {
     initialValues: {
       instansiId: isEdit ? program.instansiId : '',
       namaProgram: isEdit ? program.namaProgram : '',
+      sasaran: isEdit ? program.sasaran : '',
+      indikatorSasaran: isEdit ? program.indikatorSasaran : '',
+      kebijakan: isEdit ? program.kebijakan : '',
       indikatorKinerjaProgram: isEdit ? program.indikatorKinerjaProgram : ''
     },
     validationSchema,
