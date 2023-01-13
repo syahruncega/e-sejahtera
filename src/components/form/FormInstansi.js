@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
-import { EditOutlined } from '@mui/icons-material';
+import { EditTwoTone } from '@mui/icons-material';
 import { createInstansi, updateInstansi } from 'store/slices/instansi';
 
 const validationSchema = yup.object({
@@ -79,12 +79,14 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
     setOpen(false);
   };
 
+  console.log(dataBidangUrusan);
+
   return (
     <>
       {isEdit ? (
         <Tooltip title="Ubah">
-          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
-            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          <IconButton color="primary" size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditTwoTone fontSize="small" />
           </IconButton>
         </Tooltip>
       ) : (
@@ -104,7 +106,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Instansi' : 'Tambah Instansi'}</DialogTitle>
           <DialogContent>
-            <Autocomplete
+            {/* <Autocomplete
               disablePortal
               name="bidangUrusanId"
               value={bidangUrusan}
@@ -125,7 +127,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
                   {...params}
                 />
               )}
-            />
+            /> */}
             <TextField
               name="namaInstansi"
               label="Nama Instansi"

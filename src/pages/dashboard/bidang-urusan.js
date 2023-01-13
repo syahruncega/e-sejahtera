@@ -34,6 +34,7 @@ import { useMemo, useState } from 'react';
 import AppTable from 'components/AppTable';
 import useDebounce from 'hooks/useDebounce';
 import { deleteBidangUrusan, getBidangUrusan } from 'store/slices/bidang-urusan';
+import FormBidangUrusan from 'components/form/FormBidangUrusan';
 
 const BidangUrusanPage = () => {
   const [search, setSearch] = useState('');
@@ -49,8 +50,8 @@ const BidangUrusanPage = () => {
         header: 'No'
       },
       {
-        id: 'bidangUrusan',
-        accessorKey: 'bidangUrusan',
+        id: 'namaBidangUrusan',
+        accessorKey: 'namaBidangUrusan',
         header: 'Bidang Urusan'
       },
 
@@ -63,7 +64,7 @@ const BidangUrusanPage = () => {
           }
         }) => (
           <div className="flex">
-            <FormInstansi isEdit instansi={data} />
+            <FormBidangUrusan isEdit bidangUrusan={data} />
             <DeleteDialog id={data.id} deleteFunc={deleteBidangUrusan} mutationKey="bidangUrusan" />
           </div>
         )
@@ -138,7 +139,7 @@ const BidangUrusanPage = () => {
                     </Tooltip>
 
                     {/* product add & dialog */}
-                    <FormInstansi />
+                    <FormBidangUrusan />
                   </Grid>
                 </Grid>
               </CardContent>

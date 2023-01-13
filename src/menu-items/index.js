@@ -1,11 +1,15 @@
 import pages from './pages';
-import mainMenu from './mainMenu';
+import mahasiswa from './mahasiswa';
 import admin from './admin';
+import opd from './opd';
+import main from './main';
+import dpl from './dpl';
+import bappeda from './bappeda';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [mainMenu, admin, pages]
+  items: [main, mahasiswa, admin]
 };
 
 export default menuItems;

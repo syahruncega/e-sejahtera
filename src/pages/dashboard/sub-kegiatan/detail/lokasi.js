@@ -4,6 +4,7 @@ import {
   AlertTitle,
   CardContent,
   CircularProgress,
+  Fab,
   Grid,
   IconButton,
   InputAdornment,
@@ -33,6 +34,8 @@ import FormDetailLokasi from 'components/form/FormDetailLokasi';
 import { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import AppTable from 'components/AppTable';
+import { IconBookmark, IconBookmarks } from '@tabler/icons';
+import ConfirmDialog from 'components/dialog/ConfirmDialog';
 
 const headCells = [
   {
@@ -188,6 +191,7 @@ const LokasiDetailSubKegiatanPage = () => {
 
                   {/* product add & dialog */}
                   <FormDetailLokasi dataKabupatenKota={fetchKabupatenKota?.data} />
+                  <ConfirmDialog handleFunc={() => {}} title="Tag Lokasi" description="Anda yakin akan tag lokasi?" />
                 </Grid>
               </Grid>
             </CardContent>

@@ -17,19 +17,19 @@ const icons = {
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
-const mainMenu = {
-  id: 'mainmenu',
-  title: <FormattedMessage id="mainmenu" defaultMessage="Menu" />,
+const opd = {
+  id: 'opd',
+  title: <FormattedMessage id="opd" defaultMessage="OPD" />,
   icon: IconApps,
   type: 'group',
   children: [
-    {
-      id: 'dashboard',
-      title: <FormattedMessage id="dashboard" />,
-      type: 'item',
-      url: '/dashboard',
-      icon: icons.IconDashboard
-    },
+    // {
+    //   id: 'dashboard',
+    //   title: <FormattedMessage id="dashboard" />,
+    //   type: 'item',
+    //   url: '/dashboard',
+    //   icon: icons.IconDashboard
+    // },
     {
       id: 'bidang-urusan',
       title: <FormattedMessage id="bidang-urusan" defaultMessage="Bidang Urusan" />,
@@ -69,4 +69,4 @@ const mainMenu = {
   ]
 };
 
-export default mainMenu;
+export default opd;

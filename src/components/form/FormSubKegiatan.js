@@ -6,12 +6,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Autocomplete, Fab, IconButton, MenuItem, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import axiosService from 'utils/axios';
-import { EditOutlined } from '@mui/icons-material';
+import { EditTwoTone } from '@mui/icons-material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSubKegiatan, updateSubKegiatan } from 'store/slices/sub-kegiatan';
 import { toast } from 'react-hot-toast';
@@ -92,8 +91,8 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
     <>
       {isEdit ? (
         <Tooltip title="Ubah">
-          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
-            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          <IconButton color="primary" size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditTwoTone fontSize="small" />
           </IconButton>
         </Tooltip>
       ) : (

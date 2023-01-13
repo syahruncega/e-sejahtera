@@ -72,7 +72,7 @@ const InstansiPage = () => {
       }
     ],
 
-    []
+    [fetchBidangUrusan.data]
   );
 
   const pageProps = {

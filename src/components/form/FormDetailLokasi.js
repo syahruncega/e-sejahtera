@@ -12,7 +12,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { createDetailLokasi, getDesaKelurahan, getKecamatan, updateDetailLokasi } from 'store/slices/detail-lokasi';
-import { EditOutlined } from '@mui/icons-material';
+import { EditOutlined, EditTwoTone } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -99,8 +99,8 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
     <>
       {isEdit ? (
         <Tooltip title="Ubah">
-          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
-            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          <IconButton color="primary" size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditTwoTone fontSize="small" />
           </IconButton>
         </Tooltip>
       ) : (

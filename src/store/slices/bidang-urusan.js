@@ -1,6 +1,6 @@
 import axiosService from 'utils/axios';
 
-const ENDPOINT = 'bidang-urusan';
+const ENDPOINT = 'bidangurusan';
 
 export async function getBidangUrusan({ signal, params }) {
   const response = await axiosService.get(`/${ENDPOINT}`, { signal, params });
@@ -9,10 +9,12 @@ export async function getBidangUrusan({ signal, params }) {
 
 export async function getBidangUrusanById(id) {
   const response = await axiosService.get(`/${ENDPOINT}/${id}`);
+
   return response.data;
 }
 
 export async function createBidangUrusan(newBidangUrusan) {
+  console.log(newBidangUrusan);
   const response = await axiosService.post(`/${ENDPOINT}`, newBidangUrusan);
   return response.data;
 }

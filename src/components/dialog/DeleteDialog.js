@@ -11,6 +11,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
+import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 
 const DeleteDialog = ({ id, deleteFunc, mutationKey }) => {
   const [open, setOpen] = useState(false);
@@ -48,8 +49,8 @@ const DeleteDialog = ({ id, deleteFunc, mutationKey }) => {
   return (
     <>
       <Tooltip title="Hapus">
-        <IconButton size="medium" aria-label="Hapus" onClick={handleClickOpen}>
-          <DeleteOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+        <IconButton color="error" size="medium" aria-label="Hapus" onClick={handleClickOpen}>
+          <DeleteTwoTone fontSize="small" />
         </IconButton>
       </Tooltip>
 

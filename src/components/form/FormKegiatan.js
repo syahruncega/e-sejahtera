@@ -10,7 +10,7 @@ import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { EditOutlined } from '@mui/icons-material';
+import { EditTwoTone } from '@mui/icons-material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createKegiatan, updateKegiatan } from 'store/slices/kegiatan';
 import { toast } from 'react-hot-toast';
@@ -88,8 +88,8 @@ const FormKegiatan = ({ isEdit, kegiatan, dataProgram }) => {
     <>
       {isEdit ? (
         <Tooltip title="Ubah">
-          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
-            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          <IconButton color="primary" size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditTwoTone fontSize="small" />
           </IconButton>
         </Tooltip>
       ) : (

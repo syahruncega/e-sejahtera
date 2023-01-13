@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
-import { EditOutlined } from '@mui/icons-material';
+import { EditTwoTone } from '@mui/icons-material';
 import { createBidangUrusan, updateBidangUrusan } from 'store/slices/bidang-urusan';
 
 const validationSchema = yup.object({
@@ -80,8 +80,8 @@ const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
     <>
       {isEdit ? (
         <Tooltip title="Ubah">
-          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
-            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          <IconButton color="primary" size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditTwoTone fontSize="small" />
           </IconButton>
         </Tooltip>
       ) : (

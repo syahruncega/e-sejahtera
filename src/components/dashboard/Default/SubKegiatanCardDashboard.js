@@ -9,7 +9,6 @@ import MainCard from 'components/ui-component/cards/MainCard';
 import TotalIncomeCard from 'components/ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
-import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
 import { IconSitemap } from '@tabler/icons';
 
 // styles

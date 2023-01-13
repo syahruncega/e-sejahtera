@@ -12,6 +12,7 @@ import KegiatanCardDashboard from '../../components/dashboard/Default/KegiatanCa
 import SubKegiatanCardDashboard from '../../components/dashboard/Default/SubKegiatanCardDashboard';
 import { gridSpacing } from '../../store/constant';
 import P3KEBarChart from 'components/dashboard/P3KEBarChart';
+import DaftarWilayah from 'components/dashboard/DaftarWilayah';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
@@ -44,9 +45,12 @@ const Dashboard = () => {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} md={12}>
           <P3KEBarChart isLoading={isLoading} />
         </Grid>
+        {/* <Grid item xs={12} md={4}>
+          <DaftarWilayah />
+        </Grid> */}
       </Grid>
     </Page>
   );

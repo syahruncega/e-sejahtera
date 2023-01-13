@@ -14,7 +14,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createProgram, updateProgram } from 'store/slices/program';
 import { toast } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
-import { EditOutlined } from '@mui/icons-material';
+import { EditTwoTone } from '@mui/icons-material';
 
 const validationSchema = yup.object({
   instansiId: yup.string().required('Instansi wajib diisi'),
@@ -93,8 +93,8 @@ const FormProgram = ({ isEdit, program, dataInstansi }) => {
     <>
       {isEdit ? (
         <Tooltip title="Ubah">
-          <IconButton size="medium" aria-label="Ubah" onClick={handleClickOpen}>
-            <EditOutlined fontSize="small" sx={{ color: 'grey.500' }} />
+          <IconButton color="primary" size="medium" aria-label="Ubah" onClick={handleClickOpen}>
+            <EditTwoTone fontSize="small" />
           </IconButton>
         </Tooltip>
       ) : (

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Grid, MenuItem, TextField, Typography } from '@mui/material';
+import { Box, Grid, MenuItem, TextField, Typography } from '@mui/material';
 
 // third-party
 
@@ -14,76 +14,9 @@ import useConfig from 'hooks/useConfig';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 import SkeletonP3KEBarChart from 'components/ui-component/cards/Skeleton/SkeletonP3KEBarChart';
+import { IconHome, IconUsers } from '@tabler/icons';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
-
-// chart data
-const chartOptions = {
-  chart: {
-    height: 480,
-    type: 'bar',
-    id: 'bar-chart',
-    stacked: true,
-    toolbar: {
-      show: true
-    },
-    zoom: {
-      enabled: true
-    }
-  },
-  responsive: [
-    {
-      breakpoint: 480,
-      options: {
-        legend: {
-          position: 'bottom',
-          offsetX: -10,
-          offsetY: 0
-        }
-      }
-    }
-  ],
-  plotOptions: {
-    bar: {
-      horizontal: false,
-      columnWidth: '50%'
-    }
-  },
-  xaxis: {
-    type: 'category',
-    categories: ['Palu', 'Morowali', 'Sigi'],
-    tooltip: {
-      enabled: true
-    }
-  },
-  legend: {
-    show: true,
-    fontFamily: `'Roboto', sans-serif`,
-    position: 'bottom',
-    offsetX: 20,
-    labels: {
-      useSeriesColors: false
-    },
-    markers: {
-      width: 16,
-      height: 16,
-      radius: 5
-    },
-    itemMargin: {
-      horizontal: 15,
-      vertical: 8
-    }
-  },
-  fill: {
-    type: 'solid'
-  },
-  dataLabels: {
-    enabled: false
-  },
-  grid: {
-    show: true
-  }
-};
 
 const status = [
   {
@@ -102,11 +35,11 @@ const P3KEBarChart = ({ isLoading }) => {
   const [series] = useState([
     {
       name: 'Keluarga',
-      data: [350, 122, 580]
+      data: [29995, 44656, 2004, 46034, 25503, 22722, 17756, 20995, 73611, 29951, 33522, 12011, 20155]
     },
     {
       name: 'Individu',
-      data: [773, 398, 1320]
+      data: [124634, 182756, 112209, 193999, 107660, 98341, 72158, 80607, 288129, 114613, 133868, 46496, 80419]
     }
   ]);
 
@@ -124,35 +57,101 @@ const P3KEBarChart = ({ isLoading }) => {
   const secondaryMain = theme.palette.secondary.main;
   const secondaryLight = theme.palette.secondary.light;
 
-  const [options, setOptions] = useState(chartOptions);
+  const [options, setOptions] = useState({});
 
   useEffect(() => {
-    setOptions((prevState) => ({
-      ...prevState,
-      colors: [primary200, primaryDark, secondaryMain, secondaryLight],
-      xaxis: {
-        labels: {
-          style: {
-            colors: [primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary, primary]
+    setOptions(() => ({
+      chart: {
+        height: 480,
+        type: 'bar',
+        id: 'bar-chart',
+        stacked: true,
+        toolbar: {
+          show: true
+        },
+        zoom: {
+          enabled: true
+        },
+        events: {
+          xAxisLabelClick: (val) => console.log(val.target.textContent)
+        }
+      },
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
           }
         }
+      ],
+      legend: {
+        show: true,
+        fontFamily: `'Roboto', sans-serif`,
+        position: 'bottom',
+        offsetX: 20,
+        labels: {
+          useSeriesColors: false,
+          colors: grey500
+        },
+        markers: {
+          width: 16,
+          height: 16,
+          radius: 5
+        },
+        itemMargin: {
+          horizontal: 15,
+          vertical: 8
+        }
+      },
+      colors: [secondaryMain, primaryDark, secondaryMain, secondaryLight],
+      xaxis: {
+        type: 'category',
+        categories: [
+          'Kota Palu',
+          'Banggai',
+          'Poso',
+          'Donggala',
+          'Tolitoli',
+          'Buol',
+          'Morowali',
+          'Banggai Kepulauan',
+          'Parigi Moutong',
+          'Tojo Una-Una',
+          'Sigi',
+          'Banggai Laut',
+          'Morowali Utara'
+        ]
       },
       yaxis: {
         labels: {
           style: {
-            colors: [primary]
+            colors: [primary],
+            cssClass: 'apexcharts-xaxis-label'
           }
         }
       },
       grid: {
+        show: true,
         borderColor: navType === 'dark' ? darkLight + 20 : grey200
       },
       tooltip: {
         theme: navType === 'dark' ? 'dark' : 'light'
       },
-      legend: {
-        labels: {
-          colors: grey500
+
+      fill: {
+        type: 'solid'
+      },
+      dataLabels: {
+        enabled: false
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%'
         }
       }
     }));
@@ -170,10 +169,43 @@ const P3KEBarChart = ({ isLoading }) => {
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">Total P3KE</Typography>
+                      <Typography variant="subtitle2">Data P3KE Sulawesi Tengah</Typography>
                     </Grid>
                     <Grid item>
-                      <Typography variant="h3">$2,324.00</Typography>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Typography
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            color: theme.palette.secondary.main,
+                            borderRadius: '12px',
+                            padding: 1,
+                            backgroundColor:
+                              theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.secondary.light
+                          }}
+                        >
+                          <IconHome stroke={2} />
+                        </Typography>
+
+                        <Typography ml={1} mr={4} variant="h3">
+                          378.915
+                        </Typography>
+                        <Typography
+                          sx={{
+                            width: 40,
+                            height: 40,
+                            color: theme.palette.primary.main,
+                            borderRadius: '12px',
+                            padding: 1,
+                            backgroundColor: theme.palette.mode === 'dark' ? theme.palette.background.default : theme.palette.primary.light
+                          }}
+                        >
+                          <IconUsers stroke={2} />
+                        </Typography>
+                        <Typography ml={1} variant="h3">
+                          1.635.889
+                        </Typography>
+                      </Box>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -188,7 +220,15 @@ const P3KEBarChart = ({ isLoading }) => {
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item xs={12} sx={{ '& .apexcharts-legend-text': { marginLeft: rtlLayout ? '8px' : 'initial' } }}>
+            <Grid
+              item
+              xs={12}
+              sx={{
+                '& .apexcharts-legend-text': { marginLeft: rtlLayout ? '8px' : 'initial' },
+                marginRight: '60px',
+                '.apexcharts-xaxis-label': { cursor: 'pointer' }
+              }}
+            >
               <ReactApexChart options={options} series={series} type="bar" height={480} />
             </Grid>
           </Grid>
