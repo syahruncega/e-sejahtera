@@ -15,36 +15,26 @@ import MainCard from 'components/ui-component/cards/MainCard';
 import { gridSpacing } from 'store/constant';
 import SkeletonP3KEBarChart from 'components/ui-component/cards/Skeleton/SkeletonP3KEBarChart';
 import { IconHome, IconUsers } from '@tabler/icons';
-import Router from 'next/router';
+import SubCard from 'components/ui-component/cards/SubCard';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-const status = [
-  {
-    value: '2022',
-    label: '2022'
-  },
-  {
-    value: '2023',
-    label: '2023'
-  }
-];
+// const status = [
+//   {
+//     value: '2022',
+//     label: '2022'
+//   },
+//   {
+//     value: '2023',
+//     label: '2023'
+//   }
+// ];
 
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
-const P3KEBarChart = ({ isLoading }) => {
-  const [series] = useState([
-    {
-      name: 'Keluarga',
-      data: [29995, 44656, 2004, 46034, 25503, 22722, 17756, 20995, 73611, 29951, 33522, 12011, 20155]
-    },
-    {
-      name: 'Individu',
-      data: [124634, 182756, 112209, 193999, 107660, 98341, 72158, 80607, 288129, 114613, 133868, 46496, 80419]
-    }
-  ]);
+const WilayahChart = ({ title, jumlahKelurga, jumlahIndividu, isLoading, initSeries, categories }) => {
+  const [series] = useState(initSeries);
 
-  const [value, setValue] = useState('2022');
   const theme = useTheme();
   const { navType, rtlLayout } = useConfig();
 
@@ -74,10 +64,7 @@ const P3KEBarChart = ({ isLoading }) => {
           enabled: true
         },
         events: {
-          xAxisLabelClick: (val) => {
-            if (val.target.textContent === 'Donggala') Router.push('/dashboard/stats/donggala');
-            else if (val.target.textContent === 'Sigi') Router.push('/dashboard/stats/sigi');
-          }
+          xAxisLabelClick: (val) => console.log(val.target.textContent)
         }
       },
       responsive: [
@@ -114,21 +101,7 @@ const P3KEBarChart = ({ isLoading }) => {
       colors: [secondaryMain, primaryDark, secondaryMain, secondaryLight],
       xaxis: {
         type: 'category',
-        categories: [
-          'Kota Palu',
-          'Banggai',
-          'Poso',
-          'Donggala',
-          'Tolitoli',
-          'Buol',
-          'Morowali',
-          'Banggai Kepulauan',
-          'Parigi Moutong',
-          'Tojo Una-Una',
-          'Sigi',
-          'Banggai Laut',
-          'Morowali Utara'
-        ]
+        categories
       },
       yaxis: {
         labels: {
@@ -159,21 +132,21 @@ const P3KEBarChart = ({ isLoading }) => {
         }
       }
     }));
-  }, [navType, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, isLoading, grey500]);
+  }, [categories, navType, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, isLoading, grey500]);
 
   return (
     <>
       {isLoading ? (
         <SkeletonP3KEBarChart />
       ) : (
-        <MainCard>
+        <SubCard>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
                     <Grid item>
-                      <Typography variant="subtitle2">Data P3KE Sulawesi Tengah</Typography>
+                      <Typography variant="subtitle2">{title}</Typography>
                     </Grid>
                     <Grid item>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -190,9 +163,8 @@ const P3KEBarChart = ({ isLoading }) => {
                         >
                           <IconHome stroke={2} />
                         </Typography>
-
                         <Typography ml={1} mr={4} variant="h3">
-                          378.915
+                          {jumlahKelurga.replace(/\B(?=(\d{3})+(?!\d))/g, '.') ?? 0}
                         </Typography>
                         <Typography
                           sx={{
@@ -207,20 +179,20 @@ const P3KEBarChart = ({ isLoading }) => {
                           <IconUsers stroke={2} />
                         </Typography>
                         <Typography ml={1} variant="h3">
-                          1.635.889
+                          {jumlahIndividu.replace(/\B(?=(\d{3})+(?!\d))/g, '.') ?? 0}
                         </Typography>
                       </Box>
                     </Grid>
                   </Grid>
                 </Grid>
                 <Grid item>
-                  <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
+                  {/* <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
                     {status.map((option) => (
                       <MenuItem key={option.value} value={option.value}>
                         {option.label}
                       </MenuItem>
                     ))}
-                  </TextField>
+                  </TextField> */}
                 </Grid>
               </Grid>
             </Grid>
@@ -229,21 +201,25 @@ const P3KEBarChart = ({ isLoading }) => {
               xs={12}
               sx={{
                 '& .apexcharts-legend-text': { marginLeft: rtlLayout ? '8px' : 'initial' },
-                marginRight: '60px',
                 '.apexcharts-xaxis-label': { cursor: 'pointer' }
               }}
             >
               <ReactApexChart options={options} series={series} type="bar" height={480} />
             </Grid>
           </Grid>
-        </MainCard>
+        </SubCard>
       )}
     </>
   );
 };
 
-P3KEBarChart.propTypes = {
-  isLoading: PropTypes.bool
+WilayahChart.propTypes = {
+  title: PropTypes.string,
+  jumlahKelurga: PropTypes.string,
+  jumlahIndividu: PropTypes.string,
+  isLoading: PropTypes.bool,
+  initSeries: PropTypes.array,
+  categories: PropTypes.array
 };
 
-export default P3KEBarChart;
+export default WilayahChart;
