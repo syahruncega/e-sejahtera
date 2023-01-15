@@ -25,6 +25,13 @@ const mahasiswa = {
       type: 'item',
       url: '/dashboard/verifikasi-p3ke',
       icon: IconChecks
+    },
+    {
+      id: 'verifikasi-monev',
+      title: <FormattedMessage id="verifikasi-monev" defaultMessage="Verifikasi Monev" />,
+      type: 'item',
+      url: '/dashboard/verifikasi-monev',
+      icon: IconChecks
     }
   ]
 };

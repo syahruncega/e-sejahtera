@@ -11,18 +11,18 @@ import { FormattedMessage } from 'react-intl';
 
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import { getKeluargaDonggalById, getKeluargaSigiById } from 'store/slices/keluarga';
-import FormVerifikasiP3KE from 'components/form/FormVerifikasiP3KE';
-import MainCard from 'components/ui-component/cards/MainCard';
+import { getKeluargaSigiById } from 'store/slices/keluarga';
 
-const ReviewP3KEPage = () => {
+import MainCard from 'components/ui-component/cards/MainCard';
+import { getMonevById } from 'store/slices/monev';
+import FormVerifikasiMonev from 'components/form/FormVerifikasiMonev';
+
+const ReviewMonevPage = () => {
   const router = useRouter();
 
-  const fetchKeluagaById = useQuery(['keluargaById'], () =>
-    router.query.keluarga === 'Donggala' ? getKeluargaDonggalById(router.query.id) : getKeluargaSigiById(router.query.id)
-  );
+  const fetchMonevById = useQuery(['MonevById'], () => getMonevById(router.query.kabupatenKotaId, router.query.id));
 
-  console.log(fetchKeluagaById.data);
+  console.log(fetchMonevById.data);
 
   const pageProps = {
     title: 'Review',
@@ -40,17 +40,17 @@ const ReviewP3KEPage = () => {
           <Grid item xs={12} lg={12}>
             <MainCard>
               <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginBottom: 2 }}>
-                <AlertTitle>Kabupaten/Kota: {fetchKeluagaById.data?.KabupatenKota.nama}</AlertTitle>
-                <AlertTitle>Kecamatan: {fetchKeluagaById.data?.Kecamatan.nama}</AlertTitle>
-                <AlertTitle>Desa/Kelurahan: {fetchKeluagaById.data?.Kelurahan.nama}</AlertTitle>
+                <AlertTitle>Kabupaten/Kota: {fetchMonevById.data?.KabupatenKota.nama}</AlertTitle>
+                <AlertTitle>Kecamatan: {fetchMonevById.data?.Kecamatan.nama}</AlertTitle>
+                <AlertTitle>Desa/Kelurahan: {fetchMonevById.data?.Kelurahan.nama}</AlertTitle>
               </Alert>
             </MainCard>
           </Grid>
           <Grid item xs={12} lg={6}>
-            <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} readOnly />
+            <FormVerifikasiMonev initialData={fetchMonevById.data ?? []} readOnly />
           </Grid>
           <Grid item xs={12} lg={6}>
-            <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} />
+            <FormVerifikasiMonev initialData={fetchMonevById.data ?? []} />
           </Grid>
         </Grid>
       </Page>
@@ -58,8 +58,8 @@ const ReviewP3KEPage = () => {
   );
 };
 
-ReviewP3KEPage.getLayout = function getLayout(page) {
+ReviewMonevPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default ReviewP3KEPage;
+export default ReviewMonevPage;

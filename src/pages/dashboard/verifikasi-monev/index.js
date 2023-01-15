@@ -21,21 +21,20 @@ import SubCard from 'components/ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
 import { PublishedWithChangesTwoTone } from '@mui/icons-material';
 import Link from 'Link';
+import { getMonevKabupatenKotaId } from 'store/slices/monev';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 
-const VerifikasiP3KEPage = () => {
+const VerifikasiMonev = () => {
   const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala' });
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(false);
   const [keyKelurahan, setKeyKelurahan] = useState(false);
-
-  const fetchKeluarga = useQuery(
-    ['keluarga'],
-    // eslint-disable-next-line no-nested-ternary
-    kabupaten.nama === 'Kabupaten Donggala' ? getKeluargaDonggala : getKeluargaSigi
-  );
   const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
+
+  const fetchMonev = useQuery(['monev'], () => getMonevKabupatenKotaId(kabupaten.id));
+
+  console.log(fetchMonev.data);
 
   const columns = useMemo(
     () => [
@@ -45,19 +44,24 @@ const VerifikasiP3KEPage = () => {
         header: 'No'
       },
       {
-        id: 'idKeluarga',
-        accessorKey: 'idKeluarga',
-        header: 'ID Keluarga'
+        id: 'namaPenerima',
+        accessorKey: 'namaPenerima',
+        header: 'Nama Penerima'
       },
       {
-        id: 'nik',
-        accessorKey: 'nik',
-        header: 'NIK'
+        id: 'volumeBantuan',
+        accessorKey: 'volumeBantuan',
+        header: 'Volume Bantuan'
       },
       {
-        id: 'kepalaKeluarga',
-        accessorKey: 'kepalaKeluarga',
-        header: 'Kepala Keluarga'
+        id: 'satuanVolume',
+        accessorKey: 'satuanVolume',
+        header: 'Satuan Volume'
+      },
+      {
+        id: 'jenisBantuan',
+        accessorKey: 'jenisBantuan',
+        header: 'Jenis Bantuan'
       },
       {
         id: 'kecamatan',
@@ -84,7 +88,7 @@ const VerifikasiP3KEPage = () => {
                 color="primary"
                 size="medium"
                 aria-label="Ubah"
-                href={`/dashboard/verifikasi-p3ke/review?id=${data.id}&keluarga=${kabupaten.value}`}
+                href={`/dashboard/verifikasi-monev/review?id=${data.id}&kabupatenKotaId=${data.kabupatenKotaId}`}
               >
                 <PublishedWithChangesTwoTone fontSize="small" />
               </IconButton>
@@ -98,17 +102,19 @@ const VerifikasiP3KEPage = () => {
   );
 
   const pageProps = {
-    title: 'Verifikasi P3KE',
-    navigation: [{ title: <FormattedMessage id="verifikasi-p3ke" defaultMessage="Verifikasi P3KE" />, url: '/dashboard/verifikasi-p3ke' }]
+    title: 'Verifikasi Monev',
+    navigation: [
+      { title: <FormattedMessage id="verifikasi-monev" defaultMessage="Verifikasi Monev" />, url: '/dashboard/verifikasi-monev' }
+    ]
   };
 
   // Error
-  if (fetchKeluarga.isError) {
+  if (fetchMonev.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchKeluarga.error.message}
+          {fetchMonev.error.message}
         </Alert>
       </Page>
     );
@@ -119,13 +125,13 @@ const VerifikasiP3KEPage = () => {
     <>
       <Page {...pageProps}>
         <MainCard>
-          {fetchKeluarga.isLoading && (
+          {fetchMonev.isLoading && (
             <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
               <CircularProgress />
             </Box>
           )}
 
-          {!fetchKeluarga.isLoading && (
+          {!fetchMonev.isLoading && (
             <Grid container spacing={gridSpacing}>
               <Grid item xs={12}>
                 <SubCard title="Filter">
@@ -204,7 +210,7 @@ const VerifikasiP3KEPage = () => {
                         startIcon={<IconSearch size={18} />}
                         onClick={() => {
                           // queryClient.invalidateQueries(['keluarga']);
-                          fetchKeluarga.refetch();
+                          fetchMonev.refetch();
                         }}
                       >
                         Cari
@@ -215,12 +221,7 @@ const VerifikasiP3KEPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <SubCard content={false}>
-                  {!fetchKeluarga.isLoading && (
-                    <AppTable
-                      columns={columns}
-                      initialData={kabupaten.nama !== 'Kabupaten Donggala' && kabupaten.nama !== 'Kabupaten Sigi' ? [] : fetchKeluarga.data}
-                    />
-                  )}
+                  {!fetchMonev.isLoading && <AppTable columns={columns} initialData={fetchMonev.data ?? []} />}
                 </SubCard>
               </Grid>
             </Grid>
@@ -231,8 +232,8 @@ const VerifikasiP3KEPage = () => {
   );
 };
 
-VerifikasiP3KEPage.getLayout = function getLayout(page) {
+VerifikasiMonev.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default VerifikasiP3KEPage;
+export default VerifikasiMonev;

@@ -21,10 +21,10 @@ const SigiPage = () => {
   }, []);
 
   const pageProps = {
-    title: 'Kabupaten Donggala',
+    title: 'Kabupaten Sigi',
     navigation: [
       { title: <FormattedMessage id="statistik" defaultMessage="Statistik" />, url: '/dashboard' },
-      { title: <FormattedMessage id="donggala" defaultMessage="Donggala" />, url: '/dashboard/stats/donggala' }
+      { title: <FormattedMessage id="sigi" defaultMessage="Sigi" />, url: '/dashboard/stats/sigi' }
     ]
   };
 

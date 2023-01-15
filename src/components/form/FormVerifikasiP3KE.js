@@ -24,6 +24,7 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Box } from '@mui/system';
 import { toast } from 'react-hot-toast';
+import { TaskAlt, TaskAltTwoTone, VerifiedTwoTone, VerifiedUserTwoTone } from '@mui/icons-material';
 
 const validationSchema = yup.object({
   desilKesejahteraan: yup.string().required(''),
@@ -155,7 +156,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
             </Grid> */}
             <Grid item xs={12}>
               <SubCard title="Keluarga/Kepala Keluarga">
-                <FormControl>
+                <FormControl disabled>
                   <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="desil">
                     Status Kesejahteraan/Desil
                   </FormLabel>
@@ -177,8 +178,19 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="nama">
+                  <FormLabel
+                    sx={{
+                      fontWeight: 500,
+                      display: 'flex',
+                      alignItems: 'center',
+                      color: 'black'
+                    }}
+                    id="nama"
+                  >
                     Nama
+                    {initialData.kepalaKeluarga !== formik.values.kepalaKeluarga && (
+                      <TaskAltTwoTone fontSize="14" color="primary" sx={{ marginLeft: 1 }} />
+                    )}
                   </FormLabel>
                   <TextField
                     InputProps={{ readOnly }}
@@ -190,21 +202,46 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="nik">
+                  <FormLabel
+                    sx={{
+                      fontWeight: 500,
+                      color: 'black'
+                    }}
+                    id="nik"
+                  >
                     NIK
                   </FormLabel>
                   <TextField InputProps={{ readOnly }} name="nik" value={formik.values.nik} onChange={formik.handleChange} />
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="alamat">
+                  <FormLabel
+                    sx={{
+                      fontWeight: 500,
+                      color: 'black'
+                    }}
+                    id="alamat"
+                  >
                     Alamat
                   </FormLabel>
-                  <TextField multiline rows={3} name="alamat" value={formik.values.alamat} onChange={formik.handleChange} />
+                  <TextField
+                    InputProps={{ readOnly }}
+                    multiline
+                    rows={3}
+                    name="alamat"
+                    value={formik.values.alamat}
+                    onChange={formik.handleChange}
+                  />
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="jenisKelamin">
+                  <FormLabel
+                    sx={{
+                      fontWeight: 500,
+                      color: 'black'
+                    }}
+                    id="jenisKelamin"
+                  >
                     Jenis Kelamin
                   </FormLabel>
                   <RadioGroup
@@ -255,7 +292,10 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl> */}
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="pekerjaan">
+                  <FormLabel
+                    sx={{ fontWeight: 500, color: initialData.pekerjaan !== formik.values.pekerjaan ? 'secondary' : 'black' }}
+                    id="pekerjaan"
+                  >
                     Pekerjaan
                   </FormLabel>
                   <RadioGroup
