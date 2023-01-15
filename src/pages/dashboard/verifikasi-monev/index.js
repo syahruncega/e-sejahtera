@@ -25,7 +25,7 @@ import { getMonevKabupatenKotaId } from 'store/slices/monev';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 
 const VerifikasiMonev = () => {
-  const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala' });
+  const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(false);
@@ -33,8 +33,6 @@ const VerifikasiMonev = () => {
   const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
 
   const fetchMonev = useQuery(['monev'], () => getMonevKabupatenKotaId(kabupaten.id));
-
-  console.log(fetchMonev.data);
 
   const columns = useMemo(
     () => [
