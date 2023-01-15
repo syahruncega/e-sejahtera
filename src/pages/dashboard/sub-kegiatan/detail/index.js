@@ -205,9 +205,7 @@ const DetailSubKegiatanPage = () => {
 
             {/* table */}
             {!fetchDetailSubKegiatan.isLoading && (
-              <TableContainer>
-                <AppTable columns={columns} initialData={fetchDetailSubKegiatan.data ?? []} globalFilter={debouncedValue} />
-              </TableContainer>
+              <AppTable stickyHeader columns={columns} initialData={fetchDetailSubKegiatan.data ?? []} globalFilter={debouncedValue} />
             )}
           </>
         )}

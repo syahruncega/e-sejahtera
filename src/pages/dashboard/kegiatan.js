@@ -170,9 +170,7 @@ const KegiatanPage = () => {
             {/* table */}
 
             {!fetchKegiatan.isLoading && (
-              <TableContainer>
-                <AppTable columns={columns} initialData={fetchKegiatan.data ?? []} globalFilter={debouncedValue} />
-              </TableContainer>
+              <AppTable stickyHeader columns={columns} initialData={fetchKegiatan.data ?? []} globalFilter={debouncedValue} />
             )}
           </>
         )}

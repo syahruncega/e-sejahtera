@@ -181,9 +181,7 @@ const ProgramPage = () => {
             </CardContent>
             {/* table */}
             {!fetchProgram.isLoading && (
-              <TableContainer>
-                <AppTable columns={columns} initialData={fetchProgram.data ?? []} globalFilter={debouncedValue} />
-              </TableContainer>
+              <AppTable stickyHeader columns={columns} initialData={fetchProgram.data ?? []} globalFilter={debouncedValue} />
             )}
           </>
         )}

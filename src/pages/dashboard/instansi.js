@@ -35,6 +35,7 @@ import { useMemo, useState } from 'react';
 import AppTable from 'components/AppTable';
 import useDebounce from 'hooks/useDebounce';
 import { getBidangUrusan } from 'store/slices/bidang-urusan';
+import SubCard from 'components/ui-component/cards/SubCard';
 
 const InstansiPage = () => {
   const [search, setSearch] = useState('');
@@ -100,7 +101,7 @@ const InstansiPage = () => {
   return (
     <>
       <Page {...pageProps}>
-        <MainCard content={false}>
+        <MainCard>
           {fetchInstansi.isLoading && (
             <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
               <CircularProgress />
@@ -109,50 +110,48 @@ const InstansiPage = () => {
 
           {!fetchInstansi.isLoading && (
             <>
-              <CardContent>
-                <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      InputProps={{
-                        startAdornment: (
-                          <InputAdornment position="start">
-                            <SearchIcon fontSize="small" />
-                          </InputAdornment>
-                        )
-                      }}
-                      onChange={(e) => setSearch(e.target.value)}
-                      placeholder="Cari Instansi"
-                      value={search}
-                      size="small"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                    <Tooltip title="Copy">
-                      <IconButton size="large">
-                        <FileCopyIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Print">
-                      <IconButton size="large">
-                        <PrintIcon />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Filter">
-                      <IconButton size="large">
-                        <FilterListIcon />
-                      </IconButton>
-                    </Tooltip>
-
-                    {/* product add & dialog */}
-                    <FormInstansi dataBidangUrusan={fetchBidangUrusan.data} />
-                  </Grid>
+              <Grid container justifyContent="space-between" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">
+                          <SearchIcon fontSize="small" />
+                        </InputAdornment>
+                      )
+                    }}
+                    onChange={(e) => setSearch(e.target.value)}
+                    placeholder="Cari Instansi"
+                    value={search}
+                    size="small"
+                  />
                 </Grid>
-              </CardContent>
+                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                  <Tooltip title="Copy">
+                    <IconButton size="large">
+                      <FileCopyIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Print">
+                    <IconButton size="large">
+                      <PrintIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Filter">
+                    <IconButton size="large">
+                      <FilterListIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  {/* product add & dialog */}
+                  <FormInstansi dataBidangUrusan={fetchBidangUrusan.data} />
+                </Grid>
+              </Grid>
 
               {!fetchInstansi.isLoading && (
-                <TableContainer>
-                  <AppTable columns={columns} initialData={fetchInstansi.data ?? []} globalFilter={debouncedValue} />
-                </TableContainer>
+                <SubCard content={false}>
+                  <AppTable stickyHeader columns={columns} initialData={fetchInstansi.data ?? []} globalFilter={debouncedValue} />
+                </SubCard>
               )}
             </>
           )}

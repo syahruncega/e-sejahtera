@@ -24,6 +24,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableContainer,
   TableHead,
   TableRow,
   TableSortLabel,
@@ -39,7 +40,7 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const AppTable = ({ columns, initialData, columnVisibility, globalFilter, disablePagination = false }) => {
+const AppTable = ({ columns, initialData, columnVisibility, globalFilter, disablePagination = false, stickyHeader = false }) => {
   const [data, setData] = useState([]);
 
   const table = useReactTable({
@@ -70,51 +71,53 @@ const AppTable = ({ columns, initialData, columnVisibility, globalFilter, disabl
 
   return (
     <>
-      <Table sx={{ minWidth: 750 }}>
-        <TableHead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header, index) => (
-                <TableCell key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : (
-                    <>
-                      <TableSortLabel
-                        {...{
-                          onClick: header.column.getToggleSortingHandler(),
-                          direction: header.column.getSortIndex() === index - 0 ? header.column.getIsSorted() : 'asc',
-                          active: header.column.getSortIndex() === index - 0
-                        }}
-                      >
-                        {flexRender(header.column.columnDef.header, header.getContext())}
-                        {{
-                          asc: <IconCaretUp v />,
-                          desc: <IconCaretDown />
-                        }[header.column.getIsSorted()] ?? null}
-                      </TableSortLabel>
-                    </>
-                  )}
+      <TableContainer sx={{ maxHeight: stickyHeader ? 440 : 'auto' }}>
+        <Table stickyHeader={stickyHeader} sx={{ minWidth: 750 }}>
+          <TableHead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header, index) => (
+                  <TableCell key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <>
+                        <TableSortLabel
+                          {...{
+                            onClick: header.column.getToggleSortingHandler(),
+                            direction: header.column.getSortIndex() === index - 0 ? header.column.getIsSorted() : 'asc',
+                            active: header.column.getSortIndex() === index - 0
+                          }}
+                        >
+                          {flexRender(header.column.columnDef.header, header.getContext())}
+                          {{
+                            asc: <IconCaretUp v />,
+                            desc: <IconCaretDown />
+                          }[header.column.getIsSorted()] ?? null}
+                        </TableSortLabel>
+                      </>
+                    )}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+          </TableHead>
+          <TableBody>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow hover key={row.id}>
+                {row.getVisibleCells().map((cell, index) => (
+                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                ))}
+              </TableRow>
+            ))}
+            {table.getRowModel().rows.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={columns.length}>
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>{`${globalFilter || 'Data'} tidak ditemukan`}</Box>
                 </TableCell>
-              ))}
-            </TableRow>
-          ))}
-        </TableHead>
-        <TableBody>
-          {table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell, index) => (
-                <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-              ))}
-            </TableRow>
-          ))}
-          {table.getRowModel().rows.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={columns.length}>
-                <Box sx={{ display: 'flex', justifyContent: 'center' }}>{`${globalFilter || 'Data'} tidak ditemukan`}</Box>
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
       {!disablePagination && (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
           <Typography>Data per halaman:</Typography>
@@ -156,7 +159,8 @@ AppTable.propTypes = {
   columnVisibility: PropTypes.object,
   globalFilter: PropTypes.string,
   onGlobalFilterChange: PropTypes.func,
-  disablePagination: PropTypes.bool
+  disablePagination: PropTypes.bool,
+  stickyHeader: PropTypes.bool
 };
 
 export default AppTable;

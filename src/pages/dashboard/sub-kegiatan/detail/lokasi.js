@@ -36,6 +36,7 @@ import useDebounce from 'hooks/useDebounce';
 import AppTable from 'components/AppTable';
 import { IconBookmark, IconBookmarks } from '@tabler/icons';
 import ConfirmDialog from 'components/dialog/ConfirmDialog';
+import SubCard from 'components/ui-component/cards/SubCard';
 
 const headCells = [
   {
@@ -142,7 +143,7 @@ const LokasiDetailSubKegiatanPage = () => {
 
   return (
     <Page {...pageProps}>
-      <MainCard content={false}>
+      <MainCard>
         {fetchDetailLokasi.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
@@ -151,57 +152,56 @@ const LokasiDetailSubKegiatanPage = () => {
 
         {!fetchDetailLokasi.isLoading && (
           <>
-            <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginX: 3, marginTop: 2 }}>
+            <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginBottom: 2 }}>
               <AlertTitle>Fokus Belanja:</AlertTitle>
               {fetchDetailSubKegiatan.data?.fokusBelanja}
             </Alert>
-            <CardContent>
-              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon fontSize="small" />
-                        </InputAdornment>
-                      )
-                    }}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Lokasi"
-                    value={search}
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                  <Tooltip title="Copy">
-                    <IconButton size="large">
-                      <FileCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Print">
-                    <IconButton size="large">
-                      <PrintIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Filter">
-                    <IconButton size="large">
-                      <FilterListIcon />
-                    </IconButton>
-                  </Tooltip>
 
-                  {/* product add & dialog */}
-                  <FormDetailLokasi dataKabupatenKota={fetchKabupatenKota?.data} />
-                  <ConfirmDialog handleFunc={() => {}} title="Tag Lokasi" description="Anda yakin akan tag lokasi?" />
-                </Grid>
+            <Grid container justifyContent="space-between" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    )
+                  }}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Cari Lokasi"
+                  value={search}
+                  size="small"
+                />
               </Grid>
-            </CardContent>
+              <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                <Tooltip title="Copy">
+                  <IconButton size="large">
+                    <FileCopyIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Print">
+                  <IconButton size="large">
+                    <PrintIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Filter">
+                  <IconButton size="large">
+                    <FilterListIcon />
+                  </IconButton>
+                </Tooltip>
+
+                {/* product add & dialog */}
+                <FormDetailLokasi dataKabupatenKota={fetchKabupatenKota?.data} />
+                <ConfirmDialog handleFunc={() => {}} title="Tag Lokasi" description="Anda yakin akan tag lokasi?" />
+              </Grid>
+            </Grid>
 
             {/* table */}
 
             {!fetchDetailLokasi.isLoading && (
-              <TableContainer>
-                <AppTable columns={columns} initialData={fetchDetailLokasi.data ?? []} globalFilter={debouncedValue} />
-              </TableContainer>
+              <SubCard content={false}>
+                <AppTable stickyHeader columns={columns} initialData={fetchDetailLokasi.data ?? []} globalFilter={debouncedValue} />
+              </SubCard>
             )}
           </>
         )}
