@@ -12,9 +12,8 @@ import { FormattedMessage } from 'react-intl';
 import { LoadingButton } from '@mui/lab';
 import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
-import { useRouter } from 'next/router';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getKeluargaDonggala, getKeluargaSigi } from 'store/slices/keluarga';
+import { useQuery } from '@tanstack/react-query';
+import { getKeluargaByKabupatenKotaId } from 'store/slices/keluarga';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
@@ -24,18 +23,14 @@ import Link from 'Link';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 
 const VerifikasiP3KEPage = () => {
-  const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala' });
+  const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(false);
   const [keyKelurahan, setKeyKelurahan] = useState(false);
 
-  const fetchKeluarga = useQuery(
-    ['keluarga'],
-    // eslint-disable-next-line no-nested-ternary
-    kabupaten.nama === 'Kabupaten Donggala' ? getKeluargaDonggala : getKeluargaSigi
-  );
-  const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
+  const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
+  const fetchKeluarga = useQuery(['keluarga'], () => getKeluargaByKabupatenKotaId(kabupaten.id));
 
   const columns = useMemo(
     () => [
@@ -84,7 +79,7 @@ const VerifikasiP3KEPage = () => {
                 color="primary"
                 size="medium"
                 aria-label="Ubah"
-                href={`/dashboard/verifikasi-p3ke/review?id=${data.id}&keluarga=${kabupaten.value}`}
+                href={`/dashboard/verifikasi-p3ke/review?id=${data.id}&kabupaten=${kabupaten.id}`}
               >
                 <PublishedWithChangesTwoTone fontSize="small" />
               </IconButton>
@@ -94,7 +89,7 @@ const VerifikasiP3KEPage = () => {
       }
     ],
 
-    []
+    [kabupaten.id]
   );
 
   const pageProps = {
@@ -137,7 +132,7 @@ const VerifikasiP3KEPage = () => {
                         disableClearable
                         isOptionEqualToValue={(option, value) => option.id === value.id}
                         getOptionLabel={(option) => option.nama}
-                        value={kabupaten ?? { label: '', value: '' }}
+                        value={kabupaten}
                         onChange={async (e, value) => {
                           setKabupaten(value);
                           if (value !== null) {
@@ -215,12 +210,7 @@ const VerifikasiP3KEPage = () => {
               </Grid>
               <Grid item xs={12}>
                 <SubCard content={false}>
-                  {!fetchKeluarga.isLoading && (
-                    <AppTable
-                      columns={columns}
-                      initialData={kabupaten.nama !== 'Kabupaten Donggala' && kabupaten.nama !== 'Kabupaten Sigi' ? [] : fetchKeluarga.data}
-                    />
-                  )}
+                  {!fetchKeluarga.isLoading && <AppTable columns={columns} initialData={fetchKeluarga.data || []} />}
                 </SubCard>
               </Grid>
             </Grid>

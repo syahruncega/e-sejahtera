@@ -2,7 +2,7 @@
 import { FormattedMessage } from 'react-intl';
 
 // assets
-import { IconApps, IconChecks, IconUserSearch } from '@tabler/icons';
+import { IconApps, IconChecklist, IconChecks, IconUserCheck, IconUserSearch } from '@tabler/icons';
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -24,14 +24,14 @@ const mahasiswa = {
       title: <FormattedMessage id="verifikasi-p3ke" defaultMessage="Verifikasi P3KE" />,
       type: 'item',
       url: '/dashboard/verifikasi-p3ke',
-      icon: IconChecks
+      icon: IconUserCheck
     },
     {
       id: 'verifikasi-monev',
       title: <FormattedMessage id="verifikasi-monev" defaultMessage="Verifikasi Monev" />,
       type: 'item',
       url: '/dashboard/verifikasi-monev',
-      icon: IconChecks
+      icon: IconChecklist
     }
   ]
 };

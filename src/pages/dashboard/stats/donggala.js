@@ -13,6 +13,9 @@ import { FormattedMessage } from 'react-intl';
 import { useEffect, useState } from 'react';
 import WilayahChart from 'components/dashboard/Statistik/WilayahChart';
 import DonggalaTabs from 'components/dashboard/Statistik/DonggalaTabs';
+import DesilCard from 'components/dashboard/Statistik/DesilCard';
+import SubCard from 'components/ui-component/cards/SubCard';
+import BantuanCard from 'components/dashboard/Statistik/BantuanCard';
 
 const DonggalaPage = () => {
   const [isLoading, setLoading] = useState(true);
@@ -32,12 +35,12 @@ const DonggalaPage = () => {
   return (
     <>
       <Page {...pageProps}>
-        <MainCard content={false}>
-          <Grid container spacing={0}>
-            <Grid item xs={12}>
+        <MainCard>
+          <Grid container spacing={2}>
+            <Grid item sm={12}>
               <WilayahChart
                 isLoading={isLoading}
-                title="Data P3KE Kabupaten Donggala"
+                title="Data P3KE"
                 jumlahKelurga="46034"
                 jumlahIndividu="193999"
                 categories={[
@@ -70,7 +73,13 @@ const DonggalaPage = () => {
                 ]}
               />
             </Grid>
-            <Grid item xs={12}>
+            <Grid item sm={12}>
+              <DesilCard />
+            </Grid>
+            <Grid item sm={12}>
+              <BantuanCard />
+            </Grid>
+            <Grid item sm={12}>
               <DonggalaTabs />
             </Grid>
           </Grid>

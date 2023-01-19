@@ -14,7 +14,6 @@ import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getKeluargaDonggala, getKeluargaSigi } from 'store/slices/keluarga';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
@@ -30,8 +29,8 @@ const VerifikasiMonev = () => {
   const [dataKelurahan, setDataKelurahan] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(false);
   const [keyKelurahan, setKeyKelurahan] = useState(false);
-  const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
 
+  const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
   const fetchMonev = useQuery(['monev'], () => getMonevKabupatenKotaId(kabupaten.id));
 
   const columns = useMemo(

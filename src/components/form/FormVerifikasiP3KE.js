@@ -1,22 +1,9 @@
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import { useState } from 'react';
-import {
-  Button,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup
-} from '@mui/material';
+import { Button, Chip, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup } from '@mui/material';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { useQueryClient } from '@tanstack/react-query';
 
 import MainCard from 'components/ui-component/cards/MainCard';
 import SubCard from 'components/ui-component/cards/SubCard';
@@ -24,7 +11,15 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Box } from '@mui/system';
 import { toast } from 'react-hot-toast';
-import { TaskAlt, TaskAltTwoTone, VerifiedTwoTone, VerifiedUserTwoTone } from '@mui/icons-material';
+
+const UpdateChip = () => (
+  <Chip
+    variant="outlined"
+    label="DIUBAH"
+    size="small"
+    sx={{ ml: 1, height: 16, fontSize: 12, borderWidth: 2, color: 'warning.dark', borderColor: 'warning.dark' }}
+  />
+);
 
 const validationSchema = yup.object({
   desilKesejahteraan: yup.string().required(''),
@@ -50,7 +45,7 @@ const validationSchema = yup.object({
   penerimaSembako: yup.string().required('')
 });
 
-const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
+const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -84,9 +79,17 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
 
   const [value, setValue] = useState(formik.values.tanggalLahir);
 
+  const labelStyle = {
+    fontWeight: 500,
+    display: 'flex',
+    alignItems: 'center',
+    color: 'black',
+    marginBottom: 0.5
+  };
+
   return (
     <>
-      <MainCard title={readOnly ? 'Data Mentah (Read Only)' : 'Data Verifikasi'}>
+      <MainCard>
         <form onSubmit={formik.handleSubmit}>
           <Grid container spacing={3}>
             {/* <Grid item xs={12}>
@@ -127,7 +130,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="satuanData">
+                  <FormLabel sx={labelStyle} id="satuanData">
                     Satuan Data
                   </FormLabel>
                   <RadioGroup row aria-labelledby="satuanData" name="satuanData" defaultValue="Dengan Nama/Alamat (BNBA)">
@@ -141,7 +144,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="batasanSpasial">
+                  <FormLabel sx={labelStyle} id="batasanSpasial">
                     Batasan Spasial
                   </FormLabel>
                   <FormGroup row>
@@ -157,16 +160,11 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
             <Grid item xs={12}>
               <SubCard title="Keluarga/Kepala Keluarga">
                 <FormControl disabled>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="desil">
+                  <FormLabel sx={labelStyle} id="desil">
                     Status Kesejahteraan/Desil
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="desil"
-                    value={formik.values.desilKesejahteraan}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
-                    <FormControlLabel name="desilKesejahteraan" value="1" control={<Radio readOnly={readOnly} />} label="1" />
+                  <RadioGroup row aria-labelledby="desil" value={formik.values.desilKesejahteraan} onChange={formik.handleChange}>
+                    <FormControlLabel name="desilKesejahteraan" value="1" control={<Radio />} label="1" />
                     <FormControlLabel name="desilKesejahteraan" value="2" control={<Radio />} label="2" />
                     <FormControlLabel name="desilKesejahteraan" value="3" control={<Radio />} label="3" />
                     <FormControlLabel name="desilKesejahteraan" value="4" control={<Radio />} label="4" />
@@ -178,22 +176,15 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel
-                    sx={{
-                      fontWeight: 500,
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: 'black'
-                    }}
-                    id="nama"
-                  >
+                  <FormLabel sx={labelStyle} id="nama">
                     Nama
-                    {initialData.kepalaKeluarga !== formik.values.kepalaKeluarga && (
-                      <TaskAltTwoTone fontSize="14" color="primary" sx={{ marginLeft: 1 }} />
-                    )}
+                    {initialData.kepalaKeluarga !== formik.values.kepalaKeluarga && <UpdateChip />}
                   </FormLabel>
+                  {initialData.kepalaKeluarga !== formik.values.kepalaKeluarga && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.kepalaKeluarga}</FormHelperText>
+                  )}
+
                   <TextField
-                    InputProps={{ readOnly }}
                     placeholder="Masukkan nama kepala keluarga"
                     name="kepalaKeluarga"
                     value={formik.values.kepalaKeluarga}
@@ -202,54 +193,41 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel
-                    sx={{
-                      fontWeight: 500,
-                      color: 'black'
-                    }}
-                    id="nik"
-                  >
+                  <FormLabel sx={labelStyle} id="nik">
                     NIK
+                    {initialData.nik !== formik.values.nik && <UpdateChip />}
                   </FormLabel>
-                  <TextField InputProps={{ readOnly }} name="nik" value={formik.values.nik} onChange={formik.handleChange} />
+                  {initialData.nik !== formik.values.nik && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.nik}</FormHelperText>
+                  )}
+                  <TextField name="nik" value={formik.values.nik} onChange={formik.handleChange} />
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel
-                    sx={{
-                      fontWeight: 500,
-                      color: 'black'
-                    }}
-                    id="alamat"
-                  >
+                  <FormLabel sx={labelStyle} id="alamat">
                     Alamat
+                    {initialData.alamat !== formik.values.alamat && <UpdateChip />}
                   </FormLabel>
-                  <TextField
-                    InputProps={{ readOnly }}
-                    multiline
-                    rows={3}
-                    name="alamat"
-                    value={formik.values.alamat}
-                    onChange={formik.handleChange}
-                  />
+                  {initialData.alamat !== formik.values.alamat && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.alamat}</FormHelperText>
+                  )}
+                  <TextField multiline rows={3} name="alamat" value={formik.values.alamat} onChange={formik.handleChange} />
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel
-                    sx={{
-                      fontWeight: 500,
-                      color: 'black'
-                    }}
-                    id="jenisKelamin"
-                  >
+                  <FormLabel sx={labelStyle} id="jenisKelamin">
                     Jenis Kelamin
+                    {initialData.jenisKelamin !== formik.values.jenisKelamin && <UpdateChip />}
                   </FormLabel>
+                  {initialData.jenisKelamin !== formik.values.jenisKelamin && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.jenisKelamin}</FormHelperText>
+                  )}
                   <RadioGroup
                     row
                     aria-labelledby="jenisKelamin"
                     name="jenisKelamin"
                     value={formik.values.jenisKelamin}
-                    onChange={readOnly ? () => {} : formik.handleChange}
+                    onChange={formik.handleChange}
                   >
                     <FormControlLabel value="Laki-laki" control={<Radio />} label="Laki-laki" />
                     <FormControlLabel value="Perempuan" control={<Radio />} label="Perempuan" />
@@ -257,30 +235,26 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="tanggalLahir">
+                  <FormLabel sx={labelStyle} id="tanggalLahir">
                     Tanggal Lahir
+                    {new Date(initialData.tanggalLahir) !== formik.values.tanggalLahir && <UpdateChip />}
                   </FormLabel>
+                  {new Date(initialData.tanggalLahir) !== formik.values.tanggalLahir && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.tanggalLahir}</FormHelperText>
+                  )}
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
-                      value={value}
-                      onChange={(newValue) => {
-                        setValue(newValue);
+                      value={formik.values.tanggalLahir}
+                      onChange={(e) => {
+                        formik.setFieldValue('tanggalLahir', new Date(e));
                       }}
-                      renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          fullWidth
-                          name="tanggalLahir"
-                          value={formik.values.tanggalLahir}
-                          onChange={formik.handleChange}
-                        />
-                      )}
+                      renderInput={(params) => <TextField {...params} fullWidth name="tanggalLahir" />}
                     />
                   </LocalizationProvider>
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 {/* <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="statusKawin">
+                  <FormLabel sx={labelStyle} id="statusKawin">
                     Status Kawin
                   </FormLabel>
                   <RadioGroup row aria-labelledby="statusKawin" value={formik.values.tanggalLahir} onChange={formik.handleChange}>
@@ -292,18 +266,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl> */}
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel
-                    sx={{ fontWeight: 500, color: initialData.pekerjaan !== formik.values.pekerjaan ? 'secondary' : 'black' }}
-                    id="pekerjaan"
-                  >
+                  <FormLabel sx={labelStyle} id="pekerjaan">
                     Pekerjaan
+                    {initialData.pekerjaan !== formik.values.pekerjaan && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="pekerjaan"
-                    value={formik.values.pekerjaan}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.pekerjaan !== formik.values.pekerjaan && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.pekerjaan}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="pekerjaan" value={formik.values.pekerjaan} onChange={formik.handleChange}>
                     <FormControlLabel name="pekerjaan" value="Tidak/Belum Bekerja" control={<Radio />} label="Tidak/Belum Bekerja" />
                     <FormControlLabel name="pekerjaan" value="Petani" control={<Radio />} label="Petani" />
                     <FormControlLabel name="pekerjaan" value="Nelayan" control={<Radio />} label="Nelayan" />
@@ -317,15 +287,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="pendidikan">
+                  <FormLabel sx={labelStyle} id="pendidikan">
                     Pendidikan
+                    {initialData.pendidikan !== formik.values.pendidikan && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="pendidikan"
-                    value={formik.values.pendidikan}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.pendidikan !== formik.values.pendidikan && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.pendidikan}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="pendidikan" value={formik.values.pendidikan} onChange={formik.handleChange}>
                     <FormControlLabel name="pendidikan" value="Tidak/belum sekolah" control={<Radio />} label="Tidak/belum sekolah" />
                     <FormControlLabel
                       name="pendidikan"
@@ -350,15 +319,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="simpanan">
+                  <FormLabel sx={labelStyle} id="simpanan">
                     Tabungan/Simpanan
+                    {initialData.simpanan !== formik.values.simpanan && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="simpanan"
-                    value={formik.values.simpanan}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.simpanan !== formik.values.simpanan && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.simpanan}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="simpanan" value={formik.values.simpanan} onChange={formik.handleChange}>
                     <FormControlLabel name="simpanan" value="Ya" control={<Radio />} label="Ya" />
                     <FormControlLabel name="simpanan" value="Tidak" control={<Radio />} label="Tidak" />
                   </RadioGroup>
@@ -366,15 +334,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 <FormHelperText>Uang kontan, perhiasan, hewan ternak, hasil kebun, dll.</FormHelperText>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="kepemilikanRumah">
+                  <FormLabel sx={labelStyle} id="kepemilikanRumah">
                     Kepemilikan rumah/bangunan tempat tinggal
+                    {initialData.kepemilikanRumah !== formik.values.kepemilikanRumah && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="kepemilikanRumah"
-                    value={formik.values.kepemilikanRumah}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.kepemilikanRumah !== formik.values.kepemilikanRumah && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.kepemilikanRumah}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="kepemilikanRumah" value={formik.values.kepemilikanRumah} onChange={formik.handleChange}>
                     <FormControlLabel nama="kepemilikanRumah" value="Milik Sendiri" control={<Radio />} label="Milik Sendiri" />
                     <FormControlLabel nama="kepemilikanRumah" value="Kontrak/Sewa" control={<Radio />} label="Kontrak/Sewa" />
                     <FormControlLabel nama="kepemilikanRumah" value="Bebas Sewa" control={<Radio />} label="Bebas Sewa" />
@@ -385,15 +352,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="jenisDinding">
+                  <FormLabel sx={labelStyle} id="jenisDinding">
                     Jenis dinding rumah terluas
+                    {initialData.jenisDinding !== formik.values.jenisDinding && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="jenisDinding"
-                    value={formik.values.jenisDinding}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.jenisDinding !== formik.values.jenisDinding && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.jenisDinding}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="jenisDinding" value={formik.values.jenisDinding} onChange={formik.handleChange}>
                     <FormControlLabel nama="jenisDinding" value="Tembok" control={<Radio />} label="Tembok" />
                     <FormControlLabel nama="jenisDinding" value="Kayu/Papan" control={<Radio />} label="Kayu/Papan" />
                     <FormControlLabel nama="jenisDinding" value="Seng" control={<Radio />} label="Seng" />
@@ -403,15 +369,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="jenisLantai">
+                  <FormLabel sx={labelStyle} id="jenisLantai">
                     Jenis lantai rumah terluas
+                    {initialData.jenisLantai !== formik.values.jenisLantai && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="jenisLantai"
-                    value={formik.values.jenisLantai}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.jenisLantai !== formik.values.jenisLantai && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.jenisLantai}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="jenisLantai" value={formik.values.jenisLantai} onChange={formik.handleChange}>
                     <FormControlLabel
                       value="Keramik/Granit/Marmer/Ubin/Tegel/Teraso"
                       control={<Radio />}
@@ -426,15 +391,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="sumberPenerangan">
+                  <FormLabel sx={labelStyle} id="sumberPenerangan">
                     Sumber penerangan utama
+                    {initialData.sumberPenerangan !== formik.values.sumberPenerangan && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="sumberPenerangan"
-                    value={formik.values.sumberPenerangan}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.sumberPenerangan !== formik.values.sumberPenerangan && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.sumberPenerangan}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="sumberPenerangan" value={formik.values.sumberPenerangan} onChange={formik.handleChange}>
                     <FormControlLabel
                       name="sumberPenerangan"
                       value="Listrik Pribadi s/d 900 Watt"
@@ -454,15 +418,14 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="sumberAirMinum">
+                  <FormLabel sx={labelStyle} id="sumberAirMinum">
                     Sumber air minum utama
+                    {initialData.sumberAirMinum !== formik.values.sumberAirMinum && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="sumberAirMinum"
-                    value={formik.values.sumberAirMinum}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.sumberAirMinum !== formik.values.sumberAirMinum && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.sumberAirMinum}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="sumberAirMinum" value={formik.values.sumberAirMinum} onChange={formik.handleChange}>
                     <FormControlLabel
                       name="sumberAirMinum"
                       value="Air Kemasan/Isi Ulang"
@@ -479,24 +442,29 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                       label="Sumur Tidak Terlindung"
                     />
                     <FormControlLabel
+                      name="sumberAirMinum"
                       value="Air Permukaan (Sungai, Danau, dll)"
                       control={<Radio />}
                       label="Air Permukaan (Sungai, Danau, dll)"
                     />
-                    <FormControlLabel value="Air Hujan" control={<Radio />} label="Air Hujan" />
-                    <FormControlLabel value="Lainnya" control={<Radio />} label="Lainnya" />
+                    <FormControlLabel name="sumberAirMinum" value="Air Hujan" control={<Radio />} label="Air Hujan" />
+                    <FormControlLabel name="sumberAirMinum" value="Lainnya" control={<Radio />} label="Lainnya" />
                   </RadioGroup>
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="fasilitasBAB">
+                  <FormLabel sx={labelStyle} id="fasilitasBuangAirBesar">
                     Memiliki fasilitas tempat buang air besar
+                    {initialData.fasilitasBuangAirBesar !== formik.values.fasilitasBuangAirBesar && <UpdateChip />}
                   </FormLabel>
+                  {initialData.fasilitasBuangAirBesar !== formik.values.fasilitasBuangAirBesar && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.fasilitasBuangAirBesar}</FormHelperText>
+                  )}
                   <RadioGroup
                     row
-                    aria-labelledby="fasilitasBAB"
+                    aria-labelledby="fasilitasBuangAirBesar"
                     value={formik.values.fasilitasBuangAirBesar}
-                    onChange={readOnly ? () => {} : formik.handleChange}
+                    onChange={formik.handleChange}
                   >
                     <FormControlLabel
                       name="fasilitasBuangAirBesar"
@@ -521,14 +489,18 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="sumberBahanBakar">
+                  <FormLabel sx={labelStyle} id="bahanBakarMemasak">
                     Sumber Bahan Bakar Untuk Memasak
+                    {initialData.bahanBakarMemasak !== formik.values.bahanBakarMemasak && <UpdateChip />}
                   </FormLabel>
+                  {initialData.bahanBakarMemasak !== formik.values.bahanBakarMemasak && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.bahanBakarMemasak}</FormHelperText>
+                  )}
                   <RadioGroup
                     row
-                    aria-labelledby="sumberBahanBakar"
+                    aria-labelledby="bahanBakarMemasak"
                     value={formik.values.bahanBakarMemasak}
-                    onChange={readOnly ? () => {} : formik.handleChange}
+                    onChange={formik.handleChange}
                   >
                     <FormControlLabel name="bahanBakarMemasak" value="Listrik/Gas" control={<Radio />} label="Listrik/Gas" />
                     <FormControlLabel name="bahanBakarMemasak" value="Minyak Tanah" control={<Radio />} label="Minyak Tanah" />
@@ -538,114 +510,107 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="penerimaBPNT">
+                  <FormLabel sx={labelStyle} id="penerimaBPNT">
                     Penerima BPNT
+                    {initialData.penerimaBPNT !== formik.values.penerimaBPNT && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="penerimaBPNT"
-                    value={formik.values.penerimaBPNT}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.penerimaBPNT !== formik.values.penerimaBPNT && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.penerimaBPNT}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="penerimaBPNT" value={formik.values.penerimaBPNT} onChange={formik.handleChange}>
                     <FormControlLabel name="penerimaBPNT" value="Ya" control={<Radio />} label="Ya" />
                     <FormControlLabel name="penerimaBPNT" value="Tidak" control={<Radio />} label="Tidak" />
                   </RadioGroup>
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="penerimaBPUM">
+                  <FormLabel sx={labelStyle} id="penerimaBPUM">
                     Penerima BPUM
+                    {initialData.penerimaBPUM !== formik.values.penerimaBPUM && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="penerimaBPUM"
-                    value={formik.values.penerimaBPUM}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.penerimaBPUM !== formik.values.penerimaBPUM && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.penerimaBPUM}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="penerimaBPUM" value={formik.values.penerimaBPUM} onChange={formik.handleChange}>
                     <FormControlLabel name="penerimaBPUM" value="Ya" control={<Radio />} label="Ya" />
                     <FormControlLabel name="penerimaBPUM" value="Tidak" control={<Radio />} label="Tidak" />
                   </RadioGroup>
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="penerimaBST">
+                  <FormLabel sx={labelStyle} id="penerimaBST">
                     Penerima BST
+                    {initialData.penerimaBST !== formik.values.penerimaBST && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="penerimaBST"
-                    value={formik.values.penerimaBST}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.penerimaBST !== formik.values.penerimaBST && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.penerimaBST}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="penerimaBST" value={formik.values.penerimaBST} onChange={formik.handleChange}>
                     <FormControlLabel name="penerimaBST" value="Ya" control={<Radio />} label="Ya" />
                     <FormControlLabel name="penerimaBST" value="Tidak" control={<Radio />} label="Tidak" />
                   </RadioGroup>
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="penerimaPKH">
+                  <FormLabel sx={labelStyle} id="penerimaPKH">
                     Penerima PKH
+                    {initialData.penerimaPKH !== formik.values.penerimaPKH && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="penerimaPKH"
-                    value={formik.values.penerimaPKH}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.penerimaPKH !== formik.values.penerimaPKH && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.penerimaPKH}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="penerimaPKH" value={formik.values.penerimaPKH} onChange={formik.handleChange}>
                     <FormControlLabel name="penerimaPKH" value="Ya" control={<Radio />} label="Ya" />
                     <FormControlLabel name="penerimaPKH" value="Tidak" control={<Radio />} label="Tidak" />
                   </RadioGroup>
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="penerimaSembako">
-                    Penerima SEMBAKO
+                  <FormLabel sx={labelStyle} id="penerimaSembako">
+                    Penerima Sembako
+                    {initialData.penerimaSembako !== formik.values.penerimaSembako && <UpdateChip />}
                   </FormLabel>
-                  <RadioGroup
-                    row
-                    aria-labelledby="penerimaSembako"
-                    value={formik.values.penerimaSembako}
-                    onChange={readOnly ? () => {} : formik.handleChange}
-                  >
+                  {initialData.penerimaSembako !== formik.values.penerimaSembako && (
+                    <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.penerimaSembako}</FormHelperText>
+                  )}
+                  <RadioGroup row aria-labelledby="penerimaSembako" value={formik.values.penerimaSembako} onChange={formik.handleChange}>
                     <FormControlLabel name="penerimaSembako" value="Ya" control={<Radio />} label="Ya" />
                     <FormControlLabel name="penerimaSembako" value="Tidak" control={<Radio />} label="Tidak" />
                   </RadioGroup>
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
-                {!readOnly && (
-                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button variant="contained" type="submit">
-                      Verifikasi
-                    </Button>{' '}
-                  </Box>
-                )}
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Button variant="contained" type="submit">
+                    Verifikasi
+                  </Button>
+                </Box>
               </SubCard>
             </Grid>
             {/* <Grid item xs={12}>
               <SubCard title="Individu/Anggota Keluarga">
                 <FormControl fullWidth>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="nama">
+                  <FormLabel sx={labelStyle} id="nama">
                     Nama
                   </FormLabel>
                   <TextField placeholder="Masukkan nama lengkap" />
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="nik">
+                  <FormLabel sx={labelStyle} id="nik">
                     NIK
                   </FormLabel>
                   <TextField />
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl fullWidth>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="alamat">
+                  <FormLabel sx={labelStyle} id="alamat">
                     Alamat
                   </FormLabel>
                   <TextField multiline rows={3} />
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="jenisKelamin">
+                  <FormLabel sx={labelStyle} id="jenisKelamin">
                     Jenis Kelamin
                   </FormLabel>
                   <RadioGroup row aria-labelledby="jenisKelamin" name="jenisKelamin" defaultValue="Laki-laki">
@@ -655,7 +620,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="tanggalLahir">
+                  <FormLabel sx={labelStyle} id="tanggalLahir">
                     Tanggal Lahir
                   </FormLabel>
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -670,7 +635,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="statusKawin">
+                  <FormLabel sx={labelStyle} id="statusKawin">
                     Status Kawin
                   </FormLabel>
                   <RadioGroup row aria-labelledby="statusKawin" name="statusKawin">
@@ -682,7 +647,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="pekerjaan">
+                  <FormLabel sx={labelStyle} id="pekerjaan">
                     Pekerjaan
                   </FormLabel>
                   <RadioGroup row aria-labelledby="pekerjaan" name="pekerjaan">
@@ -699,7 +664,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
                 </FormControl>
                 <Divider sx={{ marginY: 2 }} />
                 <FormControl>
-                  <FormLabel sx={{ fontWeight: 500, color: 'black' }} id="pendidikan">
+                  <FormLabel sx={labelStyle} id="pendidikan">
                     Pendidikan
                   </FormLabel>
                   <RadioGroup row aria-labelledby="pendidikan" name="pendidikan">
@@ -726,7 +691,6 @@ const FormVerifikasiP3KE = ({ isEdit, initialData, readOnly = false }) => {
 
 FormVerifikasiP3KE.propTypes = {
   isEdit: PropTypes.bool,
-  readOnly: PropTypes.bool,
   initialData: PropTypes.any
 };
 

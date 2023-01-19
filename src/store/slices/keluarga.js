@@ -2,25 +2,24 @@ import axiosService from 'utils/axios';
 
 const ENDPOINT = 'keluarga';
 
-export async function getKeluargaDonggala({ signal, params }) {
-  const response = await axiosService.get(`/${ENDPOINT}/donggala`, { signal, params });
+// export async function getKeluarga({ signal, params }) {
+//   const response = await axiosService.get(`/${ENDPOINT}/donggala`, { signal, params });
 
+//   return response.data;
+// }
+
+export async function getKeluargaByKabupatenKotaId(kabupatenKotaId) {
+  const response = await axiosService.get(`/${ENDPOINT}/${kabupatenKotaId}`);
   return response.data;
 }
 
-export async function getKeluargaDonggalById(id) {
-  const response = await axiosService.get(`/${ENDPOINT}/donggala/${id}`);
+export async function getKeluargaById(kabupatenKotaId, id) {
+  const response = await axiosService.get(`/${ENDPOINT}/detail/${kabupatenKotaId}/${id}`);
   return response.data;
 }
 
-export async function getKeluargaSigi({ signal, params }) {
-  const response = await axiosService.get(`/${ENDPOINT}/sigi`, { signal, params });
-  console.log(response.data);
-  return response.data;
-}
-
-export async function getKeluargaSigiById(id) {
-  const response = await axiosService.get(`/${ENDPOINT}/sigi/${id}`);
+export async function getKeluargaByIdKeluarga(kabupatenKotaId, idKeluarga) {
+  const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${kabupatenKotaId}/${idKeluarga}`);
   return response.data;
 }
 

@@ -11,18 +11,14 @@ import { FormattedMessage } from 'react-intl';
 
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import { getKeluargaDonggalById, getKeluargaSigiById } from 'store/slices/keluarga';
 import FormVerifikasiP3KE from 'components/form/FormVerifikasiP3KE';
 import MainCard from 'components/ui-component/cards/MainCard';
+import { getKeluargaById } from 'store/slices/keluarga';
 
 const ReviewP3KEPage = () => {
   const router = useRouter();
 
-  const fetchKeluagaById = useQuery(['keluargaById'], () =>
-    router.query.keluarga === 'Donggala' ? getKeluargaDonggalById(router.query.id) : getKeluargaSigiById(router.query.id)
-  );
-
-  console.log(fetchKeluagaById.data);
+  const fetchKeluagaById = useQuery(['keluargaById'], () => getKeluargaById(router.query.kabupaten, router.query.id));
 
   const pageProps = {
     title: 'Review',
@@ -46,9 +42,9 @@ const ReviewP3KEPage = () => {
               </Alert>
             </MainCard>
           </Grid>
-          <Grid item xs={12} lg={6}>
+          {/* <Grid item xs={12} lg={6}>
             <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} readOnly />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} lg={6}>
             <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} />
           </Grid>

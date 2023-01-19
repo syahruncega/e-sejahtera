@@ -31,12 +31,12 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'components/ui-component/cards/MainCard';
 import Transitions from 'components/ui-component/extended/Transitions';
-import UpgradePlanCard from './UpgradePlanCard';
 import useAuth from 'hooks/useAuth';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
 import useConfig from 'hooks/useConfig';
+import Link from 'Link';
 
 const User1 = '/assets/images/users/user-round.svg';
 
@@ -165,7 +165,7 @@ const ProfileSection = () => {
                             {user ? user.name : 'Jone Doe'}
                           </Typography>
                         </Stack>
-                        <Typography variant="subtitle2">Project Admin</Typography>
+                        <Typography variant="subtitle2">Superadmin</Typography>
                       </Stack>
                       <OutlinedInput
                         sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
@@ -187,8 +187,6 @@ const ProfileSection = () => {
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                       <Box sx={{ p: 2, pt: 0 }}>
-                        <UpgradePlanCard />
-                        <Divider />
                         <Card
                           sx={{
                             bgcolor: theme.palette.mode === 'dark' ? theme.palette.dark[800] : theme.palette.primary.light,
@@ -268,6 +266,8 @@ const ProfileSection = () => {
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 1}
                             onClick={(event) => handleListItemClick(event, 1)}
+                            LinkComponent={Link}
+                            href="/dashboard/profil"
                           >
                             <ListItemIcon>
                               <IconUser stroke={1.5} size="20px" />
@@ -280,7 +280,7 @@ const ProfileSection = () => {
                                       <FormattedMessage id="social-profile" />
                                     </Typography>
                                   </Grid>
-                                  <Grid item>
+                                  {/* <Grid item>
                                     <Chip
                                       label="02"
                                       size="small"
@@ -289,7 +289,7 @@ const ProfileSection = () => {
                                         color: theme.palette.background.default
                                       }}
                                     />
-                                  </Grid>
+                                  </Grid> */}
                                 </Grid>
                               }
                             />

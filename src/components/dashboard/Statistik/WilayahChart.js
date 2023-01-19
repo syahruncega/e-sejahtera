@@ -139,15 +139,12 @@ const WilayahChart = ({ title, jumlahKelurga, jumlahIndividu, isLoading, initSer
       {isLoading ? (
         <SkeletonP3KEBarChart />
       ) : (
-        <SubCard>
+        <SubCard title={title}>
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
               <Grid container alignItems="center" justifyContent="space-between">
                 <Grid item>
                   <Grid container direction="column" spacing={1}>
-                    <Grid item>
-                      <Typography variant="subtitle2">{title}</Typography>
-                    </Grid>
                     <Grid item>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography

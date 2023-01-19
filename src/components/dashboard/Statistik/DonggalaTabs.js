@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import SubCard from 'components/ui-component/cards/SubCard';
 import WilayahChart from './WilayahChart';
+import MainCard from 'components/ui-component/cards/MainCard';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -418,8 +419,8 @@ export default function DonggalaTabs() {
   }, []);
 
   return (
-    <SubCard>
-      <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 660 }}>
+    <SubCard title="Data per Kecamatan" content={false}>
+      <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 720 }}>
         <Tabs
           orientation="vertical"
           variant="scrollable"
