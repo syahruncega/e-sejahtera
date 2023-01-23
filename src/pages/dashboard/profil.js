@@ -18,7 +18,7 @@ import DescriptionTwoToneIcon from '@mui/icons-material/DescriptionTwoTone';
 import LibraryBooksTwoToneIcon from '@mui/icons-material/LibraryBooksTwoTone';
 import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
-import UserProfile from 'components/dashboard/Profil/UserProfile';
+import FormProfilMahasiswa from 'components/dashboard/Profil/FormProfilMahasiswa';
 import UbahKataSandi from 'components/dashboard/Profil/UbahKataSandi';
 import { FormattedMessage } from 'react-intl';
 
@@ -120,7 +120,7 @@ const ProfilPage = () => {
               ))}
             </Tabs>
             <TabPanel value={value} index={0}>
-              <UserProfile />
+              <FormProfilMahasiswa />
             </TabPanel>
             <TabPanel value={value} index={1}>
               <UbahKataSandi />

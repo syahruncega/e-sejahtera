@@ -32,9 +32,9 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const [kabupatenKotaId, setKabupatenKotaId] = useState(isEdit ? detailLokasi.kabupatenKota : null);
-  const [kecamatanId, setKecamatanId] = useState(isEdit ? detailLokasi.kecamatan : null);
-  const [kelurahanId, setKelurahanId] = useState(isEdit ? detailLokasi.kelurahan : null);
+  const [kabupatenKotaValue, setKabupatenKotaValue] = useState(isEdit ? detailLokasi.kabupatenKota : null);
+  const [kecamatanValue, setKecamatanValue] = useState(isEdit ? detailLokasi.kecamatan : null);
+  const [desaKelurahanValue, setDesaKelurahanValue] = useState(isEdit ? detailLokasi.kelurahan : null);
 
   const queryCreateDetailLokasi = useMutation({
     mutationFn: (newDetailLokasi) => createDetailLokasi(newDetailLokasi),
@@ -43,9 +43,9 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
       queryClient.invalidateQueries(['detailLokasi']);
       // queryClient.setQueriesData(['detailLokasi'], (oldData) => [newDetailLokasi, ...(oldData ?? [])]);
       setOpen(false);
-      setKabupatenKotaId(null);
-      setKecamatanId(null);
-      setKelurahanId(null);
+      setKabupatenKotaValue(null);
+      setKecamatanValue(null);
+      setDesaKelurahanValue(null);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
     }
@@ -123,7 +123,7 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
             <Autocomplete
               disablePortal
               name="kabupatenKotaId"
-              value={kabupatenKotaId}
+              value={kabupatenKotaValue}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
               onChange={async (e, value) => {
@@ -140,15 +140,15 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
                   setDataKecamatan([]);
                   setDataKelurahan([]);
                 }
-                setKabupatenKotaId(value);
-                setKecamatanId(null);
-                setKelurahanId(null);
+                setKabupatenKotaValue(value);
+                setKecamatanValue(null);
+                setDesaKelurahanValue(null);
               }}
               options={dataKabupatenKota || []}
               sx={{ width: 'auto', marginTop: 2 }}
               renderInput={(params) => (
                 <TextField
-                  label="Kabupaten"
+                  label="Kabupaten/Kota"
                   value={formik.values.kabupatenKotaId}
                   helperText={formik.touched.kabupatenKotaId && formik.errors.kabupatenKotaId}
                   error={formik.touched.kabupatenKotaId && Boolean(formik.errors.kabupatenKotaId)}
@@ -160,8 +160,8 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
               disablePortal
               key={`kecamatan${keyKecamatan}`}
               name="kecamatanId"
-              value={kecamatanId}
-              disabled={!(dataKecamatan.length > 0) && kecamatanId === null}
+              value={kecamatanValue}
+              disabled={!(dataKecamatan.length > 0) && kecamatanValue === null}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
               onChange={async (e, value) => {
@@ -175,8 +175,8 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
                   formik.setFieldValue('kecamatanId', '');
                   setKeyKelurahan([]);
                 }
-                setKecamatanId(value);
-                setKelurahanId(null);
+                setKecamatanValue(value);
+                setDesaKelurahanValue(null);
               }}
               options={dataKecamatan || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -194,8 +194,8 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
               disablePortal
               key={`kelurahan${keyKelurahan}`}
               name="kelurahanId"
-              value={kelurahanId}
-              disabled={!(dataKelurahan.length > 0) && kelurahanId === null}
+              value={setDesaKelurahanValue}
+              disabled={!(dataKelurahan.length > 0) && setDesaKelurahanValue === null}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
               onChange={async (e, value) => {
@@ -204,13 +204,13 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
                 } else {
                   formik.setFieldValue('kelurahanId', '');
                 }
-                setKelurahanId(value);
+                setDesaKelurahanValue(value);
               }}
               options={dataKelurahan || []}
               sx={{ width: 'auto', marginTop: 2 }}
               renderInput={(params) => (
                 <TextField
-                  label="Kelurahan"
+                  label="Desa/Kelurahan"
                   value={formik.values.kelurahanId}
                   helperText={formik.touched.kelurahanId && formik.errors.kelurahanId}
                   error={formik.touched.kelurahanId && Boolean(formik.errors.kelurahanId)}

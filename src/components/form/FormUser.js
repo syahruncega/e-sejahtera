@@ -14,40 +14,40 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
 import { EditTwoTone } from '@mui/icons-material';
-import { createInstansi, updateInstansi } from 'store/slices/instansi';
+import { createUser, updateUser } from 'store/slices/user';
 
 const validationSchema = yup.object({
   username: yup.string().required('Username wajib diisi'),
   password: yup.string().required('Password wajib diisi'),
-  role: yup.mixed().oneOf(['ADMIN', 'ANALIS', 'DOSEN', 'MAHASISWA', 'PUSBANG']),
-  email: yup.string().email().required('Email wajib diisi'),
-  noHP: yup.string().required('Nomor HP wajib diisi')
+  role: yup.mixed().oneOf(['admin', 'analis', 'dosen', 'mahasiswa', 'pusbang']),
+  email: yup.string().email('Masukkan email valid').required('Email wajib diisi'),
+  noHp: yup.string().required('Nomor HP wajib diisi')
 });
 
-const FormPengguna = ({ isEdit, pengguna }) => {
+const FormUser = ({ isEdit, user }) => {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
-  const queryCreateInstansi = useMutation({
-    mutationFn: (newInstansi) => createInstansi(newInstansi),
+  const queryCreateUser = useMutation({
+    mutationFn: (newUser) => createUser(newUser),
 
-    onSuccess: (newInstansi) => {
-      // queryClient.setQueriesData(['instansi'], (oldData) => [newInstansi, ...(oldData ?? [])]);
-      queryClient.invalidateQueries('instansi');
+    onSuccess: (newUser) => {
+      // queryClient.setQueriesData(['instansi'], (oldData) => [newUser, ...(oldData ?? [])]);
+      queryClient.invalidateQueries('user');
       setOpen(false);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
     }
   });
 
-  const queryUpdateInstansi = useMutation({
-    mutationFn: (newInstansi) => updateInstansi(pengguna.id, newInstansi),
-    onSuccess: (newInstansi) => {
-      queryClient.invalidateQueries('instansi');
+  const queryUpdateUser = useMutation({
+    mutationFn: async (newUser) => updateUser(user.id, newUser),
+    onSuccess: (newUser) => {
+      queryClient.invalidateQueries('user');
       // queryClient.setQueriesData(['instansi'], (oldData) => {
-      //   const filteredOldData = oldData.filter((values) => values.id !== newInstansi.id);
-      //   return [newInstansi, ...(filteredOldData ?? [])];
+      //   const filteredOldData = oldData.filter((values) => values.id !== newUser.id);
+      //   return [newUser, ...(filteredOldData ?? [])];
       // });
       setOpen(false);
     }
@@ -55,16 +55,17 @@ const FormPengguna = ({ isEdit, pengguna }) => {
 
   const formik = useFormik({
     initialValues: {
-      username: isEdit ? pengguna.username : '',
+      username: isEdit ? user.username : '',
       password: '',
-      role: isEdit ? pengguna.role : 'MAHASISWA',
-      email: isEdit ? pengguna.email : '',
-      noHP: isEdit ? pengguna.noHP : ''
+      role: isEdit ? user.role : 'mahasiswa',
+      email: isEdit ? user.email : '',
+      noHp: isEdit ? user.noHp : ''
     },
     validationSchema,
     onSubmit: (values) => {
+      console.log(values);
       toast.promise(
-        isEdit ? queryUpdateInstansi.mutateAsync(values) : queryCreateInstansi.mutateAsync(values),
+        isEdit ? queryUpdateUser.mutateAsync(values) : queryCreateUser.mutateAsync(values),
         {
           loading: 'Sedang menyimpan...',
           success: `Data instansi berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
@@ -93,7 +94,7 @@ const FormPengguna = ({ isEdit, pengguna }) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Tambah Instansi">
+        <Tooltip title="Tambah Pengguna">
           <Fab
             color="primary"
             size="small"
@@ -133,16 +134,16 @@ const FormPengguna = ({ isEdit, pengguna }) => {
               helperText={formik.touched.password && formik.errors.password}
             />
 
-            <FormControl>
-              <FormLabel sx={{ fontWeight: 500, color: 'black', marginTop: 2 }} id="role">
+            <FormControl sx={{ marginTop: 2, marginX: 1 }}>
+              <FormLabel sx={{ fontWeight: 400 }} id="role">
                 Role
               </FormLabel>
               <RadioGroup row aria-labelledby="Role" value={formik.values.role} onChange={formik.handleChange}>
-                <FormControlLabel name="role" value="ADMIN" control={<Radio />} label="Admin" />
-                <FormControlLabel name="role" value="ANALIS" control={<Radio />} label="Analis" />
-                <FormControlLabel name="role" value="DOSEN" control={<Radio />} label="Dosen" />
-                <FormControlLabel name="role" value="MAHASISWA" control={<Radio />} label="Mahasiswa" />
-                <FormControlLabel name="role" value="PUSBANG" control={<Radio />} label="Pusbang" />
+                <FormControlLabel name="role" value="admin" control={<Radio size="small" />} label="Admin" />
+                <FormControlLabel name="role" value="analis" control={<Radio size="small" />} label="Analis" />
+                <FormControlLabel name="role" value="dosen" control={<Radio size="small" />} label="Dosen" />
+                <FormControlLabel name="role" value="mahasiswa" control={<Radio size="small" />} label="Mahasiswa" />
+                <FormControlLabel name="role" value="pusbang" control={<Radio size="small" />} label="Pusbang" />
               </RadioGroup>
             </FormControl>
             <TextField
@@ -157,22 +158,22 @@ const FormPengguna = ({ isEdit, pengguna }) => {
               helperText={formik.touched.email && formik.errors.email}
             />
             <TextField
-              name="noHP"
+              name="noHp"
               label="Nomor HP"
               variant="outlined"
               fullWidth
-              value={formik.values.noHP}
+              value={formik.values.noHp}
               sx={{ marginTop: 2 }}
               onChange={formik.handleChange}
-              error={formik.touched.noHP && Boolean(formik.errors.noHP)}
-              helperText={formik.touched.noHP && formik.errors.noHP}
+              error={formik.touched.noHp && Boolean(formik.errors.noHp)}
+              helperText={formik.touched.noHp && formik.errors.noHp}
             />
           </DialogContent>
           <DialogActions>
-            <Button disabled={queryCreateInstansi.isLoading || queryUpdateInstansi.isLoading} onClick={handleClose}>
+            <Button disabled={queryCreateUser.isLoading || queryUpdateUser.isLoading} onClick={handleClose}>
               Batal
             </Button>
-            <LoadingButton loading={queryCreateInstansi.isLoading || queryUpdateInstansi.isLoading} type="submit">
+            <LoadingButton loading={queryCreateUser.isLoading || queryUpdateUser.isLoading} type="submit">
               Simpan
             </LoadingButton>
           </DialogActions>
@@ -182,9 +183,9 @@ const FormPengguna = ({ isEdit, pengguna }) => {
   );
 };
 
-FormPengguna.propTypes = {
+FormUser.propTypes = {
   isEdit: PropTypes.bool,
-  pengguna: PropTypes.any
+  user: PropTypes.any
 };
 
-export default FormPengguna;
+export default FormUser;
