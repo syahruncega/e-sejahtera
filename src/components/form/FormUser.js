@@ -68,7 +68,7 @@ const FormUser = ({ isEdit, user }) => {
         isEdit ? queryUpdateUser.mutateAsync(values) : queryCreateUser.mutateAsync(values),
         {
           loading: 'Sedang menyimpan...',
-          success: `Data instansi berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          success: `Pengguna berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
           error: (err) => `${err.message}`
         },
         { id: 'toast' }

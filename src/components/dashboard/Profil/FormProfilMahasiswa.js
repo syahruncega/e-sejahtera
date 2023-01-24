@@ -35,7 +35,7 @@ const Avatar1 = '/assets/images/users/avatar-1.png';
 const validationSchema = yup.object({
   namaLengkap: yup.string().required('Nama lengkap wajib diisi'),
   email: yup.string().email().required('Email wajib diisi'),
-  universitasId: yup.string().required('Universitas wajib diisi'),
+  universitas: yup.string().required('Universitas wajib diisi'),
   tanggalLahir: yup.date().required('Tanggal lahir wajib diisi'),
   jenisKelamin: yup.string().required('Jenis kelamin wajib diisi'),
   noHP: yup.string().required('No HP wajib diisi'),
@@ -71,7 +71,7 @@ const FormProfilMahasiswa = () => {
       email: 'example@mail.com',
       jenisKelamin: 'Laki-laki',
       tanggalLahir: new Date(),
-      universitasId: '',
+      universitas: 'Universitas Tadulako',
       noHP: '0822-3333-4444',
       stambuk: 'F55123000',
       kabupatenKotaId: '',
@@ -157,7 +157,16 @@ const FormProfilMahasiswa = () => {
               </LocalizationProvider>
             </Grid>
             <Grid item md={6} xs={12}>
-              <Autocomplete
+              <TextField
+                fullWidth
+                label="Universitas"
+                name="universitas"
+                value={formik.values.universitas}
+                onChange={formik.handleChange}
+                error={formik.touched.universitas && Boolean(formik.errors.universitas)}
+                helperText={formik.touched.universitas && formik.errors.universitas}
+              />
+              {/* <Autocomplete
                 disablePortal
                 disableClearable
                 name="universitasId"
@@ -180,7 +189,7 @@ const FormProfilMahasiswa = () => {
                     {...params}
                   />
                 )}
-              />
+              /> */}
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField

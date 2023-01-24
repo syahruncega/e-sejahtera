@@ -56,12 +56,12 @@ const VerifikasiP3KEPage = () => {
       },
       {
         id: 'kecamatan',
-        accessorKey: 'Kecamatan.nama',
+        accessorKey: 'kecamatan.nama',
         header: 'Kecamatan'
       },
       {
         id: 'kelurahan',
-        accessorKey: 'Kelurahan.nama',
+        accessorKey: 'kelurahan.nama',
         header: 'Desa/Kelurahan'
       },
       {

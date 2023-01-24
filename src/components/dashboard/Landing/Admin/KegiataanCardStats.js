@@ -42,7 +42,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
 
-const KegiatanCardDashboard = ({ isLoading }) => {
+const KegiatanCardStats = ({ isLoading }) => {
   const theme = useTheme();
 
   return (
@@ -93,8 +93,8 @@ const KegiatanCardDashboard = ({ isLoading }) => {
   );
 };
 
-KegiatanCardDashboard.propTypes = {
+KegiatanCardStats.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default KegiatanCardDashboard;
+export default KegiatanCardStats;

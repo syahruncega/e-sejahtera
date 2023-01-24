@@ -19,32 +19,12 @@ import Router from 'next/router';
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-const status = [
-  {
-    value: '2022',
-    label: '2022'
-  },
-  {
-    value: '2023',
-    label: '2023'
-  }
-];
-
 // ==============================|| DASHBOARD DEFAULT - TOTAL GROWTH BAR CHART ||============================== //
 
-const P3KEBarChart = ({ isLoading }) => {
-  const [series] = useState([
-    {
-      name: 'Keluarga',
-      data: [29995, 44656, 2004, 46034, 25503, 22722, 17756, 20995, 73611, 29951, 33522, 12011, 20155]
-    },
-    {
-      name: 'Individu',
-      data: [124634, 182756, 112209, 193999, 107660, 98341, 72158, 80607, 288129, 114613, 133868, 46496, 80419]
-    }
-  ]);
+const P3KEBarChart = () => {
+  const [isLoading, setLoading] = useState(true);
+  const [series, setSeries] = useState([]);
 
-  const [value, setValue] = useState('2022');
   const theme = useTheme();
   const { navType, rtlLayout } = useConfig();
 
@@ -61,6 +41,16 @@ const P3KEBarChart = ({ isLoading }) => {
   const [options, setOptions] = useState({});
 
   useEffect(() => {
+    setSeries([
+      {
+        name: 'Keluarga',
+        data: [29995, 44656, 2004, 46034, 25503, 22722, 17756, 20995, 73611, 29951, 33522, 12011, 20155]
+      },
+      {
+        name: 'Individu',
+        data: [124634, 182756, 112209, 193999, 107660, 98341, 72158, 80607, 288129, 114613, 133868, 46496, 80419]
+      }
+    ]);
     setOptions(() => ({
       chart: {
         height: 480,
@@ -159,7 +149,8 @@ const P3KEBarChart = ({ isLoading }) => {
         }
       }
     }));
-  }, [navType, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, isLoading, grey500]);
+    setLoading(false);
+  }, [navType, primary200, primaryDark, secondaryMain, secondaryLight, primary, darkLight, grey200, grey500]);
 
   return (
     <>
@@ -213,23 +204,14 @@ const P3KEBarChart = ({ isLoading }) => {
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item>
-                  <TextField id="standard-select-currency" select value={value} onChange={(e) => setValue(e.target.value)}>
-                    {status.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
               </Grid>
             </Grid>
             <Grid
               item
               xs={12}
               sx={{
-                '& .apexcharts-legend-text': { marginLeft: rtlLayout ? '8px' : 'initial' },
-                marginRight: '60px',
+                // backgroundColor: 'yellow',
+                // '& .apexcharts-legend-text': { marginLeft: rtlLayout ? '8px' : 'initial' },
                 '.apexcharts-xaxis-label': { cursor: 'pointer' }
               }}
             >
@@ -242,8 +224,6 @@ const P3KEBarChart = ({ isLoading }) => {
   );
 };
 
-P3KEBarChart.propTypes = {
-  isLoading: PropTypes.bool
-};
+P3KEBarChart.propTypes = {};
 
 export default P3KEBarChart;

@@ -36,16 +36,16 @@ const ReviewP3KEPage = () => {
           <Grid item xs={12} lg={12}>
             <MainCard>
               <Alert severity="info" color="secondary" variant="outlined" sx={{ borderColor: 'secondary.main', marginBottom: 2 }}>
-                <AlertTitle>Kabupaten/Kota: {fetchKeluagaById.data?.KabupatenKota.nama}</AlertTitle>
-                <AlertTitle>Kecamatan: {fetchKeluagaById.data?.Kecamatan.nama}</AlertTitle>
-                <AlertTitle>Desa/Kelurahan: {fetchKeluagaById.data?.Kelurahan.nama}</AlertTitle>
+                <AlertTitle>Kabupaten/Kota: {fetchKeluagaById.data?.kabupatenKota.nama}</AlertTitle>
+                <AlertTitle>Kecamatan: {fetchKeluagaById.data?.kecamatan.nama}</AlertTitle>
+                <AlertTitle>Desa/Kelurahan: {fetchKeluagaById.data?.kelurahan.nama}</AlertTitle>
               </Alert>
             </MainCard>
           </Grid>
           {/* <Grid item xs={12} lg={6}>
             <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} readOnly />
           </Grid> */}
-          <Grid item xs={12} lg={6}>
+          <Grid item xs={12} lg={12}>
             <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} />
           </Grid>
         </Grid>

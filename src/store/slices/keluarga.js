@@ -10,6 +10,7 @@ const ENDPOINT = 'keluarga';
 
 export async function getKeluargaByKabupatenKotaId(kabupatenKotaId) {
   const response = await axiosService.get(`/${ENDPOINT}/${kabupatenKotaId}`);
+  console.log(response.data);
   return response.data;
 }
 

@@ -64,7 +64,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const InstansiCardDashboard = ({ isLoading }) => {
+const InstansiCardStats = ({ isLoading }) => {
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -187,8 +187,8 @@ const InstansiCardDashboard = ({ isLoading }) => {
   );
 };
 
-InstansiCardDashboard.propTypes = {
+InstansiCardStats.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default InstansiCardDashboard;
+export default InstansiCardStats;

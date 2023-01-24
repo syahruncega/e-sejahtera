@@ -113,7 +113,7 @@ const chartOptions = {
 
 // ==============================|| DASHBOARD - TOTAL ORDER LINE CHART CARD ||============================== //
 
-const ProgramCardDashboard = ({ isLoading }) => {
+const ProgramCardStats = ({ isLoading }) => {
   const theme = useTheme();
 
   const yearSeries = [
@@ -233,8 +233,8 @@ const ProgramCardDashboard = ({ isLoading }) => {
   );
 };
 
-ProgramCardDashboard.propTypes = {
+ProgramCardStats.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default ProgramCardDashboard;
+export default ProgramCardStats;

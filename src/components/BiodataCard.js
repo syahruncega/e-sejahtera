@@ -26,6 +26,7 @@ import {
 import AnimateButton from 'components/ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
 import FormProfilMahasiswa from './dashboard/Profil/FormProfilMahasiswa';
+import FormProfilDosen from './dashboard/Profil/FormProfilDosen';
 
 // assets
 const mailImg = '/assets/images/img-contact-mail.svg';
@@ -127,6 +128,7 @@ const BiodataCard = () => {
           <Card sx={{ mb: 6.25 }} elevation={4}>
             <CardContent sx={{ p: 4 }}>
               <FormProfilMahasiswa />
+              {/* <FormProfilDosen /> */}
             </CardContent>
           </Card>
         </Grid>

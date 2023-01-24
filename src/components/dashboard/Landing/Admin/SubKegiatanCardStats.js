@@ -39,7 +39,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL INCOME LIGHT CARD ||============================== //
 
-const SubKegiatanCardDashboard = ({ isLoading }) => {
+const SubKegiatanCardStats = ({ isLoading }) => {
   const theme = useTheme();
 
   return (
@@ -92,8 +92,8 @@ const SubKegiatanCardDashboard = ({ isLoading }) => {
   );
 };
 
-SubKegiatanCardDashboard.propTypes = {
+SubKegiatanCardStats.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default SubKegiatanCardDashboard;
+export default SubKegiatanCardStats;
