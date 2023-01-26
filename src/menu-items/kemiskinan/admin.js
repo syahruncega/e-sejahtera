@@ -6,7 +6,7 @@ import { IconKey, IconBug, IconUserCheck, IconUserCircle } from '@tabler/icons';
 
 // ==============================|| EXTRA PAGES MENU ITEMS ||============================== //
 
-const admin = {
+const adminKemiskinan = {
   id: 'admin',
   title: <FormattedMessage id="admin" defaultMessage="Admin" />,
   icon: IconKey,
@@ -18,9 +18,9 @@ const admin = {
       type: 'item',
       icon: IconUserCircle,
       breadcrumbs: false,
-      url: '/dashboard/pengguna'
+      url: '/kemiskinan/dashboard/pengguna'
     }
   ]
 };
 
-export default admin;
+export default adminKemiskinan;

@@ -11,7 +11,6 @@ import { FormattedMessage } from 'react-intl';
 
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import { getKeluargaSigiById } from 'store/slices/keluarga';
 
 import MainCard from 'components/ui-component/cards/MainCard';
 import { getMonevById } from 'store/slices/monev';

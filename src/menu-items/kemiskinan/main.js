@@ -6,7 +6,7 @@ import { IconDashboard, IconApps, IconBox, IconHelp, IconSitemap, IconBuildingSk
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
-const main = {
+const mainKemiskinan = {
   id: 'main',
   title: <FormattedMessage id="main" defaultMessage="Menu" />,
   type: 'group',
@@ -15,54 +15,54 @@ const main = {
       id: 'dashboard',
       title: <FormattedMessage id="dashboard" />,
       type: 'item',
-      url: '/dashboard',
+      url: '/kemiskinan/dashboard',
       icon: IconDashboard
     },
     {
       id: 'bidang-urusan',
       title: <FormattedMessage id="bidang-urusan" defaultMessage="Bidang Urusan" />,
       type: 'item',
-      url: '/dashboard/bidang-urusan',
+      url: 'kemiskinan/dashboard/bidang-urusan',
       icon: IconFocus2
     },
     {
       id: 'instansi',
       title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
       type: 'item',
-      url: '/dashboard/instansi',
+      url: 'kemiskinan/dashboard/instansi',
       icon: IconBuildingSkyscraper
     },
     {
       id: 'program',
       title: <FormattedMessage id="program" defaultMessage="Program" />,
       type: 'item',
-      url: '/dashboard/program',
+      url: 'kemiskinan/dashboard/program',
       icon: IconApps
     },
     {
       id: 'kegiatan',
       title: <FormattedMessage id="kegiatan" defaultMessage="Kegiatan" />,
       type: 'item',
-      url: '/dashboard/kegiatan',
+      url: 'kemiskinan/dashboard/kegiatan',
       icon: IconBox
     },
     {
       id: 'sub-kegiatan',
       title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
       type: 'item',
-      url: '/dashboard/sub-kegiatan',
+      url: 'kemiskinan/dashboard/sub-kegiatan',
       icon: IconSitemap,
       breadcrumbs: false
     },
     {
-      id: 'tagging-data',
-      title: <FormattedMessage id="tagging-data" defaultMessage="Tagging Data" />,
+      id: 'penerima-manfaat',
+      title: <FormattedMessage id="penerima-manfaat" defaultMessage="Tagging Data" />,
       type: 'item',
-      url: '/dashboard/tagging-data',
+      url: '/kemiskinan/dashboard/penerima-manfaat',
       icon: IconBookmarks,
       breadcrumbs: false
     }
   ]
 };
 
-export default main;
+export default mainKemiskinan;

@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React from 'react';
 import Link from 'Link';
 
@@ -8,11 +7,9 @@ import {
   Box,
   Button,
   Checkbox,
-  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
-  Grid,
   IconButton,
   InputAdornment,
   InputLabel,

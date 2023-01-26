@@ -2,7 +2,6 @@ import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
 import InstansiCardDashboard from './InstansiCardStats';
-import P3KEBarChart from './P3KEBarChart';
 import ProgramCardStats from './ProgramCardStats';
 import KegiatanCardStats from './KegiataanCardStats';
 import SubKegiatanCardStats from './SubKegiatanCardStats';
@@ -34,9 +33,6 @@ const DashboardAdmin = () => {
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      <Grid item xs={12} md={12}>
-        <P3KEBarChart />
       </Grid>
     </Grid>
   );

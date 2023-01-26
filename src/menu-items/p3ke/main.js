@@ -2,23 +2,33 @@
 import { FormattedMessage } from 'react-intl';
 
 // assets
-import { IconApps, IconChecklist, IconChecks, IconUserCheck, IconUserSearch } from '@tabler/icons';
+import {
+  IconDashboard,
+  IconApps,
+  IconBox,
+  IconHelp,
+  IconSitemap,
+  IconBuildingSkyscraper,
+  IconFocus2,
+  IconBookmarks,
+  IconUserCheck,
+  IconChecklist
+} from '@tabler/icons';
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
-const mahasiswa = {
-  id: 'mahasiswa',
-  title: <FormattedMessage id="mahasiswa" defaultMessage="Mahasiswa" />,
-  icon: IconApps,
+const mainP3KE = {
+  id: 'main',
+  title: <FormattedMessage id="main" defaultMessage="Menu" />,
   type: 'group',
   children: [
-    // {
-    //   id: 'survey-p3ke',
-    //   title: <FormattedMessage id="survey-p3ke" defaultMessage="Survey P3KE" />,
-    //   type: 'item',
-    //   url: '/survey-p3ke',
-    //   icon: IconUserSearch
-    // },
+    {
+      id: 'dashboard',
+      title: <FormattedMessage id="dashboard" />,
+      type: 'item',
+      url: 'p3ke/dashboard',
+      icon: IconDashboard
+    },
     {
       id: 'verifikasi-p3ke',
       title: <FormattedMessage id="verifikasi-p3ke" defaultMessage="Verifikasi P3KE" />,
@@ -36,4 +46,4 @@ const mahasiswa = {
   ]
 };
 
-export default mahasiswa;
+export default mainP3KE;

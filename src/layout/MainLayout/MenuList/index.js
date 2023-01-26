@@ -1,41 +1,53 @@
-import { memo } from 'react';
+import { memo, useMemo } from 'react';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Typography, useMediaQuery } from '@mui/material';
 
 // project imports
-import menuItem from 'menu-items';
 import NavGroup from './NavGroup';
 import { LAYOUT_CONST } from 'constant';
 import { HORIZONTAL_MAX_ITEM } from 'config';
 import useConfig from 'hooks/useConfig';
+import { useRouter } from 'next/router';
+import { menuItemsKemiskinan, menuItemsP3KE, menuItemsStunting } from 'menu-items';
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
   const theme = useTheme();
+  const router = useRouter();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
+
+  const menuToShow = useMemo(() => {
+    if (router.pathname.startsWith('/kemiskinan')) {
+      return menuItemsKemiskinan;
+    }
+    if (router.pathname.startsWith('/p3ke')) {
+      return menuItemsP3KE;
+    }
+    return menuItemsStunting;
+  }, [router.pathname]);
 
   const { layout } = useConfig();
 
   // last menu-item to show in horizontal menu bar
   const lastItem = layout === LAYOUT_CONST.HORIZONTAL_LAYOUT && !matchDownMd ? HORIZONTAL_MAX_ITEM : null;
 
-  let lastItemIndex = menuItem.items.length - 1;
+  let lastItemIndex = menuToShow.items.length - 1;
   let remItems = [];
   let lastItemId;
 
-  if (lastItem && lastItem < menuItem.items.length) {
-    lastItemId = menuItem.items[lastItem - 1].id;
+  if (lastItem && lastItem < menuToShow.items.length) {
+    lastItemId = menuToShow.items[lastItem - 1].id;
     lastItemIndex = lastItem - 1;
-    remItems = menuItem.items.slice(lastItem - 1, menuItem.items.length).map((item) => ({
+    remItems = menuToShow.items.slice(lastItem - 1, menuToShow.items.length).map((item) => ({
       title: item.title,
       elements: item.children
     }));
   }
 
-  const navItems = menuItem.items.slice(0, lastItemIndex + 1).map((item) => {
+  const navItems = menuToShow.items.slice(0, lastItemIndex + 1).map((item) => {
     switch (item.type) {
       case 'group':
         return <NavGroup key={item.id} item={item} lastItem={lastItem} remItems={remItems} lastItemId={lastItemId} />;
