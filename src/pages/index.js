@@ -25,17 +25,16 @@ const HeaderWrapper = styled('div')(({ theme }) => ({
 
 // ============================|| CONTACT US MAIN ||============================ //
 
-const BiodataPage = () => (
-  <Page title="Contact us">
+const Index = () => (
+  <Page title="e-Sejahtera">
     <HeaderWrapper>
-      {/* <AppBar />
-      <BiodataCard /> */}
+      <></>
     </HeaderWrapper>
   </Page>
 );
 
-BiodataPage.getLayout = function getLayout(page) {
+Index.getLayout = function getLayout(page) {
   return <Layout variant={LAYOUT.minimal}>{page}</Layout>;
 };
 
-export default BiodataPage;
+export default Index;

@@ -35,31 +35,33 @@ const UpdateChip = () => (
 );
 
 const validationSchema = yup.object({
-  desilKesejahteraan: yup.string().required(''),
-  kepalaKeluarga: yup.string().required(''),
-  nik: yup.string().required(''),
-  alamat: yup.string().required(''),
-  jenisKelamin: yup.string().required(''),
-  tanggalLahir: yup.date().required(''),
-  pekerjaan: yup.string().required(''),
-  pendidikan: yup.string().required(''),
-  simpanan: yup.string().required(''),
-  kepemilikanRumah: yup.string().required(''),
-  jenisDinding: yup.string().required(''),
-  jenisLantai: yup.string().required(''),
-  sumberPenerangan: yup.string().required(''),
-  sumberAirMinum: yup.string().required(''),
-  fasilitasBuangAirBesar: yup.string().required(''),
-  bahanBakarMemasak: yup.string().required(''),
-  penerimaBPNT: yup.string().required(''),
-  penerimaBPUM: yup.string().required(''),
-  penerimaBST: yup.string().required(''),
-  penerimaPKH: yup.string().required(''),
-  penerimaSembako: yup.string().required(''),
-  statusResponden: yup.mixed().oneOf(['dapatDiverifikasi', 'tidakDapatDitemui', 'meninggalDunia'])
+  desilKesejahteraan: yup.string().required('Desil kesejahteraan wajib diisi'),
+  kepalaKeluarga: yup.string().required('Kepala keluarga wajib diisi'),
+  nik: yup.string().required('NIK wajib diisi'),
+  alamat: yup.string().required('Alamat wajib diisi'),
+  jenisKelamin: yup.string().required('Jenis Kelamin wajib diisi'),
+  tanggalLahir: yup.date().required('Tanggal Lahir wajib diisi'),
+  pekerjaan: yup.string().required('Pekerjaan wajib diisi'),
+  pendidikan: yup.string().required('Pendidikan wajib diisi'),
+  simpanan: yup.string().required('Tabungan/simpanan wajib diisi'),
+  jenisAtap: yup.string().required('Jenis atap rumah terluas wajib diisi'),
+  kepemilikanRumah: yup.string().required('Kepemilikan rumah/bangunan tempat tinggal wajib diisi'),
+  jenisDinding: yup.string().required('Jenis dinding rumah terluas wajib diisi'),
+  jenisLantai: yup.string().required('Jenis lantai rumah terluas wajib diisi'),
+  sumberPenerangan: yup.string().required('Sumber penerangan utama wajib diisi'),
+  sumberAirMinum: yup.string().required('Sumber air minum utama wajib diisi'),
+  fasilitasBuangAirBesar: yup.string().required('Fasilitas tempat buang air besar besar wajib diisi'),
+  bahanBakarMemasak: yup.string().required('Sumber bahan bakar untuk memasak wajib diisi'),
+  penerimaBPNT: yup.string().required('Peneriman bantuan pangan non tunai (BPNT) wajib diisi'),
+  penerimaBPUM: yup.string().required('Penerima Bantuan Produktif Usaha Mikro (BPUM) wajib diisi'),
+  penerimaBST: yup.string().required('Penerima Bantuan Sosial Tunai (BST) wajib diisi'),
+  penerimaPKH: yup.string().required('Penerima Program Keluarga Harapan (PKH) wajib diisi'),
+  penerimaSembako: yup.string().required('Penerima Bantuan Sembako wajib diisi'),
+  statusResponden: yup.mixed().oneOf(['dapatDiverifikasi', 'tidakDapatDitemui', 'meninggalDunia']),
+  penerimaBantuanLainnya: yup.string().required('Penerima bantuan lainnya wajib diisi')
 });
 
-const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
+const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -73,6 +75,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
       pendidikan: initialData?.pendidikan ?? 'Tidak/Belum Sekolah',
       simpanan: initialData?.simpanan ?? 'Tidak',
       kepemilikanRumah: initialData?.kepemilikanRumah ?? 'Lainnya',
+      jenisAtap: initialData?.jenisAtap ?? 'Lainnya',
       jenisDinding: initialData?.jenisDinding ?? 'Lainnya',
       jenisLantai: initialData?.jenisLantai ?? 'Lainnya',
       sumberPenerangan: initialData?.sumberPenerangan ?? 'Non-Listrik',
@@ -84,7 +87,8 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
       penerimaBST: initialData?.penerimaBST ?? 'Tidak',
       penerimaPKH: initialData?.penerimaPKH ?? 'Tidak',
       penerimaSembako: initialData?.penerimaSembako ?? 'Tidak',
-      statusResponden: 'dapatDiverifikasi'
+      statusResponden: 'dapatDiverifikasi',
+      penerimaBantuanLainnya: ''
     },
     validationSchema,
     onSubmit: (values) => {
@@ -327,6 +331,30 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
+                    <FormLabel sx={labelStyle} id="jenisAtap">
+                      Jenis atap rumah terluas
+                      {initialData.jenisAtap !== formik.values.jenisAtap && <UpdateChip />}
+                    </FormLabel>
+                    {initialData.jenisAtap !== formik.values.jenisAtap && (
+                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.jenisAtap}</FormHelperText>
+                    )}
+                    <RadioGroup row aria-labelledby="jenisAtap" value={formik.values.jenisAtap} onChange={formik.handleChange}>
+                      <FormControlLabel nama="jenisAtap" value="Beton" control={<Radio />} label="Beton" />
+                      <FormControlLabel nama="jenisAtap" value="Asbes/Seng" control={<Radio />} label="Asbes/Seng" />
+                      <FormControlLabel nama="jenisAtap" value="Bambu" control={<Radio />} label="Bambu" />
+                      <FormControlLabel
+                        nama="jenisAtap"
+                        value="Jerami/Ijuk/Rumbia/Daun-daunan"
+                        control={<Radio />}
+                        label="Jerami/Ijuk/Rumbia/Daun-daunan"
+                      />
+                      <FormControlLabel nama="jenisAtap" value="Genteng" control={<Radio />} label="Genteng" />
+                      <FormControlLabel nama="jenisAtap" value="Kayu/Sirap" control={<Radio />} label="Kayu/Sirap" />
+                      <FormControlLabel nama="jenisAtap" value="Lainnya" control={<Radio />} label="Lainnya" />
+                    </RadioGroup>
+                  </FormControl>
+                  <Divider sx={{ marginY: 2 }} />
+                  <FormControl>
                     <FormLabel sx={labelStyle} id="jenisDinding">
                       Jenis dinding rumah terluas
                       {initialData.jenisDinding !== formik.values.jenisDinding && <UpdateChip />}
@@ -491,7 +519,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
                     <FormLabel sx={labelStyle} id="penerimaBPNT">
-                      Penerima BPNT
+                      Penerima Bantuan Pangan Non Tunai (BPNT)
                       {initialData.penerimaBPNT !== formik.values.penerimaBPNT && <UpdateChip />}
                     </FormLabel>
                     {initialData.penerimaBPNT !== formik.values.penerimaBPNT && (
@@ -505,7 +533,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
                     <FormLabel sx={labelStyle} id="penerimaBPUM">
-                      Penerima BPUM
+                      Penerima Bantuan Produktif Usaha Mikro (BPUM)
                       {initialData.penerimaBPUM !== formik.values.penerimaBPUM && <UpdateChip />}
                     </FormLabel>
                     {initialData.penerimaBPUM !== formik.values.penerimaBPUM && (
@@ -519,7 +547,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
                     <FormLabel sx={labelStyle} id="penerimaBST">
-                      Penerima BST
+                      Penerima Bantuan Sosial Tunai (BST)
                       {initialData.penerimaBST !== formik.values.penerimaBST && <UpdateChip />}
                     </FormLabel>
                     {initialData.penerimaBST !== formik.values.penerimaBST && (
@@ -533,7 +561,7 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
                     <FormLabel sx={labelStyle} id="penerimaPKH">
-                      Penerima PKH
+                      Penerima Program Keluarga Harapan (PKH)
                       {initialData.penerimaPKH !== formik.values.penerimaPKH && <UpdateChip />}
                     </FormLabel>
                     {initialData.penerimaPKH !== formik.values.penerimaPKH && (
@@ -559,8 +587,21 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
                     </RadioGroup>
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
+                  <FormControl fullWidth>
+                    <FormLabel sx={labelStyle} id="penerimaBantuanLainnya">
+                      Penerima Bantuan Lainnya
+                    </FormLabel>
+                    <TextField
+                      multiline
+                      rows={3}
+                      name="penerimaBantuanLainnya"
+                      value={formik.values.penerimaBantuanLainnya}
+                      onChange={formik.handleChange}
+                    />
+                  </FormControl>
+                  <Divider sx={{ marginY: 2 }} />
                   <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button variant="contained" type="submit">
+                    <Button variant="contained" type="submit" fullWidth>
                       Verifikasi
                     </Button>
                   </Box>
@@ -574,9 +615,9 @@ const FormVerifikasiP3KE = ({ isEdit, initialData }) => {
   );
 };
 
-FormVerifikasiP3KE.propTypes = {
+FormVerifikasiKeluarga.propTypes = {
   isEdit: PropTypes.bool,
   initialData: PropTypes.any
 };
 
-export default FormVerifikasiP3KE;
+export default FormVerifikasiKeluarga;

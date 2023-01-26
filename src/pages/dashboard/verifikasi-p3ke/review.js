@@ -11,7 +11,7 @@ import { FormattedMessage } from 'react-intl';
 
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import FormVerifikasiP3KE from 'components/form/FormVerifikasiP3KE';
+import FormVerifikasiKeluarga from 'components/form/FormVerifikasiKeluarga';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { getKeluargaById } from 'store/slices/keluarga';
 
@@ -43,10 +43,10 @@ const ReviewP3KEPage = () => {
             </MainCard>
           </Grid>
           {/* <Grid item xs={12} lg={6}>
-            <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} readOnly />
+            <FormVerifikasiKeluarga initialData={fetchKeluagaById.data ?? []} readOnly />
           </Grid> */}
           <Grid item xs={12} lg={12}>
-            <FormVerifikasiP3KE initialData={fetchKeluagaById.data ?? []} />
+            <FormVerifikasiKeluarga initialData={fetchKeluagaById.data ?? []} />
           </Grid>
         </Grid>
       </Page>
