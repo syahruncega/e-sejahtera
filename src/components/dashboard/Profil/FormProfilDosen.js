@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 
 // project imports
-import useAuth from 'hooks/useAuth';
 import SubCard from 'components/ui-component/cards/SubCard';
 import AnimateButton from 'components/ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
@@ -44,7 +43,6 @@ const validationSchema = yup.object({
 });
 
 const FormProfilDosen = () => {
-  const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
   // const isEdit = router.pathname !== '/biodata';
@@ -65,7 +63,7 @@ const FormProfilDosen = () => {
     validationSchema,
     // enableReinitialize: true,
     initialValues: {
-      namaLengkap: user.name || '',
+      namaLengkap: 'Fulan',
       email: 'example@mail.com',
       //   jenisKelamin: 'Laki-laki',
       //   tanggalLahir: new Date(),
