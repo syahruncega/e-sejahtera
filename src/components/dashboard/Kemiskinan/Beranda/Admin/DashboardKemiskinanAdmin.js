@@ -6,7 +6,7 @@ import ProgramCardStats from './ProgramCardStats';
 import KegiatanCardStats from './KegiataanCardStats';
 import SubKegiatanCardStats from './SubKegiatanCardStats';
 
-const DashboardAdmin = () => {
+const DashboardKemiskinanAdmin = () => {
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(false);
@@ -38,4 +38,4 @@ const DashboardAdmin = () => {
   );
 };
 
-export default DashboardAdmin;
+export default DashboardKemiskinanAdmin;

@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import { Container, Grid, Typography, Stack, CardMedia } from '@mui/material';
+import { Container, Grid, Typography, Stack, CardMedia, Box } from '@mui/material';
 
 // project imports
 import FadeInWhenVisible from './Animation';
@@ -63,8 +63,20 @@ const FeatureSection = () => (
   <Container>
     <Grid container spacing={7.5} justifyContent="center">
       <Grid item xs={12} md={6} sx={{ textAlign: 'center' }}>
-        <Grid item sx={{ mb: 3 }}>
-          <Image src="/e-sejahtera-logo.svg" width="300px" height="69" />
+        <Grid container spacing={1.5}>
+          <Grid item xs={12}>
+            <Image src="/e-sejahtera-logo.svg" width="300px" height="69" />
+          </Grid>
+          <Grid item xs={12} sx={{ alignItems: 'center' }}>
+            <Box display="flex" justifyContent="center">
+              <Typography variant="body2" sx={{ fontSize: '1rem', mr: '4px' }}>
+                elektronik -
+              </Typography>
+              <Typography variant="body2" sx={{ fontSize: '1rem' }}>
+                Sinergi dan kerjasama untuk kesejahteraan rakyat
+              </Typography>
+            </Box>
+          </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12}>
