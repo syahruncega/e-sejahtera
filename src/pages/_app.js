@@ -18,7 +18,6 @@ import Snackbar from 'components/ui-component/extended/Snackbar';
 
 import { ConfigProvider } from 'contexts/ConfigContext';
 
-import { FirebaseProvider as AuthProvider } from '../contexts/FirebaseContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 
@@ -42,12 +41,10 @@ function App({ Component, pageProps }) {
             <RTLLayout>
               <Locales>
                 <NavigationScroll>
-                  <AuthProvider>
-                    <>
-                      {getLayout(<Component {...pageProps} />)}
-                      <Snackbar />
-                    </>
-                  </AuthProvider>
+                  <>
+                    {getLayout(<Component {...pageProps} />)}
+                    <Snackbar />
+                  </>
                 </NavigationScroll>
               </Locales>
             </RTLLayout>

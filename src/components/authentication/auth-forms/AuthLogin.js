@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import React from 'react';
 import Link from 'Link';
 
@@ -8,11 +7,9 @@ import {
   Box,
   Button,
   Checkbox,
-  Divider,
   FormControl,
   FormControlLabel,
   FormHelperText,
-  Grid,
   IconButton,
   InputAdornment,
   InputLabel,
@@ -28,13 +25,13 @@ import { Formik } from 'formik';
 
 // project imports
 import useConfig from 'hooks/useConfig';
-import useAuth from 'hooks/useAuth';
 import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'components/ui-component/extended/AnimateButton';
 
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useRouter } from 'next/router';
 
 const Google = '/assets/images/icons/social-google.svg';
 
@@ -46,11 +43,11 @@ const FirebaseLogin = ({ ...others }) => {
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const { borderRadius } = useConfig();
   const [checked, setChecked] = React.useState(true);
+  const router = useRouter();
 
-  const { firebaseEmailPasswordSignIn, firebaseGoogleSignIn } = useAuth();
   const googleHandler = async () => {
     try {
-      await firebaseGoogleSignIn();
+      console.log('first');
     } catch (err) {
       console.error(err);
     }
@@ -67,7 +64,7 @@ const FirebaseLogin = ({ ...others }) => {
 
   return (
     <>
-      <Grid container direction="column" justifyContent="center" spacing={2}>
+      {/* <Grid container direction="column" justifyContent="center" spacing={2}>
         <Grid item xs={12}>
           <AnimateButton>
             <Button
@@ -125,7 +122,7 @@ const FirebaseLogin = ({ ...others }) => {
             <Typography variant="subtitle1">Sign in with Email address</Typography>
           </Box>
         </Grid>
-      </Grid>
+      </Grid> */}
 
       <Formik
         initialValues={{
@@ -138,38 +135,29 @@ const FirebaseLogin = ({ ...others }) => {
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            await firebaseEmailPasswordSignIn(values.email, values.password).then(
-              () => {
-                // WARNING: do not set any formik state here as formik might be already destroyed here. You may get following error by doing so.
-                // Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application.
-                // To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
-                // github issue: https://github.com/formium/formik/issues/2430
-              },
-              (err) => {
-                if (scriptedRef.current) {
-                  setStatus({ success: false });
-                  setErrors({ submit: err.message });
-                  setSubmitting(false);
-                }
-              }
-            );
-          } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+          if (router.pathname === '/p3ke/login') {
+            router.push('/p3ke/dashboard');
+          } else if (router.pathname === '/kemiskinan/login') {
+            router.push('/kemiskinan/dashboard');
           }
+          // try {
+          //   console.log('first');
+          // } catch (err) {
+          //   console.error(err);
+          //   if (scriptedRef.current) {
+          //     setStatus({ success: false });
+          //     setErrors({ submit: err.message });
+          //     setSubmitting(false);
+          //   }
+          // }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
             <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
+              <InputLabel htmlFor="username">Email / Username</InputLabel>
               <OutlinedInput
-                id="outlined-adornment-email-login"
+                id="username"
                 type="email"
                 value={values.email}
                 name="email"
@@ -186,9 +174,9 @@ const FirebaseLogin = ({ ...others }) => {
             </FormControl>
 
             <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
-              <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
+              <InputLabel htmlFor="password">Password</InputLabel>
               <OutlinedInput
-                id="outlined-adornment-password-login"
+                id="password"
                 type={showPassword ? 'text' : 'password'}
                 value={values.password}
                 name="password"

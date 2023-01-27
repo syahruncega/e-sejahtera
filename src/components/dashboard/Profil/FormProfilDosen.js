@@ -1,30 +1,14 @@
 // material-ui
-import {
-  Autocomplete,
-  Avatar,
-  Button,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup,
-  Stack,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Avatar, Button, Grid, Stack, TextField, Typography } from '@mui/material';
 
 // project imports
-import useAuth from 'hooks/useAuth';
 import SubCard from 'components/ui-component/cards/SubCard';
 import AnimateButton from 'components/ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
+import { getKabupatenKota } from 'store/slices/detail-lokasi';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 
@@ -44,7 +28,6 @@ const validationSchema = yup.object({
 });
 
 const FormProfilDosen = () => {
-  const { user } = useAuth();
   const router = useRouter();
   const queryClient = useQueryClient();
   // const isEdit = router.pathname !== '/biodata';
@@ -65,7 +48,7 @@ const FormProfilDosen = () => {
     validationSchema,
     // enableReinitialize: true,
     initialValues: {
-      namaLengkap: user.name || '',
+      namaLengkap: 'Fulan',
       email: 'example@mail.com',
       //   jenisKelamin: 'Laki-laki',
       //   tanggalLahir: new Date(),

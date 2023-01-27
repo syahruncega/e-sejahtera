@@ -9,7 +9,6 @@ import { Formik } from 'formik';
 
 // project imports
 import AnimateButton from 'components/ui-component/extended/AnimateButton';
-import useAuth from 'hooks/useAuth';
 import useScriptRef from 'hooks/useScriptRef';
 import { openSnackbar } from 'store/slices/snackbar';
 
@@ -19,8 +18,6 @@ const AuthForgotPassword = ({ ...others }) => {
   const theme = useTheme();
   const scriptedRef = useScriptRef();
   const dispatch = useDispatch();
-
-  const { resetPassword } = useAuth();
 
   return (
     <Formik
@@ -34,8 +31,6 @@ const AuthForgotPassword = ({ ...others }) => {
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
-          await resetPassword(values.email);
-
           if (scriptedRef.current) {
             setStatus({ success: true });
             setSubmitting(false);

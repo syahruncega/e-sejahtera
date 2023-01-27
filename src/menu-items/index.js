@@ -1,15 +1,18 @@
-import pages from './pages';
-import mahasiswa from './mahasiswa';
-import admin from './admin';
-import opd from './opd';
-import main from './main';
-import dpl from './dpl';
-import bappeda from './bappeda';
-
 // ==============================|| MENU ITEMS ||============================== //
 
-const menuItems = {
-  items: [main, mahasiswa, admin]
+import adminKemiskinan from './kemiskinan/admin';
+import mainKemiskinan from './kemiskinan/main';
+import adminP3KE from './p3ke/admin';
+import mainP3KE from './p3ke/main';
+
+export const menuItemsP3KE = {
+  items: [mainP3KE, adminP3KE]
 };
 
-export default menuItems;
+export const menuItemsKemiskinan = {
+  items: [mainKemiskinan, adminKemiskinan]
+};
+
+export const menuItemsStunting = {
+  items: [adminP3KE]
+};

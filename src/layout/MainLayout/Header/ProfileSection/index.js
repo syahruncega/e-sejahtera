@@ -31,7 +31,6 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 // project imports
 import MainCard from 'components/ui-component/cards/MainCard';
 import Transitions from 'components/ui-component/extended/Transitions';
-import useAuth from 'hooks/useAuth';
 
 // assets
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
@@ -50,7 +49,6 @@ const ProfileSection = () => {
   const [value, setValue] = useState('');
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const { logout, user } = useAuth();
   const [open, setOpen] = useState(false);
 
   /**
@@ -59,7 +57,7 @@ const ProfileSection = () => {
   const anchorRef = useRef(null);
   const handleLogout = async () => {
     try {
-      await logout();
+      console.log('first');
     } catch (err) {
       console.error(err);
     }
@@ -162,7 +160,7 @@ const ProfileSection = () => {
                         <Stack direction="row" spacing={0.5} alignItems="center">
                           <Typography variant="h4">Good Morning,</Typography>
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                            {user ? user.name : 'Jone Doe'}
+                            Jone Doe
                           </Typography>
                         </Stack>
                         <Typography variant="subtitle2">Superadmin</Typography>
