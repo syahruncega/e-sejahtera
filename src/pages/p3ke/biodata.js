@@ -26,10 +26,10 @@ const HeaderWrapper = styled('div')(({ theme }) => ({
 // ============================|| CONTACT US MAIN ||============================ //
 
 const BiodataPage = () => (
-  <Page title="Contact us">
+  <Page title="Biodata">
     <HeaderWrapper>
-      {/* <AppBar />
-      <BiodataCard /> */}
+      <AppBar />
+      <BiodataCard />
     </HeaderWrapper>
   </Page>
 );

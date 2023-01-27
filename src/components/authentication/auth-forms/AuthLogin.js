@@ -31,6 +31,7 @@ import AnimateButton from 'components/ui-component/extended/AnimateButton';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useRouter } from 'next/router';
 
 const Google = '/assets/images/icons/social-google.svg';
 
@@ -42,6 +43,7 @@ const FirebaseLogin = ({ ...others }) => {
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const { borderRadius } = useConfig();
   const [checked, setChecked] = React.useState(true);
+  const router = useRouter();
 
   const googleHandler = async () => {
     try {
@@ -133,16 +135,21 @@ const FirebaseLogin = ({ ...others }) => {
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
-          try {
-            console.log('first');
-          } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+          if (router.pathname === '/p3ke/login') {
+            router.push('/p3ke/dashboard');
+          } else if (router.pathname === '/kemiskinan/login') {
+            router.push('/kemiskinan/dashboard');
           }
+          // try {
+          //   console.log('first');
+          // } catch (err) {
+          //   console.error(err);
+          //   if (scriptedRef.current) {
+          //     setStatus({ success: false });
+          //     setErrors({ submit: err.message });
+          //     setSubmitting(false);
+          //   }
+          // }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (

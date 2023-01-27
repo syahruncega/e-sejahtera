@@ -44,7 +44,7 @@ const Landing = () => {
     <Page title="Welcome">
       {/* 1. header and hero section */}
       <HeaderWrapper id="home">
-        <AppBar />
+        {/* <AppBar /> */}
         <HeaderSection />
       </HeaderWrapper>
 

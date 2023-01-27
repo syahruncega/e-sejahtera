@@ -20,6 +20,9 @@ const widget1 = '/assets/images/landing/hero-widget-1.png';
 const widget2 = '/assets/images/landing/hero-widget-2.png';
 const BgDark = '/assets/images/landing/bg-hero-block-dark.png';
 const BgLight = '/assets/images/landing/bg-hero-block-light.png';
+const Icon1 = 'assets/images/landing/3d/icon-1.png';
+const Icon2 = 'assets/images/landing/3d/icon-2.png';
+const Icon3 = 'assets/images/landing/3d/icon-3.png';
 
 // styles
 const HeaderImage = styled('img')(({ theme }) => ({
@@ -69,7 +72,7 @@ const HeaderSection = () => {
 
   return (
     <Container sx={{ height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <Grid container justifyContent="space-between" alignItems="center" sx={{ mt: { xs: 10, sm: 6, md: 18.75 }, mb: { xs: 2.5, md: 10 } }}>
+      <Grid container justifyContent="space-between" alignItems="center" sx={{ mt: { xs: 10, sm: 6, md: 0 }, mb: { xs: 2.5, md: 10 } }}>
         <Grid item xs={12} md={5}>
           <Grid container spacing={6}>
             <Grid item xs={12}>
@@ -80,10 +83,10 @@ const HeaderSection = () => {
               >
                 <Stack spacing={1}>
                   <Typography textAlign={{ xs: 'center', md: 'left' }} variant="h1" sx={headerSX}>
-                    Use Berry to Power Your Next
+                    Selamat Datang di Portal Web
                   </Typography>
                   <Typography textAlign={{ xs: 'center', md: 'left' }} variant="h1" color="primary" sx={headerSX}>
-                    React Project
+                    e-Sejahtera
                   </Typography>
                 </Stack>
               </motion.div>
@@ -104,7 +107,7 @@ const HeaderSection = () => {
                 </Typography>
               </motion.div>
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <motion.div
                 initial={{ opacity: 0, translateY: 550 }}
                 animate={{ opacity: 1, translateY: 0 }}
@@ -133,7 +136,7 @@ const HeaderSection = () => {
                   </Grid>
                 </Grid>
               </motion.div>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12}>
               <motion.div
                 initial={{ opacity: 0, translateY: 550 }}
@@ -153,44 +156,6 @@ const HeaderSection = () => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={7} sx={{ display: { xs: 'none', md: 'flex' } }}>
-          <Box sx={{ position: 'relative', mt: 8.75, zIndex: 9 }}>
-            <HeaderImage src={dashboard} alt="Berry" />
-            <Box
-              sx={{
-                position: 'absolute',
-                top: { md: -35, lg: -110 },
-                right: theme.direction === 'rtl' ? 170 : { md: -50, lg: -140, xl: -220 },
-                width: { md: 220, lg: 290 },
-                animation: '10s slideY linear infinite'
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', stiffness: 150, damping: 30, delay: 0.2 }}
-              >
-                <HeaderAnimationImage src={widget1} alt="Berry" />
-              </motion.div>
-            </Box>
-            <Box
-              sx={{
-                position: 'absolute',
-                bottom: { md: -20, lg: -90 },
-                left: { md: 100, lg: 300 },
-                width: { md: 220, lg: 280 },
-                animation: '10s slideY linear infinite',
-                animationDelay: '2s'
-              }}
-            >
-              <motion.div
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ type: 'spring', stiffness: 150, damping: 30, delay: 0.4 }}
-              >
-                <HeaderAnimationImage src={widget2} alt="Berry" />
-              </motion.div>
-            </Box>
-          </Box>
           {HeaderAnimationImagememo}
         </Grid>
       </Grid>

@@ -62,7 +62,7 @@ const FooterSection = () => {
               <Grid item xs={12} md={4}>
                 <Stack spacing={{ xs: 2, md: 5 }}>
                   <Typography variant="h4" color={textColor} sx={{ fontWeight: 500 }}>
-                    About Berry
+                    Tentang e-Sejahtera
                   </Typography>
                   <Typography variant="body2" color={textColor}>
                     Berry React is a dashboard template that utilizes the Material-UI framework and the React JavaScript library. It offers
@@ -72,23 +72,23 @@ const FooterSection = () => {
               </Grid>
               <Grid item xs={12} md={8}>
                 <Grid container spacing={{ xs: 5, md: 2 }}>
+                  <Grid item xs={6} sm={6}>
+                    <></>
+                  </Grid>
                   <Grid item xs={6} sm={3}>
                     <Stack spacing={{ xs: 3, md: 5 }}>
                       <Typography variant="h4" color={textColor} sx={{ fontWeight: 500 }}>
-                        Help
+                        Portal
                       </Typography>
                       <Stack spacing={{ xs: 1.5, md: 2.5 }}>
-                        <FooterLink href="https://links.codedthemes.com/HTIBc" target="_blank" underline="none">
-                          Blog
+                        <FooterLink href="/kemiskinan/dashboard" underline="none">
+                          Kemiskinan
                         </FooterLink>
-                        <FooterLink href="https://codedthemes.gitbook.io/berry/" target="_blank" underline="none">
-                          Documentation
+                        <FooterLink href="/p3ke/dasbhoard" underline="none">
+                          P3KE
                         </FooterLink>
-                        <FooterLink href="https://codedthemes.gitbook.io/berry/changelog" target="_blank" underline="none">
-                          Change Log
-                        </FooterLink>
-                        <FooterLink href="https://codedthemes.support-hub.io/" target="_blank" underline="none">
-                          Support
+                        <FooterLink href="/coming-soon" underline="none">
+                          Stunting
                         </FooterLink>
                       </Stack>
                     </Stack>
@@ -96,13 +96,13 @@ const FooterSection = () => {
                   <Grid item xs={6} sm={3}>
                     <Stack spacing={{ xs: 3, md: 5 }}>
                       <Typography variant="h4" color={textColor} sx={{ fontWeight: 500 }}>
-                        Store Help
+                        Legal
                       </Typography>
                       <Stack spacing={{ xs: 1.5, md: 2.5 }}>
-                        <FooterLink href="https://mui.com/store/license/" target="_blank" underline="none">
-                          License
+                        <FooterLink href="/atribut" target="_blank" underline="none">
+                          Atribut
                         </FooterLink>
-                        <FooterLink href="https://mui.com/store/customer-refund-policy/" target="_blank" underline="none">
+                        {/* <FooterLink href="https://mui.com/store/customer-refund-policy/" target="_blank" underline="none">
                           Refund Policy
                         </FooterLink>
                         <FooterLink
@@ -111,11 +111,11 @@ const FooterSection = () => {
                           underline="none"
                         >
                           Submit a Request
-                        </FooterLink>
+                        </FooterLink> */}
                       </Stack>
                     </Stack>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
+                  {/* <Grid item xs={6} sm={3}>
                     <Stack spacing={{ xs: 3, md: 5 }}>
                       <Typography variant="h4" color={textColor} sx={{ fontWeight: 500 }}>
                         Berry Eco-System
@@ -150,7 +150,7 @@ const FooterSection = () => {
                         </FooterLink>
                       </Stack>
                     </Stack>
-                  </Grid>
+                  </Grid> */}
                 </Grid>
               </Grid>
             </Grid>
