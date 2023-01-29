@@ -6,32 +6,25 @@ import { IconDashboard, IconApps, IconBox, IconHelp, IconSitemap, IconBuildingSk
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
-const mainKemiskinan = {
-  id: 'main',
-  title: 'Indikator',
+const masterKemiskinan = {
+  id: 'master',
+  title: 'Master',
   type: 'group',
   children: [
     {
-      id: 'dashboard',
-      title: 'Dashboard',
+      id: 'bidang-urusan',
+      title: 'Bidang Urusan',
       type: 'item',
-      url: '/kemiskinan/dashboard',
-      icon: IconDashboard
+      url: '/kemiskinan/dashboard/bidang-urusan',
+      icon: IconFocus2
     },
-    // {
-    //   id: 'bidang-urusan',
-    //   title: 'Bidang Urusan',
-    //   type: 'item',
-    //   url: '/kemiskinan/dashboard/bidang-urusan',
-    //   icon: IconFocus2
-    // },
-    // {
-    //   id: 'instansi',
-    //   title: 'Instansi',
-    //   type: 'item',
-    //   url: '/kemiskinan/dashboard/instansi',
-    //   icon: IconBuildingSkyscraper
-    // },
+    {
+      id: 'instansi',
+      title: 'Instansi',
+      type: 'item',
+      url: '/kemiskinan/dashboard/instansi',
+      icon: IconBuildingSkyscraper
+    },
     {
       id: 'program',
       title: 'Program',
@@ -53,16 +46,16 @@ const mainKemiskinan = {
       url: '/kemiskinan/dashboard/sub-kegiatan',
       icon: IconSitemap,
       breadcrumbs: false
-    },
-    {
-      id: 'penerima-manfaat',
-      title: <FormattedMessage id="penerima-manfaat" defaultMessage="Tagging Data" />,
-      type: 'item',
-      url: '/kemiskinan/dashboard/penerima-manfaat',
-      icon: IconBookmarks,
-      breadcrumbs: false
     }
+    // {
+    //   id: 'penerima-manfaat',
+    //   title: <FormattedMessage id="penerima-manfaat" defaultMessage="Tagging Data" />,
+    //   type: 'item',
+    //   url: '/kemiskinan/dashboard/penerima-manfaat',
+    //   icon: IconBookmarks,
+    //   breadcrumbs: false
+    // }
   ]
 };
 
-export default mainKemiskinan;
+export default masterKemiskinan;

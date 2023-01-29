@@ -8,13 +8,13 @@ import { IconKey, IconBug, IconUserCheck, IconUserCircle } from '@tabler/icons';
 
 const adminP3KE = {
   id: 'admin',
-  title: <FormattedMessage id="admin" defaultMessage="Admin" />,
+  title: 'Admin',
   icon: IconKey,
   type: 'group',
   children: [
     {
       id: 'pengguna',
-      title: <FormattedMessage id="pengguna" defaultMessage="Pengguna" />,
+      title: 'Pengguna',
       type: 'item',
       icon: IconUserCircle,
       breadcrumbs: false,

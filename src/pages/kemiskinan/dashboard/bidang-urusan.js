@@ -116,7 +116,7 @@ const BidangUrusanPage = () => {
                       )
                     }}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Instansi"
+                    placeholder="Cari bidang urusan"
                     value={search}
                     size="small"
                   />

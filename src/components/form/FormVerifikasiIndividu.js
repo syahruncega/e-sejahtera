@@ -24,6 +24,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Box } from '@mui/system';
 import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
+import ConfirmDialog from 'components/dialog/ConfirmDialog';
 import ConfirmVerifikasiDialog from 'components/dialog/ConfirmVerifikasiDialog';
 
 const UpdateChip = () => (
@@ -37,22 +38,16 @@ const UpdateChip = () => (
 
 const validationSchema = yup.object({
   desilKesejahteraan: yup.string().required('Desil kesejahteraan wajib diisi'),
-  kepalaKeluarga: yup.string().required('Kepala keluarga wajib diisi'),
+  nama: yup.string().required('Kepala keluarga wajib diisi'),
   nik: yup.string().required('NIK wajib diisi'),
   alamat: yup.string().required('Alamat wajib diisi'),
+  padanDukcapil: yup.string().required('Padan Dukcapil wajib diisi'),
   jenisKelamin: yup.string().required('Jenis Kelamin wajib diisi'),
   tanggalLahir: yup.date().required('Tanggal Lahir wajib diisi'),
+  hubungan: yup.string().required('Hubungan dengan kepala keluarga wajib diisi'),
+  statusKawin: yup.string().required('Status Kawin wajib diisi'),
   pekerjaan: yup.string().required('Pekerjaan wajib diisi'),
   pendidikan: yup.string().required('Pendidikan wajib diisi'),
-  simpanan: yup.string().required('Tabungan/simpanan wajib diisi'),
-  jenisAtap: yup.string().required('Jenis atap rumah terluas wajib diisi'),
-  kepemilikanRumah: yup.string().required('Kepemilikan rumah/bangunan tempat tinggal wajib diisi'),
-  jenisDinding: yup.string().required('Jenis dinding rumah terluas wajib diisi'),
-  jenisLantai: yup.string().required('Jenis lantai rumah terluas wajib diisi'),
-  sumberPenerangan: yup.string().required('Sumber penerangan utama wajib diisi'),
-  sumberAirMinum: yup.string().required('Sumber air minum utama wajib diisi'),
-  fasilitasBuangAirBesar: yup.string().required('Fasilitas tempat buang air besar besar wajib diisi'),
-  bahanBakarMemasak: yup.string().required('Sumber bahan bakar untuk memasak wajib diisi'),
   penerimaBPNT: yup.string().required('Peneriman bantuan pangan non tunai (BPNT) wajib diisi'),
   penerimaBPUM: yup.string().required('Penerima Bantuan Produktif Usaha Mikro (BPUM) wajib diisi'),
   penerimaBST: yup.string().required('Penerima Bantuan Sosial Tunai (BST) wajib diisi'),
@@ -62,27 +57,21 @@ const validationSchema = yup.object({
   penerimaBantuanLainnya: yup.string().required('Penerima bantuan lainnya wajib diisi')
 });
 
-const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
+const FormVerifikasiIndividu = ({ isEdit, initialData }) => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       desilKesejahteraan: initialData?.desilKesejahteraan ?? '1',
-      kepalaKeluarga: initialData?.kepalaKeluarga ?? '',
+      nama: initialData?.nama ?? '',
       nik: initialData?.nik ?? '',
       alamat: initialData?.alamat ?? '',
+      padanDukcapil: initialData?.padanDukcapil ?? 'Ya',
       jenisKelamin: initialData?.jenisKelamin ?? 'Laki-laki',
       tanggalLahir: initialData?.tanggalLahir ? new Date(initialData.tanggalLahir) : new Date(),
       pekerjaan: initialData?.pekerjaan ?? 'Tidak/Belum Bekerja',
       pendidikan: initialData?.pendidikan ?? 'Tidak/Belum Sekolah',
-      simpanan: initialData?.simpanan ?? 'Tidak',
-      kepemilikanRumah: initialData?.kepemilikanRumah ?? 'Lainnya',
-      jenisAtap: initialData?.jenisAtap ?? 'Lainnya',
-      jenisDinding: initialData?.jenisDinding ?? 'Lainnya',
-      jenisLantai: initialData?.jenisLantai ?? 'Lainnya',
-      sumberPenerangan: initialData?.sumberPenerangan ?? 'Non-Listrik',
-      sumberAirMinum: initialData?.sumberAirMinum ?? 'Lainnya',
-      fasilitasBuangAirBesar: initialData?.fasilitasBuangAirBesar ?? 'Lainnya',
-      bahanBakarMemasak: initialData?.bahanBakarMemasak ?? 'Lainnya',
+      hubungan: initialData?.hubungan ?? 'Anak',
+      statusKawin: initialData?.statusKawin ?? 'Belum Kawin',
       penerimaBPNT: initialData?.penerimaBPNT ?? 'Tidak',
       penerimaBPUM: initialData?.penerimaBPUM ?? 'Tidak',
       penerimaBST: initialData?.penerimaBST ?? 'Tidak',
@@ -144,18 +133,13 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                   <FormControl fullWidth>
                     <FormLabel sx={labelStyle} id="nama">
                       Nama
-                      {initialData.kepalaKeluarga !== formik.values.kepalaKeluarga && <UpdateChip />}
+                      {initialData.nama !== formik.values.nama && <UpdateChip />}
                     </FormLabel>
-                    {initialData.kepalaKeluarga !== formik.values.kepalaKeluarga && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.kepalaKeluarga}</FormHelperText>
+                    {initialData.nama !== formik.values.nama && (
+                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.nama}</FormHelperText>
                     )}
 
-                    <TextField
-                      placeholder="Masukkan nama kepala keluarga"
-                      name="kepalaKeluarga"
-                      value={formik.values.kepalaKeluarga}
-                      onChange={formik.handleChange}
-                    />
+                    <TextField placeholder="Masukkan nama lengkap" name="nama" value={formik.values.nama} onChange={formik.handleChange} />
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl fullWidth>
@@ -178,6 +162,20 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                       <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.alamat}</FormHelperText>
                     )}
                     <TextField multiline rows={3} name="alamat" value={formik.values.alamat} onChange={formik.handleChange} />
+                  </FormControl>
+                  <Divider sx={{ marginY: 2 }} />
+                  <FormControl>
+                    <FormLabel sx={labelStyle} id="padanDukcapil">
+                      Padan Dukcapil
+                      {initialData.padanDukcapil !== formik.values.padanDukcapil && <UpdateChip />}
+                    </FormLabel>
+                    {initialData.padanDukcapil !== formik.values.padanDukcapil && (
+                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.padanDukcapil}</FormHelperText>
+                    )}
+                    <RadioGroup row aria-labelledby="padanDukcapil" value={formik.values.padanDukcapil} onChange={formik.handleChange}>
+                      <FormControlLabel name="padanDukcapil" value="Ya" control={<Radio />} label="Ya" />
+                      <FormControlLabel name="padanDukcapil" value="Tidak" control={<Radio />} label="Tidak" />
+                    </RadioGroup>
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
@@ -221,17 +219,37 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                     </LocalizationProvider>
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
-                  {/* <FormControl>
-                  <FormLabel sx={labelStyle} id="statusKawin">
-                    Status Kawin
-                  </FormLabel>
-                  <RadioGroup row aria-labelledby="statusKawin" value={formik.values.tanggalLahir} onChange={formik.handleChange}>
-                    <FormControlLabel value="Belum Kawin" control={<Radio />} label="Belum Kawin" />
-                    <FormControlLabel value="Kawin" control={<Radio />} label="Kawin" />
-                    <FormControlLabel value="Cerai Hidup" control={<Radio />} label="Cerai Hidup" />
-                    <FormControlLabel value="Cerai Mati" control={<Radio />} label="Cerai Mati" />
-                  </RadioGroup>
-                </FormControl> */}
+                  <FormControl>
+                    <FormLabel sx={labelStyle} id="hubungan">
+                      Hubungan Dengan Kepala Keluarga
+                      {initialData.hubungan !== formik.values.hubungan && <UpdateChip />}
+                    </FormLabel>
+                    {initialData.hubungan !== formik.values.hubungan && (
+                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.hubungan}</FormHelperText>
+                    )}
+                    <RadioGroup row aria-labelledby="hubungan" value={formik.values.hubungan} onChange={formik.handleChange}>
+                      <FormControlLabel name="hubungan" value="Kepala Keluarga" control={<Radio />} label="Kepala Keluarga" />
+                      <FormControlLabel name="hubungan" value="Istri" control={<Radio />} label="Istri" />
+                      <FormControlLabel name="hubungan" value="Anak" control={<Radio />} label="Anak" />
+                      <FormControlLabel name="hubungan" value="Lainnya" control={<Radio />} label="Lainnya" />
+                    </RadioGroup>
+                  </FormControl>
+                  <Divider sx={{ marginY: 2 }} />
+                  <FormControl>
+                    <FormLabel sx={labelStyle} id="statusKawin">
+                      Status Kawin
+                      {initialData.statusKawin !== formik.values.statusKawin && <UpdateChip />}
+                    </FormLabel>
+                    {initialData.statusKawin !== formik.values.statusKawin && (
+                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.statusKawin}</FormHelperText>
+                    )}
+                    <RadioGroup row aria-labelledby="statusKawin" value={formik.values.statusKawin} onChange={formik.handleChange}>
+                      <FormControlLabel name="statusKawin" value="Belum Kawin" control={<Radio />} label="Belum Kawin" />
+                      <FormControlLabel name="statusKawin" value="Kawin" control={<Radio />} label="Kawin" />
+                      <FormControlLabel name="statusKawin" value="Cerai Hidup" control={<Radio />} label="Cerai Hidup" />
+                      <FormControlLabel name="statusKawin" value="Cerai Mati" control={<Radio />} label="Cerai Mati" />
+                    </RadioGroup>
+                  </FormControl>
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
                     <FormLabel sx={labelStyle} id="pekerjaan">
@@ -288,245 +306,6 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                         control={<Radio />}
                         label="Tamat Perguruan Tinggi"
                       />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="simpanan">
-                      Tabungan/Simpanan
-                      {initialData.simpanan !== formik.values.simpanan && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.simpanan !== formik.values.simpanan && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.simpanan}</FormHelperText>
-                    )}
-                    <RadioGroup row aria-labelledby="simpanan" value={formik.values.simpanan} onChange={formik.handleChange}>
-                      <FormControlLabel name="simpanan" value="Ya" control={<Radio />} label="Ya" />
-                      <FormControlLabel name="simpanan" value="Tidak" control={<Radio />} label="Tidak" />
-                    </RadioGroup>
-                  </FormControl>
-                  <FormHelperText>Uang kontan, perhiasan, hewan ternak, hasil kebun, dll.</FormHelperText>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="kepemilikanRumah">
-                      Kepemilikan rumah/bangunan tempat tinggal
-                      {initialData.kepemilikanRumah !== formik.values.kepemilikanRumah && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.kepemilikanRumah !== formik.values.kepemilikanRumah && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.kepemilikanRumah}</FormHelperText>
-                    )}
-                    <RadioGroup
-                      row
-                      aria-labelledby="kepemilikanRumah"
-                      value={formik.values.kepemilikanRumah}
-                      onChange={formik.handleChange}
-                    >
-                      <FormControlLabel nama="kepemilikanRumah" value="Milik Sendiri" control={<Radio />} label="Milik Sendiri" />
-                      <FormControlLabel nama="kepemilikanRumah" value="Kontrak/Sewa" control={<Radio />} label="Kontrak/Sewa" />
-                      <FormControlLabel nama="kepemilikanRumah" value="Bebas Sewa" control={<Radio />} label="Bebas Sewa" />
-                      <FormControlLabel nama="kepemilikanRumah" value="Menumpang" control={<Radio />} label="Menumpang" />
-                      <FormControlLabel nama="kepemilikanRumah" value="Dinas" control={<Radio />} label="Dinas" />
-                      <FormControlLabel nama="kepemilikanRumah" value="Lainnya" control={<Radio />} label="Lainnya" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="jenisAtap">
-                      Jenis atap rumah terluas
-                      {initialData.jenisAtap !== formik.values.jenisAtap && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.jenisAtap !== formik.values.jenisAtap && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.jenisAtap}</FormHelperText>
-                    )}
-                    <RadioGroup row aria-labelledby="jenisAtap" value={formik.values.jenisAtap} onChange={formik.handleChange}>
-                      <FormControlLabel nama="jenisAtap" value="Beton" control={<Radio />} label="Beton" />
-                      <FormControlLabel nama="jenisAtap" value="Asbes/Seng" control={<Radio />} label="Asbes/Seng" />
-                      <FormControlLabel nama="jenisAtap" value="Bambu" control={<Radio />} label="Bambu" />
-                      <FormControlLabel
-                        nama="jenisAtap"
-                        value="Jerami/Ijuk/Rumbia/Daun-daunan"
-                        control={<Radio />}
-                        label="Jerami/Ijuk/Rumbia/Daun-daunan"
-                      />
-                      <FormControlLabel nama="jenisAtap" value="Genteng" control={<Radio />} label="Genteng" />
-                      <FormControlLabel nama="jenisAtap" value="Kayu/Sirap" control={<Radio />} label="Kayu/Sirap" />
-                      <FormControlLabel nama="jenisAtap" value="Lainnya" control={<Radio />} label="Lainnya" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="jenisDinding">
-                      Jenis dinding rumah terluas
-                      {initialData.jenisDinding !== formik.values.jenisDinding && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.jenisDinding !== formik.values.jenisDinding && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.jenisDinding}</FormHelperText>
-                    )}
-                    <RadioGroup row aria-labelledby="jenisDinding" value={formik.values.jenisDinding} onChange={formik.handleChange}>
-                      <FormControlLabel nama="jenisDinding" value="Tembok" control={<Radio />} label="Tembok" />
-                      <FormControlLabel nama="jenisDinding" value="Kayu/Papan" control={<Radio />} label="Kayu/Papan" />
-                      <FormControlLabel nama="jenisDinding" value="Seng" control={<Radio />} label="Seng" />
-                      <FormControlLabel nama="jenisDinding" value="Bambu" control={<Radio />} label="Bambu" />
-                      <FormControlLabel nama="jenisDinding" value="Lainnya" control={<Radio />} label="Lainnya" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="jenisLantai">
-                      Jenis lantai rumah terluas
-                      {initialData.jenisLantai !== formik.values.jenisLantai && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.jenisLantai !== formik.values.jenisLantai && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.jenisLantai}</FormHelperText>
-                    )}
-                    <RadioGroup row aria-labelledby="jenisLantai" value={formik.values.jenisLantai} onChange={formik.handleChange}>
-                      <FormControlLabel
-                        value="Keramik/Granit/Marmer/Ubin/Tegel/Teraso"
-                        control={<Radio />}
-                        label="Keramik/Granit/Marmer/Ubin/Tegel/Teraso"
-                      />
-                      <FormControlLabel name="jenisLantai" value="Semen" control={<Radio />} label="Semen" />
-                      <FormControlLabel name="jenisLantai" value="Kayu/Papan" control={<Radio />} label="Kayu/Papan" />
-                      <FormControlLabel name="jenisLantai" value="Bambu" control={<Radio />} label="Bambu" />
-                      <FormControlLabel name="jenisLantai" value="Tanah" control={<Radio />} label="Tanah" />
-                      <FormControlLabel name="jenisLantai" value="Lainnya" control={<Radio />} label="Lainnya" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="sumberPenerangan">
-                      Sumber penerangan utama
-                      {initialData.sumberPenerangan !== formik.values.sumberPenerangan && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.sumberPenerangan !== formik.values.sumberPenerangan && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.sumberPenerangan}</FormHelperText>
-                    )}
-                    <RadioGroup
-                      row
-                      aria-labelledby="sumberPenerangan"
-                      value={formik.values.sumberPenerangan}
-                      onChange={formik.handleChange}
-                    >
-                      <FormControlLabel
-                        name="sumberPenerangan"
-                        value="Listrik Pribadi s/d 900 Watt"
-                        control={<Radio />}
-                        label="Listrik Pribadi s/d 900 Watt"
-                      />
-                      <FormControlLabel
-                        name="sumberPenerangan"
-                        value="Listrik Pribadi > 900 Watt"
-                        control={<Radio />}
-                        label="Listrik Pribadi > 900 Watt"
-                      />
-                      <FormControlLabel name="sumberPenerangan" value="Genset/solar Cell" control={<Radio />} label="Genset/solar Cell" />
-                      <FormControlLabel name="sumberPenerangan" value="Listrik Bersama" control={<Radio />} label="Listrik Bersama" />
-                      <FormControlLabel name="sumberPenerangan" value="Non-Listrik" control={<Radio />} label="Non-Listrik" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="sumberAirMinum">
-                      Sumber air minum utama
-                      {initialData.sumberAirMinum !== formik.values.sumberAirMinum && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.sumberAirMinum !== formik.values.sumberAirMinum && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.sumberAirMinum}</FormHelperText>
-                    )}
-                    <RadioGroup row aria-labelledby="sumberAirMinum" value={formik.values.sumberAirMinum} onChange={formik.handleChange}>
-                      <FormControlLabel
-                        name="sumberAirMinum"
-                        value="Air Kemasan/Isi Ulang"
-                        control={<Radio />}
-                        label="Air Kemasan/Isi Ulang"
-                      />
-                      <FormControlLabel name="sumberAirMinum" value="Ledeng/PAM" control={<Radio />} label="Ledeng/PAM" />
-                      <FormControlLabel name="sumberAirMinum" value="Sumur Bor" control={<Radio />} label="Sumur Bor" />
-                      <FormControlLabel name="sumberAirMinum" value="Sumur Terlindung" control={<Radio />} label="Sumur Terlindung" />
-                      <FormControlLabel
-                        name="sumberAirMinum"
-                        value="Sumur Tidak Terlindung"
-                        control={<Radio />}
-                        label="Sumur Tidak Terlindung"
-                      />
-                      <FormControlLabel
-                        name="sumberAirMinum"
-                        value="Air Permukaan (Sungai, Danau, dll)"
-                        control={<Radio />}
-                        label="Air Permukaan (Sungai, Danau, dll)"
-                      />
-                      <FormControlLabel name="sumberAirMinum" value="Air Hujan" control={<Radio />} label="Air Hujan" />
-                      <FormControlLabel name="sumberAirMinum" value="Lainnya" control={<Radio />} label="Lainnya" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="fasilitasBuangAirBesar">
-                      Memiliki fasilitas tempat buang air besar
-                      {initialData.fasilitasBuangAirBesar !== formik.values.fasilitasBuangAirBesar && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.fasilitasBuangAirBesar !== formik.values.fasilitasBuangAirBesar && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.fasilitasBuangAirBesar}</FormHelperText>
-                    )}
-                    <RadioGroup
-                      row
-                      aria-labelledby="fasilitasBuangAirBesar"
-                      value={formik.values.fasilitasBuangAirBesar}
-                      onChange={formik.handleChange}
-                    >
-                      <FormControlLabel
-                        name="fasilitasBuangAirBesar"
-                        value="Dengan Sepetic Tank"
-                        control={<Radio />}
-                        label="Dengan Sepetic Tank"
-                      />
-                      <FormControlLabel
-                        name="fasilitasBuangAirBesar"
-                        value="Tanpa Septic Tank"
-                        control={<Radio />}
-                        label="Tanpa Septic Tank"
-                      />
-                      <FormControlLabel
-                        name="fasilitasBuangAirBesar"
-                        value="Tidak, Jamban Umum/Bersama"
-                        control={<Radio />}
-                        label="Jamban Umum/Bersama"
-                      />
-                      <FormControlLabel name="fasilitasBuangAirBesar" value="Lainnya" control={<Radio />} label="Lainnya" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="bahanBakarMemasak">
-                      Sumber Bahan Bakar Untuk Memasak
-                      {initialData.bahanBakarMemasak !== formik.values.bahanBakarMemasak && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.bahanBakarMemasak !== formik.values.bahanBakarMemasak && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.bahanBakarMemasak}</FormHelperText>
-                    )}
-                    <RadioGroup
-                      row
-                      aria-labelledby="bahanBakarMemasak"
-                      value={formik.values.bahanBakarMemasak}
-                      onChange={formik.handleChange}
-                    >
-                      <FormControlLabel name="bahanBakarMemasak" value="Listrik/Gas" control={<Radio />} label="Listrik/Gas" />
-                      <FormControlLabel name="bahanBakarMemasak" value="Minyak Tanah" control={<Radio />} label="Minyak Tanah" />
-                      <FormControlLabel name="bahanBakarMemasak" value="Arang/Kayu" control={<Radio />} label="Arang/Kayu" />
-                      <FormControlLabel name="bahanBakarMemasak" value="Lainnya" control={<Radio />} label="Lainnya" />
-                    </RadioGroup>
-                  </FormControl>
-                  <Divider sx={{ marginY: 2 }} />
-                  <FormControl>
-                    <FormLabel sx={labelStyle} id="penerimaBPNT">
-                      Penerima Bantuan Pangan Non Tunai (BPNT)
-                      {initialData.penerimaBPNT !== formik.values.penerimaBPNT && <UpdateChip />}
-                    </FormLabel>
-                    {initialData.penerimaBPNT !== formik.values.penerimaBPNT && (
-                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.penerimaBPNT}</FormHelperText>
-                    )}
-                    <RadioGroup row aria-labelledby="penerimaBPNT" value={formik.values.penerimaBPNT} onChange={formik.handleChange}>
-                      <FormControlLabel name="penerimaBPNT" value="Ya" control={<Radio />} label="Ya" />
-                      <FormControlLabel name="penerimaBPNT" value="Tidak" control={<Radio />} label="Tidak" />
                     </RadioGroup>
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
@@ -599,6 +378,11 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                     />
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
+                  {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button variant="contained" type="submit" fullWidth>
+                      Verifikasi
+                    </Button>
+                  </Box> */}
                   <ConfirmVerifikasiDialog title="Verifikasi Data" />
                 </SubCard>
               )}
@@ -610,9 +394,9 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
   );
 };
 
-FormVerifikasiKeluarga.propTypes = {
+FormVerifikasiIndividu.propTypes = {
   isEdit: PropTypes.bool,
   initialData: PropTypes.any
 };
 
-export default FormVerifikasiKeluarga;
+export default FormVerifikasiIndividu;
