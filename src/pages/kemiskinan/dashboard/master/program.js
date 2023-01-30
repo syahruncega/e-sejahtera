@@ -112,8 +112,8 @@ const ProgramPage = () => {
     title: 'Program',
     navigation: [
       {
-        title: <FormattedMessage id="program" defaultMessage="Program" />,
-        url: '/dashboard/program'
+        title: 'Program',
+        url: '/kemiskinan/dashboard/master/program'
       }
     ]
   };

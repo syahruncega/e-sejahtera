@@ -15,35 +15,35 @@ const masterKemiskinan = {
       id: 'bidang-urusan',
       title: 'Bidang Urusan',
       type: 'item',
-      url: '/kemiskinan/dashboard/bidang-urusan',
+      url: '/kemiskinan/dashboard/master/bidang-urusan',
       icon: IconFocus2
     },
     {
       id: 'instansi',
       title: 'Instansi',
       type: 'item',
-      url: '/kemiskinan/dashboard/instansi',
+      url: '/kemiskinan/dashboard/master/instansi',
       icon: IconBuildingSkyscraper
     },
     {
       id: 'program',
       title: 'Program',
       type: 'item',
-      url: '/kemiskinan/dashboard/program',
+      url: '/kemiskinan/dashboard/master/program',
       icon: IconApps
     },
     {
       id: 'kegiatan',
       title: 'Kegiatan',
       type: 'item',
-      url: '/kemiskinan/dashboard/kegiatan',
+      url: '/kemiskinan/dashboard/master/kegiatan',
       icon: IconBox
     },
     {
       id: 'sub-kegiatan',
-      title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
+      title: 'Sub Kegiatan',
       type: 'item',
-      url: '/kemiskinan/dashboard/sub-kegiatan',
+      url: '/kemiskinan/dashboard/master/sub-kegiatan',
       icon: IconSitemap,
       breadcrumbs: false
     }

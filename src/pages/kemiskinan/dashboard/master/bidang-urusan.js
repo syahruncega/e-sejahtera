@@ -28,20 +28,19 @@ import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { deleteInstansi, getInstansi } from 'store/slices/instansi';
 import FormInstansi from 'components/form/FormInstansi';
 import DeleteDialog from 'components/dialog/DeleteDialog';
 import { useMemo, useState } from 'react';
 import AppTable from 'components/AppTable';
 import useDebounce from 'hooks/useDebounce';
-import { getBidangUrusan } from 'store/slices/bidang-urusan';
+import { deleteBidangUrusan, getBidangUrusan } from 'store/slices/bidang-urusan';
+import FormBidangUrusan from 'components/form/FormBidangUrusan';
 import SubCard from 'components/ui-component/cards/SubCard';
 
-const InstansiPage = () => {
+const BidangUrusanPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchInstansi = useQuery(['instansi'], getInstansi);
   const fetchBidangUrusan = useQuery(['bidangUrusan'], getBidangUrusan);
 
   const columns = useMemo(
@@ -52,15 +51,11 @@ const InstansiPage = () => {
         header: 'No'
       },
       {
-        id: 'namaInstansi',
-        accessorKey: 'namaInstansi',
-        header: 'Nama Instansi'
-      },
-      {
-        id: 'bidangUrusan',
-        accessorKey: 'bidangUrusan.namaBidangUrusan',
+        id: 'namaBidangUrusan',
+        accessorKey: 'namaBidangUrusan',
         header: 'Bidang Urusan'
       },
+
       {
         id: 'aksi',
         header: 'Aksi',
@@ -70,28 +65,28 @@ const InstansiPage = () => {
           }
         }) => (
           <div className="flex">
-            <FormInstansi isEdit instansi={data} dataBidangUrusan={fetchBidangUrusan.data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteInstansi} mutationKey="instansi" />
+            <FormBidangUrusan isEdit bidangUrusan={data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteBidangUrusan} mutationKey="bidangUrusan" />
           </div>
         )
       }
     ],
 
-    [fetchBidangUrusan.data]
+    []
   );
 
   const pageProps = {
-    title: 'Instansi',
-    navigation: [{ title: <FormattedMessage id="instansi" defaultMessage="Instansi" />, url: '/dashboard/instansi' }]
+    title: 'Bidang Urusan',
+    navigation: [{ title: 'Bidang Urusan', url: '/kemiskinan/dashboard/master/bidang-urusan' }]
   };
 
   // Error
-  if (fetchInstansi.isError) {
+  if (fetchBidangUrusan.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchInstansi.error.message}
+          {fetchBidangUrusan.error.message}
         </Alert>
       </Page>
     );
@@ -102,13 +97,13 @@ const InstansiPage = () => {
     <>
       <Page {...pageProps}>
         <MainCard>
-          {fetchInstansi.isLoading && (
+          {fetchBidangUrusan.isLoading && (
             <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
               <CircularProgress />
             </Box>
           )}
 
-          {!fetchInstansi.isLoading && (
+          {!fetchBidangUrusan.isLoading && (
             <>
               <Grid container justifyContent="space-between" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
                 <Grid item xs={12} sm={6}>
@@ -121,7 +116,7 @@ const InstansiPage = () => {
                       )
                     }}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Instansi"
+                    placeholder="Cari bidang urusan"
                     value={search}
                     size="small"
                   />
@@ -144,13 +139,13 @@ const InstansiPage = () => {
                   </Tooltip>
 
                   {/* product add & dialog */}
-                  <FormInstansi dataBidangUrusan={fetchBidangUrusan.data} />
+                  <FormBidangUrusan />
                 </Grid>
               </Grid>
 
-              {!fetchInstansi.isLoading && (
+              {!fetchBidangUrusan.isLoading && (
                 <SubCard content={false}>
-                  <AppTable stickyHeader columns={columns} initialData={fetchInstansi.data ?? []} globalFilter={debouncedValue} />
+                  <AppTable columns={columns} stickyHeader initialData={fetchBidangUrusan.data ?? []} globalFilter={debouncedValue} />
                 </SubCard>
               )}
             </>
@@ -161,8 +156,8 @@ const InstansiPage = () => {
   );
 };
 
-InstansiPage.getLayout = function getLayout(page) {
+BidangUrusanPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default InstansiPage;
+export default BidangUrusanPage;

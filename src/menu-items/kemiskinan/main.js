@@ -33,32 +33,32 @@ const mainKemiskinan = {
     //   icon: IconBuildingSkyscraper
     // },
     {
-      id: 'program',
+      id: 'indikator-program',
       title: 'Program',
       type: 'item',
-      url: '/kemiskinan/dashboard/program',
+      url: '/kemiskinan/dashboard/master/program',
       icon: IconApps
     },
     {
-      id: 'kegiatan',
+      id: 'indikator-kegiatan',
       title: 'Kegiatan',
       type: 'item',
-      url: '/kemiskinan/dashboard/kegiatan',
+      url: '/kemiskinan/dashboard/master/kegiatan',
       icon: IconBox
     },
     {
-      id: 'sub-kegiatan',
-      title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
+      id: 'indikator-sub-kegiatan',
+      title: 'Sub Kegiatan',
       type: 'item',
-      url: '/kemiskinan/dashboard/sub-kegiatan',
+      url: '/kemiskinan/dashboard/master/sub-kegiatan',
       icon: IconSitemap,
       breadcrumbs: false
     },
     {
       id: 'penerima-manfaat',
-      title: <FormattedMessage id="penerima-manfaat" defaultMessage="Tagging Data" />,
+      title: 'Penerima Manfaat',
       type: 'item',
-      url: '/kemiskinan/dashboard/penerima-manfaat',
+      url: '/kemiskinan/dashboard/master/penerima-manfaat',
       icon: IconBookmarks,
       breadcrumbs: false
     }

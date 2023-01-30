@@ -1,7 +1,11 @@
+import PropTypes from 'prop-types';
+import * as React from 'react';
+
 // material-ui
 import {
   Alert,
   AlertTitle,
+  Box,
   CardContent,
   CircularProgress,
   Grid,
@@ -16,7 +20,6 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { deleteKegiatan, getKegiatan } from 'store/slices/kegiatan';
 
 // assets
 import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
@@ -25,21 +28,21 @@ import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
-import { SyncOutlined } from '@mui/icons-material';
-import { Box } from '@mui/system';
-import FormKegiatan from 'components/form/FormKegiatan';
-import { getProgram } from 'store/slices/program';
+import { deleteInstansi, getInstansi } from 'store/slices/instansi';
+import FormInstansi from 'components/form/FormInstansi';
 import DeleteDialog from 'components/dialog/DeleteDialog';
-import { useState, useMemo } from 'react';
-import useDebounce from 'hooks/useDebounce';
+import { useMemo, useState } from 'react';
 import AppTable from 'components/AppTable';
+import useDebounce from 'hooks/useDebounce';
+import { getBidangUrusan } from 'store/slices/bidang-urusan';
+import SubCard from 'components/ui-component/cards/SubCard';
 
-const KegiatanPage = () => {
+const InstansiPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
-  const fetchProgram = useQuery(['program'], getProgram);
+  const fetchInstansi = useQuery(['instansi'], getInstansi);
+  const fetchBidangUrusan = useQuery(['bidangUrusan'], getBidangUrusan);
 
   const columns = useMemo(
     () => [
@@ -49,25 +52,14 @@ const KegiatanPage = () => {
         header: 'No'
       },
       {
-        id: 'namaProgram',
-        accessorKey: 'program.namaProgram',
-        header: 'Nama Program'
+        id: 'namaInstansi',
+        accessorKey: 'namaInstansi',
+        header: 'Nama Instansi'
       },
       {
-        id: 'namaKegiatan',
-        accessorKey: 'namaKegiatan',
-        header: 'Nama Kegiatan'
-      },
-      {
-        id: 'indikatorKinerjaKegiata ',
-        accessorKey: 'indikatorKinerjaKegiatan',
-        header: 'Indikator Kinerja'
-      },
-      {
-        id: 'paguKegiatan',
-        accessorKey: 'paguKegiatan',
-        accessorFn: (row) => `Rp${String(row.paguKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
-        header: 'Pagu'
+        id: 'bidangUrusan',
+        accessorKey: 'bidangUrusan.namaBidangUrusan',
+        header: 'Bidang Urusan'
       },
       {
         id: 'aksi',
@@ -77,39 +69,29 @@ const KegiatanPage = () => {
             row: { original: data }
           }
         }) => (
-          <Box sx={{ display: 'flex' }}>
-            <Tooltip title="Update Pagu">
-              <IconButton onClick={() => {}} size="medium">
-                <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
-              </IconButton>
-            </Tooltip>
-            <FormKegiatan isEdit kegiatan={data} dataProgram={fetchProgram.data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteKegiatan} mutationKey="kegiatan" />
-          </Box>
+          <div className="flex">
+            <FormInstansi isEdit instansi={data} dataBidangUrusan={fetchBidangUrusan.data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteInstansi} mutationKey="instansi" />
+          </div>
         )
       }
     ],
 
-    [fetchProgram.data]
+    [fetchBidangUrusan.data]
   );
 
   const pageProps = {
-    title: 'Kegiatan',
-    navigation: [
-      {
-        title: <FormattedMessage id="kegiatan" defaultMessage="Kegiatan" />,
-        url: '/dashboard/kegiatan'
-      }
-    ]
+    title: 'Instansi',
+    navigation: [{ title: 'Instansi', url: '/kemiskinan/dashboard/master/instansi' }]
   };
 
   // Error
-  if (fetchKegiatan.isError) {
+  if (fetchInstansi.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchKegiatan.error.message}
+          {fetchInstansi.error.message}
         </Alert>
       </Page>
     );
@@ -117,18 +99,18 @@ const KegiatanPage = () => {
 
   // Success
   return (
-    <Page {...pageProps}>
-      <MainCard content={false}>
-        {fetchKegiatan.isLoading && (
-          <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
-            <CircularProgress />
-          </Box>
-        )}
+    <>
+      <Page {...pageProps}>
+        <MainCard>
+          {fetchInstansi.isLoading && (
+            <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
+              <CircularProgress />
+            </Box>
+          )}
 
-        {!fetchKegiatan.isLoading && (
-          <>
-            <CardContent>
-              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+          {!fetchInstansi.isLoading && (
+            <>
+              <Grid container justifyContent="space-between" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     InputProps={{
@@ -139,7 +121,7 @@ const KegiatanPage = () => {
                       )
                     }}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Kegiatan"
+                    placeholder="Cari Instansi"
                     value={search}
                     size="small"
                   />
@@ -162,25 +144,25 @@ const KegiatanPage = () => {
                   </Tooltip>
 
                   {/* product add & dialog */}
-                  <FormKegiatan dataProgram={fetchProgram.data} />
+                  <FormInstansi dataBidangUrusan={fetchBidangUrusan.data} />
                 </Grid>
               </Grid>
-            </CardContent>
 
-            {/* table */}
-
-            {!fetchKegiatan.isLoading && (
-              <AppTable stickyHeader columns={columns} initialData={fetchKegiatan.data ?? []} globalFilter={debouncedValue} />
-            )}
-          </>
-        )}
-      </MainCard>
-    </Page>
+              {!fetchInstansi.isLoading && (
+                <SubCard content={false}>
+                  <AppTable stickyHeader columns={columns} initialData={fetchInstansi.data ?? []} globalFilter={debouncedValue} />
+                </SubCard>
+              )}
+            </>
+          )}
+        </MainCard>
+      </Page>
+    </>
   );
 };
 
-KegiatanPage.getLayout = function getLayout(page) {
+InstansiPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default KegiatanPage;
+export default InstansiPage;
