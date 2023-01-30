@@ -1,3 +1,5 @@
+import Link from 'Link';
+
 // material-ui
 import {
   Alert,
@@ -16,9 +18,10 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { deleteProgram, getProgram } from 'store/slices/program';
+import { deleteSubKegiatan, getSubKegiatan } from 'store/slices/sub-kegiatan';
 
 // assets
+
 import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
@@ -27,19 +30,20 @@ import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
-import FormProgram from 'components/form/FormProgram';
-import { getInstansi } from 'store/slices/instansi';
+import FormSubKegiatan from 'components/form/FormSubKegiatan';
+import AddIcon from '@mui/icons-material/AddTwoTone';
 import DeleteDialog from 'components/dialog/DeleteDialog';
+import { getKegiatan } from 'store/slices/kegiatan';
+import { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
-import { useState, useMemo } from 'react';
 import AppTable from 'components/AppTable';
 
-const ProgramPage = () => {
+const SubKegiatanPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchProgram = useQuery(['program'], getProgram);
-  const fetchInstansi = useQuery(['instansi'], getInstansi);
+  const fetchSubKegiatan = useQuery(['subKegiatan'], getSubKegiatan);
+  const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
 
   const columns = useMemo(
     () => [
@@ -49,40 +53,44 @@ const ProgramPage = () => {
         header: 'No'
       },
       {
-        id: 'namaInstansi',
-        accessorKey: 'instansi.namaInstansi',
-        header: 'Nama Instansi'
+        id: 'namaKegiatan',
+        accessorKey: 'kegiatan.namaKegiatan',
+        header: 'Kegiatan'
       },
       {
-        id: 'sasaran',
-        accessorKey: 'sasaran',
-        header: 'Sasaran'
+        id: 'namaSubKegiatan',
+        accessorKey: 'namaSubKegiatan',
+        header: 'Sub Kegiatan'
       },
       {
-        id: 'indikatorSasaran',
-        accessorKey: 'indikatorSasaran',
-        header: 'Indikator Sasaran'
-      },
-      {
-        id: 'kebijakan',
-        accessorKey: 'kebijakan',
-        header: 'Kebijakan'
-      },
-      {
-        id: 'namaProgram',
-        accessorKey: 'namaProgram',
-        header: 'Nama Program'
-      },
-      {
-        id: 'indikatorKinerjaProgram',
-        accessorKey: 'indikatorKinerjaProgram',
+        id: 'indikatorKinerjaSubKegiatan',
+        accessorKey: 'indikatorKinerjaSubKegiatan',
         header: 'Indikator Kinerja'
       },
       {
-        id: 'paguProgram',
-        accessorKey: 'paguProgram',
-        accessorFn: (row) => `Rp${String(row.paguProgram).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
+        id: 'paguSubKegiatan',
+        accessorKey: 'paguSubKegiatan',
+        accessorFn: (row) => `Rp${String(row.paguSubKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
         header: 'Pagu'
+      },
+      {
+        id: 'fokus-belanja',
+        header: 'Detail',
+        cell: ({
+          cell: {
+            row: { original: data }
+          }
+        }) => (
+          <Tooltip title="Fokus Belanja">
+            <IconButton
+              LinkComponent={Link}
+              href={`/kemiskinan/dashboard/master/sub-kegiatan/fokus-belanja?subKegiatanId=${data.id}`}
+              size="medium"
+            >
+              <AddIcon fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
+            </IconButton>
+          </Tooltip>
+        )
       },
       {
         id: 'aksi',
@@ -98,47 +106,43 @@ const ProgramPage = () => {
                 <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
               </IconButton>
             </Tooltip>
-            <FormProgram isEdit program={data} dataInstansi={fetchInstansi.data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteProgram} mutationKey="program" />
+            <FormSubKegiatan isEdit subKegiatan={data} dataKegiatan={fetchKegiatan.data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteSubKegiatan} mutationKey="subKegiatan" />
           </Box>
         )
       }
     ],
 
-    [fetchInstansi.data]
+    [fetchKegiatan.data]
   );
 
   const pageProps = {
-    title: 'Program',
-    navigation: [
-      {
-        title: <FormattedMessage id="program" defaultMessage="Program" />,
-        url: '/dashboard/program'
-      }
-    ]
+    title: 'Sub Kegiatan',
+    navigation: [{ title: 'Sub Kegiatan', url: '/kemiskinan/dashboard/master/sub-kegiatan' }]
   };
 
-  if (fetchProgram.isError) {
+  // Error
+  if (fetchSubKegiatan.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchProgram.error.message}
+          {fetchSubKegiatan.error.message}
         </Alert>
       </Page>
     );
   }
 
+  // Success
   return (
     <Page {...pageProps}>
       <MainCard content={false}>
-        {fetchProgram.isLoading && (
+        {fetchSubKegiatan.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
         )}
-
-        {!fetchProgram.isLoading && (
+        {!fetchSubKegiatan.isLoading && (
           <>
             <CardContent>
               <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -152,7 +156,7 @@ const ProgramPage = () => {
                       )
                     }}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Program"
+                    placeholder="Cari Sub Kegiatan"
                     value={search}
                     size="small"
                   />
@@ -175,13 +179,15 @@ const ProgramPage = () => {
                   </Tooltip>
 
                   {/* product add & dialog */}
-                  <FormProgram dataInstansi={fetchInstansi.data} />
+                  <FormSubKegiatan dataKegiatan={fetchKegiatan.data} />
                 </Grid>
               </Grid>
             </CardContent>
+
             {/* table */}
-            {!fetchProgram.isLoading && (
-              <AppTable stickyHeader columns={columns} initialData={fetchProgram.data ?? []} globalFilter={debouncedValue} />
+
+            {!fetchSubKegiatan.isLoading && (
+              <AppTable stickyHeader columns={columns} initialData={fetchSubKegiatan.data ?? []} globalFilter={debouncedValue} />
             )}
           </>
         )}
@@ -190,8 +196,8 @@ const ProgramPage = () => {
   );
 };
 
-ProgramPage.getLayout = function getLayout(page) {
+SubKegiatanPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default ProgramPage;
+export default SubKegiatanPage;

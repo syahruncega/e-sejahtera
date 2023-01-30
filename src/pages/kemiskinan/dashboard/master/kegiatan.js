@@ -1,5 +1,3 @@
-import Link from 'Link';
-
 // material-ui
 import {
   Alert,
@@ -18,10 +16,9 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { deleteSubKegiatan, getSubKegiatan } from 'store/slices/sub-kegiatan';
+import { deleteKegiatan, getKegiatan } from 'store/slices/kegiatan';
 
 // assets
-
 import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
@@ -30,20 +27,19 @@ import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
-import FormSubKegiatan from 'components/form/FormSubKegiatan';
-import AddIcon from '@mui/icons-material/AddTwoTone';
+import FormKegiatan from 'components/form/FormKegiatan';
+import { getProgram } from 'store/slices/program';
 import DeleteDialog from 'components/dialog/DeleteDialog';
-import { getKegiatan } from 'store/slices/kegiatan';
-import { useMemo, useState } from 'react';
+import { useState, useMemo } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import AppTable from 'components/AppTable';
 
-const SubKegiatanPage = () => {
+const KegiatanPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchSubKegiatan = useQuery(['subKegiatan'], getSubKegiatan);
   const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
+  const fetchProgram = useQuery(['program'], getProgram);
 
   const columns = useMemo(
     () => [
@@ -53,40 +49,25 @@ const SubKegiatanPage = () => {
         header: 'No'
       },
       {
+        id: 'namaProgram',
+        accessorKey: 'program.namaProgram',
+        header: 'Nama Program'
+      },
+      {
         id: 'namaKegiatan',
-        accessorKey: 'kegiatan.namaKegiatan',
-        header: 'Kegiatan'
+        accessorKey: 'namaKegiatan',
+        header: 'Nama Kegiatan'
       },
       {
-        id: 'namaSubKegiatan',
-        accessorKey: 'namaSubKegiatan',
-        header: 'Sub Kegiatan'
-      },
-      {
-        id: 'indikatorKinerjaSubKegiatan',
-        accessorKey: 'indikatorKinerjaSubKegiatan',
+        id: 'indikatorKinerjaKegiata ',
+        accessorKey: 'indikatorKinerjaKegiatan',
         header: 'Indikator Kinerja'
       },
       {
-        id: 'paguSubKegiatan',
-        accessorKey: 'paguSubKegiatan',
-        accessorFn: (row) => `Rp${String(row.paguSubKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
+        id: 'paguKegiatan',
+        accessorKey: 'paguKegiatan',
+        accessorFn: (row) => `Rp${String(row.paguKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
         header: 'Pagu'
-      },
-      {
-        id: 'detail',
-        header: 'Detail',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
-          <Tooltip title="Detail Sub Kegiatan">
-            <IconButton LinkComponent={Link} href={`/dashboard/sub-kegiatan/detail?subKegiatanId=${data.id}`} size="medium">
-              <AddIcon fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
-            </IconButton>
-          </Tooltip>
-        )
       },
       {
         id: 'aksi',
@@ -102,28 +83,33 @@ const SubKegiatanPage = () => {
                 <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
               </IconButton>
             </Tooltip>
-            <FormSubKegiatan isEdit subKegiatan={data} dataKegiatan={fetchKegiatan.data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteSubKegiatan} mutationKey="subKegiatan" />
+            <FormKegiatan isEdit kegiatan={data} dataProgram={fetchProgram.data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteKegiatan} mutationKey="kegiatan" />
           </Box>
         )
       }
     ],
 
-    [fetchKegiatan.data]
+    [fetchProgram.data]
   );
 
   const pageProps = {
-    title: 'Sub Kegiatan',
-    navigation: [{ title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />, url: '/dashboard/sub-kegiatan' }]
+    title: 'Kegiatan',
+    navigation: [
+      {
+        title: 'Kegiatan',
+        url: '/kemiskinan/dashboard/master/kegiatan'
+      }
+    ]
   };
 
   // Error
-  if (fetchSubKegiatan.isError) {
+  if (fetchKegiatan.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchSubKegiatan.error.message}
+          {fetchKegiatan.error.message}
         </Alert>
       </Page>
     );
@@ -133,12 +119,13 @@ const SubKegiatanPage = () => {
   return (
     <Page {...pageProps}>
       <MainCard content={false}>
-        {fetchSubKegiatan.isLoading && (
+        {fetchKegiatan.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
         )}
-        {!fetchSubKegiatan.isLoading && (
+
+        {!fetchKegiatan.isLoading && (
           <>
             <CardContent>
               <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -152,7 +139,7 @@ const SubKegiatanPage = () => {
                       )
                     }}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Sub Kegiatan"
+                    placeholder="Cari Kegiatan"
                     value={search}
                     size="small"
                   />
@@ -175,15 +162,15 @@ const SubKegiatanPage = () => {
                   </Tooltip>
 
                   {/* product add & dialog */}
-                  <FormSubKegiatan dataKegiatan={fetchKegiatan.data} />
+                  <FormKegiatan dataProgram={fetchProgram.data} />
                 </Grid>
               </Grid>
             </CardContent>
 
             {/* table */}
 
-            {!fetchSubKegiatan.isLoading && (
-              <AppTable stickyHeader columns={columns} initialData={fetchSubKegiatan.data ?? []} globalFilter={debouncedValue} />
+            {!fetchKegiatan.isLoading && (
+              <AppTable stickyHeader columns={columns} initialData={fetchKegiatan.data ?? []} globalFilter={debouncedValue} />
             )}
           </>
         )}
@@ -192,8 +179,8 @@ const SubKegiatanPage = () => {
   );
 };
 
-SubKegiatanPage.getLayout = function getLayout(page) {
+KegiatanPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default SubKegiatanPage;
+export default KegiatanPage;

@@ -92,7 +92,7 @@ const DetailSubKegiatanPage = () => {
               aria-label="delete"
               size="small"
               LinkComponent={Link}
-              href={`/dashboard/sub-kegiatan/detail/lokasi?detailSubKegiatanId=${data.id}`}
+              href={`/kemiskinan/dashboard/master/sub-kegiatan/fokus-belanja/lokasi?detailSubKegiatanId=${data.id}`}
             >
               <AddIcon fontSize="inherit" />
             </IconButton>
@@ -127,11 +127,11 @@ const DetailSubKegiatanPage = () => {
     title: 'Detail Sub Kegiatan',
     navigation: [
       {
-        title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
-        url: '/dashboard/sub-detailSubKegiatan'
+        title: 'Sub Kegiatan',
+        url: 'kemiskinan/dashboard/master/sub-kegiatan'
       },
       {
-        title: <FormattedMessage id="detailSubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
+        title: 'Fokus Belanja',
         url: router.asPath
       }
     ]

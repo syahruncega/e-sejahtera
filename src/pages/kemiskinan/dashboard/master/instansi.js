@@ -82,7 +82,7 @@ const InstansiPage = () => {
 
   const pageProps = {
     title: 'Instansi',
-    navigation: [{ title: <FormattedMessage id="instansi" defaultMessage="Instansi" />, url: '/dashboard/instansi' }]
+    navigation: [{ title: 'Instansi', url: '/kemiskinan/dashboard/master/instansi' }]
   };
 
   // Error

@@ -1,5 +1,16 @@
 // material-ui
-import { Alert, AlertTitle, Autocomplete, CircularProgress, Grid, IconButton, InputLabel, TextField, Tooltip } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  Autocomplete,
+  CircularProgress,
+  Grid,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  TextField,
+  Tooltip
+} from '@mui/material';
 
 // project imports
 import Layout from 'layout';
@@ -21,8 +32,12 @@ import { gridSpacing } from 'store/constant';
 import { PublishedWithChangesTwoTone } from '@mui/icons-material';
 import Link from 'Link';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
+import useDebounce from 'hooks/useDebounce';
+import SearchIcon from '@mui/icons-material/Search';
 
 const VerifikasiP3KEPage = () => {
+  const [search, setSearch] = useState('');
+  const debouncedValue = useDebounce(search, 400);
   const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
@@ -73,13 +88,13 @@ const VerifikasiP3KEPage = () => {
           }
         }) => (
           <div className="flex">
-            <Tooltip title="Verifikasi">
+            <Tooltip title="Lihat Anggota Keluarga">
               <IconButton
                 LinkComponent={Link}
                 color="primary"
                 size="medium"
                 aria-label="Ubah"
-                href={`/dashboard/verifikasi-p3ke/review?id=${data.id}&kabupaten=${kabupaten.id}`}
+                href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${data.idKeluarga}&kabupatenKotaId=${data.kabupatenKotaId}`}
               >
                 <PublishedWithChangesTwoTone fontSize="small" />
               </IconButton>
@@ -89,12 +104,12 @@ const VerifikasiP3KEPage = () => {
       }
     ],
 
-    [kabupaten.id]
+    []
   );
 
   const pageProps = {
     title: 'Verifikasi P3KE',
-    navigation: [{ title: <FormattedMessage id="verifikasi-p3ke" defaultMessage="Verifikasi P3KE" />, url: '/dashboard/verifikasi-p3ke' }]
+    navigation: [{ title: 'Verifikasi P3KE', url: '/dashboard/verifikasi-p3ke' }]
   };
 
   // Error
@@ -209,8 +224,25 @@ const VerifikasiP3KEPage = () => {
                 </SubCard>
               </Grid>
               <Grid item xs={12}>
+                <TextField
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    )
+                  }}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Cari keluarga"
+                  value={search}
+                  size="small"
+                />
+              </Grid>
+              <Grid item xs={12}>
                 <SubCard content={false}>
-                  {!fetchKeluarga.isLoading && <AppTable columns={columns} initialData={fetchKeluarga.data || []} />}
+                  {!fetchKeluarga.isLoading && (
+                    <AppTable columns={columns} globalFilter={debouncedValue} stickyHeader initialData={fetchKeluarga.data || []} />
+                  )}
                 </SubCard>
               </Grid>
             </Grid>

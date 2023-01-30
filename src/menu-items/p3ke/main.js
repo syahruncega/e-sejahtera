@@ -12,36 +12,58 @@ import {
   IconFocus2,
   IconBookmarks,
   IconUserCheck,
-  IconChecklist
+  IconUserSearch,
+  IconChecks
 } from '@tabler/icons';
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
 const mainP3KE = {
   id: 'main',
-  title: <FormattedMessage id="main" defaultMessage="Menu" />,
+  title: 'Menu',
   type: 'group',
   children: [
     {
       id: 'dashboard',
-      title: <FormattedMessage id="dashboard" />,
+      title: 'Dashboard',
       type: 'item',
       url: 'p3ke/dashboard',
       icon: IconDashboard
     },
     {
       id: 'verifikasi-p3ke',
-      title: <FormattedMessage id="verifikasi-p3ke" defaultMessage="Verifikasi P3KE" />,
+      title: 'Verifikasi P3KE',
       type: 'item',
-      url: '/dashboard/verifikasi-p3ke',
+      url: '/p3ke/dashboard/verifikasi-p3ke',
       icon: IconUserCheck
     },
+    // {
+    //   id: 'verifikasi-monev',
+    //   title: <FormattedMessage id="verifikasi-monev" defaultMessage="Verifikasi Monev" />,
+    //   type: 'item',
+    //   url: '/p3ke/dashboard/verifikasi-monev',
+    //   icon: IconChecklist
+    // }
     {
-      id: 'verifikasi-monev',
-      title: <FormattedMessage id="verifikasi-monev" defaultMessage="Verifikasi Monev" />,
+      id: 'monitor-mahasiswa',
+      title: 'Monitor Mahasiswa',
       type: 'item',
-      url: '/dashboard/verifikasi-monev',
-      icon: IconChecklist
+      url: '/p3ke/dashboard/monitor-mahasiswa',
+      icon: IconUserSearch
+    },
+    {
+      id: 'monitor-dosen',
+      title: 'Monitor Dosen',
+      type: 'item',
+      url: '/p3ke/dashboard/monitor-dosen',
+      icon: IconUserSearch
+    },
+    {
+      id: 'hasil-verifikasi',
+      title: 'Hasil Verifikasi',
+      type: 'item',
+      url: '/p3ke/dashboard/hasil-verifikasi',
+      icon: IconChecks
     }
   ]
 };

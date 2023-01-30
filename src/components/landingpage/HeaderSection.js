@@ -103,7 +103,7 @@ const HeaderSection = () => {
                   variant="body1"
                   sx={{ fontSize: { xs: '1rem', md: '1.125rem' } }}
                 >
-                  Berry is React based Dashboard template which helps you to build faster and beautiful web applications.
+                  elektronik - Sinergi dan kerjasama untuk kesejahteraan rakyat
                 </Typography>
               </motion.div>
             </Grid>

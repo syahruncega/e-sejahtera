@@ -115,15 +115,17 @@ const LokasiDetailSubKegiatanPage = () => {
     title: 'Detail Lokasi',
     navigation: [
       {
-        title: <FormattedMessage id="subKegiatan" defaultMessage="Sub Kegiatan" />,
-        url: '/dashboard/sub-kegiatan'
+        title: 'Sub Kegiatan',
+        url: 'kemiskinan/dashboard/master/sub-kegiatan'
       },
       {
-        title: <FormattedMessage id="detailsubKegiatan" defaultMessage="Detail Sub Kegiatan" />,
-        url: `/dashboard/sub-kegiatan/detail?sub_kegiatanId=${fetchDetailSubKegiatan.isLoading ? '' : fetchDetailSubKegiatan.data.id}`
+        title: 'Fokus Belanja',
+        url: `kemiskinan/dashboard/master/sub-kegiatan/fokus-belanja?sub_kegiatanId=${
+          fetchDetailSubKegiatan.isLoading ? '' : fetchDetailSubKegiatan.data.id
+        }`
       },
       {
-        title: <FormattedMessage id="lokasiDetailSubKegiatan" defaultMessage="Detail Lokasi" />,
+        title: 'Detail Lokasi',
         url: router.asPath
       }
     ]

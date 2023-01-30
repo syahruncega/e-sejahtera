@@ -8,57 +8,57 @@ import { IconDashboard, IconApps, IconBox, IconHelp, IconSitemap, IconBuildingSk
 
 const mainKemiskinan = {
   id: 'main',
-  title: <FormattedMessage id="main" defaultMessage="Menu" />,
+  title: 'Indikator',
   type: 'group',
   children: [
     {
       id: 'dashboard',
-      title: <FormattedMessage id="dashboard" />,
+      title: 'Dashboard',
       type: 'item',
       url: '/kemiskinan/dashboard',
       icon: IconDashboard
     },
+    // {
+    //   id: 'bidang-urusan',
+    //   title: 'Bidang Urusan',
+    //   type: 'item',
+    //   url: '/kemiskinan/dashboard/bidang-urusan',
+    //   icon: IconFocus2
+    // },
+    // {
+    //   id: 'instansi',
+    //   title: 'Instansi',
+    //   type: 'item',
+    //   url: '/kemiskinan/dashboard/instansi',
+    //   icon: IconBuildingSkyscraper
+    // },
     {
-      id: 'bidang-urusan',
-      title: <FormattedMessage id="bidang-urusan" defaultMessage="Bidang Urusan" />,
+      id: 'indikator-program',
+      title: 'Program',
       type: 'item',
-      url: 'kemiskinan/dashboard/bidang-urusan',
-      icon: IconFocus2
-    },
-    {
-      id: 'instansi',
-      title: <FormattedMessage id="instansi" defaultMessage="Instansi" />,
-      type: 'item',
-      url: 'kemiskinan/dashboard/instansi',
-      icon: IconBuildingSkyscraper
-    },
-    {
-      id: 'program',
-      title: <FormattedMessage id="program" defaultMessage="Program" />,
-      type: 'item',
-      url: 'kemiskinan/dashboard/program',
+      url: '/kemiskinan/dashboard/master/program',
       icon: IconApps
     },
     {
-      id: 'kegiatan',
-      title: <FormattedMessage id="kegiatan" defaultMessage="Kegiatan" />,
+      id: 'indikator-kegiatan',
+      title: 'Kegiatan',
       type: 'item',
-      url: 'kemiskinan/dashboard/kegiatan',
+      url: '/kemiskinan/dashboard/master/kegiatan',
       icon: IconBox
     },
     {
-      id: 'sub-kegiatan',
-      title: <FormattedMessage id="sub-kegiatan" defaultMessage="Sub Kegiatan" />,
+      id: 'indikator-sub-kegiatan',
+      title: 'Sub Kegiatan',
       type: 'item',
-      url: 'kemiskinan/dashboard/sub-kegiatan',
+      url: '/kemiskinan/dashboard/master/sub-kegiatan',
       icon: IconSitemap,
       breadcrumbs: false
     },
     {
       id: 'penerima-manfaat',
-      title: <FormattedMessage id="penerima-manfaat" defaultMessage="Tagging Data" />,
+      title: 'Penerima Manfaat',
       type: 'item',
-      url: '/kemiskinan/dashboard/penerima-manfaat',
+      url: '/kemiskinan/dashboard/master/penerima-manfaat',
       icon: IconBookmarks,
       breadcrumbs: false
     }

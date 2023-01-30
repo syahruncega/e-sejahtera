@@ -1,13 +1,13 @@
 // project imports
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
-import DashboardAdmin from 'components/dashboard/Landing/Admin/DashboardAdmin';
+import DashboardKemiskinanAdmin from 'components/dashboard/Kemiskinan/Beranda/Admin/DashboardKemiskinanAdmin';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const Dashboard = () => (
-  <Page title="Default Dashboard">
-    <DashboardAdmin />
+  <Page title="Dashboard Kemiskinan">
+    <DashboardKemiskinanAdmin />
   </Page>
 );
 

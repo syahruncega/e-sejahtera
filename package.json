@@ -1,6 +1,6 @@
 {
-  "name": "berry-react-material-next-js",
-  "version": "3.2.1",
+  "name": "e-sejahtera",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev -p 3003",

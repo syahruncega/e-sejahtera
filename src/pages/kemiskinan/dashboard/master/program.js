@@ -16,7 +16,7 @@ import {
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { deleteKegiatan, getKegiatan } from 'store/slices/kegiatan';
+import { deleteProgram, getProgram } from 'store/slices/program';
 
 // assets
 import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
@@ -27,19 +27,19 @@ import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
-import FormKegiatan from 'components/form/FormKegiatan';
-import { getProgram } from 'store/slices/program';
+import FormProgram from 'components/form/FormProgram';
+import { getInstansi } from 'store/slices/instansi';
 import DeleteDialog from 'components/dialog/DeleteDialog';
-import { useState, useMemo } from 'react';
 import useDebounce from 'hooks/useDebounce';
+import { useState, useMemo } from 'react';
 import AppTable from 'components/AppTable';
 
-const KegiatanPage = () => {
+const ProgramPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
   const fetchProgram = useQuery(['program'], getProgram);
+  const fetchInstansi = useQuery(['instansi'], getInstansi);
 
   const columns = useMemo(
     () => [
@@ -49,24 +49,39 @@ const KegiatanPage = () => {
         header: 'No'
       },
       {
+        id: 'namaInstansi',
+        accessorKey: 'instansi.namaInstansi',
+        header: 'Nama Instansi'
+      },
+      {
+        id: 'sasaran',
+        accessorKey: 'sasaran',
+        header: 'Sasaran'
+      },
+      {
+        id: 'indikatorSasaran',
+        accessorKey: 'indikatorSasaran',
+        header: 'Indikator Sasaran'
+      },
+      {
+        id: 'kebijakan',
+        accessorKey: 'kebijakan',
+        header: 'Kebijakan'
+      },
+      {
         id: 'namaProgram',
-        accessorKey: 'program.namaProgram',
+        accessorKey: 'namaProgram',
         header: 'Nama Program'
       },
       {
-        id: 'namaKegiatan',
-        accessorKey: 'namaKegiatan',
-        header: 'Nama Kegiatan'
-      },
-      {
-        id: 'indikatorKinerjaKegiata ',
-        accessorKey: 'indikatorKinerjaKegiatan',
+        id: 'indikatorKinerjaProgram',
+        accessorKey: 'indikatorKinerjaProgram',
         header: 'Indikator Kinerja'
       },
       {
-        id: 'paguKegiatan',
-        accessorKey: 'paguKegiatan',
-        accessorFn: (row) => `Rp${String(row.paguKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
+        id: 'paguProgram',
+        accessorKey: 'paguProgram',
+        accessorFn: (row) => `Rp${String(row.paguProgram).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
         header: 'Pagu'
       },
       {
@@ -83,49 +98,47 @@ const KegiatanPage = () => {
                 <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
               </IconButton>
             </Tooltip>
-            <FormKegiatan isEdit kegiatan={data} dataProgram={fetchProgram.data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteKegiatan} mutationKey="kegiatan" />
+            <FormProgram isEdit program={data} dataInstansi={fetchInstansi.data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteProgram} mutationKey="program" />
           </Box>
         )
       }
     ],
 
-    [fetchProgram.data]
+    [fetchInstansi.data]
   );
 
   const pageProps = {
-    title: 'Kegiatan',
+    title: 'Program',
     navigation: [
       {
-        title: <FormattedMessage id="kegiatan" defaultMessage="Kegiatan" />,
-        url: '/dashboard/kegiatan'
+        title: 'Program',
+        url: '/kemiskinan/dashboard/master/program'
       }
     ]
   };
 
-  // Error
-  if (fetchKegiatan.isError) {
+  if (fetchProgram.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchKegiatan.error.message}
+          {fetchProgram.error.message}
         </Alert>
       </Page>
     );
   }
 
-  // Success
   return (
     <Page {...pageProps}>
       <MainCard content={false}>
-        {fetchKegiatan.isLoading && (
+        {fetchProgram.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
         )}
 
-        {!fetchKegiatan.isLoading && (
+        {!fetchProgram.isLoading && (
           <>
             <CardContent>
               <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
@@ -139,7 +152,7 @@ const KegiatanPage = () => {
                       )
                     }}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Kegiatan"
+                    placeholder="Cari Program"
                     value={search}
                     size="small"
                   />
@@ -162,15 +175,13 @@ const KegiatanPage = () => {
                   </Tooltip>
 
                   {/* product add & dialog */}
-                  <FormKegiatan dataProgram={fetchProgram.data} />
+                  <FormProgram dataInstansi={fetchInstansi.data} />
                 </Grid>
               </Grid>
             </CardContent>
-
             {/* table */}
-
-            {!fetchKegiatan.isLoading && (
-              <AppTable stickyHeader columns={columns} initialData={fetchKegiatan.data ?? []} globalFilter={debouncedValue} />
+            {!fetchProgram.isLoading && (
+              <AppTable stickyHeader columns={columns} initialData={fetchProgram.data ?? []} globalFilter={debouncedValue} />
             )}
           </>
         )}
@@ -179,8 +190,8 @@ const KegiatanPage = () => {
   );
 };
 
-KegiatanPage.getLayout = function getLayout(page) {
+ProgramPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default KegiatanPage;
+export default ProgramPage;

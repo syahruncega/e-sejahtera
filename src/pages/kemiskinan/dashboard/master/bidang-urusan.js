@@ -77,7 +77,7 @@ const BidangUrusanPage = () => {
 
   const pageProps = {
     title: 'Bidang Urusan',
-    navigation: [{ title: <FormattedMessage id="bidangUrusan" defaultMessage="Bidang Urusan" />, url: '/dashboard/bidang-urusan' }]
+    navigation: [{ title: 'Bidang Urusan', url: '/kemiskinan/dashboard/master/bidang-urusan' }]
   };
 
   // Error
@@ -116,7 +116,7 @@ const BidangUrusanPage = () => {
                       )
                     }}
                     onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Instansi"
+                    placeholder="Cari bidang urusan"
                     value={search}
                     size="small"
                   />
