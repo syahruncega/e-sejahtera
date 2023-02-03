@@ -17,7 +17,7 @@ import { EditTwoTone } from '@mui/icons-material';
 import { createInstansi, updateInstansi } from 'store/slices/instansi';
 
 const validationSchema = yup.object({
-  bidangUrusanId: yup.string().required('Bidang urusan wajib diisi'),
+  id: yup.string().required('ID Instansi wajib diisi'),
   namaInstansi: yup.string().required('Instansi wajib diisi')
 });
 
@@ -54,8 +54,8 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
 
   const formik = useFormik({
     initialValues: {
-      namaInstansi: isEdit ? instansi.namaInstansi : '',
-      bidangUrusanId: isEdit ? instansi.bidangUrusanId : ''
+      id: isEdit ? instansi.id : '',
+      namaInstansi: isEdit ? instansi.namaInstansi : ''
     },
     validationSchema,
     onSubmit: (values) => {
@@ -105,7 +105,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Instansi' : 'Tambah Instansi'}</DialogTitle>
           <DialogContent>
-            <Autocomplete
+            {/* <Autocomplete
               disablePortal
               name="bidangUrusanId"
               value={bidangUrusan}
@@ -126,6 +126,17 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
                   {...params}
                 />
               )}
+            /> */}
+            <TextField
+              name="id"
+              label="ID Instansi"
+              variant="outlined"
+              fullWidth
+              sx={{ marginTop: 2 }}
+              value={formik.values.id}
+              onChange={formik.handleChange}
+              error={formik.touched.id && Boolean(formik.errors.id)}
+              helperText={formik.touched.id && formik.errors.id}
             />
             <TextField
               name="namaInstansi"

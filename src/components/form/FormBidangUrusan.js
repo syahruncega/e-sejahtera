@@ -17,7 +17,8 @@ import { EditTwoTone } from '@mui/icons-material';
 import { createBidangUrusan, updateBidangUrusan } from 'store/slices/bidang-urusan';
 
 const validationSchema = yup.object({
-  namaBidangUrusan: yup.string().required('BidangUrusan wajib diisi')
+  id: yup.string().required('ID Bidang Urusan wajib diisi'),
+  namaBidangUrusan: yup.string().required('Bidang Urusan wajib diisi')
 });
 
 const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
@@ -51,6 +52,7 @@ const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
 
   const formik = useFormik({
     initialValues: {
+      id: isEdit ? bidangUrusan.id : '',
       namaBidangUrusan: isEdit ? bidangUrusan.namaBidangUrusan : ''
     },
     validationSchema,
@@ -101,6 +103,17 @@ const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Bidang Urusan' : 'Tambah Bidang Urusan'}</DialogTitle>
           <DialogContent>
+            <TextField
+              name="id"
+              label="ID Bidang Urusan"
+              variant="outlined"
+              fullWidth
+              sx={{ marginTop: 2 }}
+              value={formik.values.id}
+              onChange={formik.handleChange}
+              error={formik.touched.id && Boolean(formik.errors.id)}
+              helperText={formik.touched.id && formik.errors.id}
+            />
             <TextField
               name="namaBidangUrusan"
               label="Nama Bidang Urusan"

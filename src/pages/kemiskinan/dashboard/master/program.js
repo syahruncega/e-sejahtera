@@ -33,6 +33,7 @@ import DeleteDialog from 'components/dialog/DeleteDialog';
 import useDebounce from 'hooks/useDebounce';
 import { useState, useMemo } from 'react';
 import AppTable from 'components/AppTable';
+import SubCard from 'components/ui-component/cards/SubCard';
 
 const ProgramPage = () => {
   const [search, setSearch] = useState('');
@@ -48,42 +49,42 @@ const ProgramPage = () => {
         id: 'no',
         header: 'No'
       },
-      {
-        id: 'namaInstansi',
-        accessorKey: 'instansi.namaInstansi',
-        header: 'Nama Instansi'
-      },
-      {
-        id: 'sasaran',
-        accessorKey: 'sasaran',
-        header: 'Sasaran'
-      },
-      {
-        id: 'indikatorSasaran',
-        accessorKey: 'indikatorSasaran',
-        header: 'Indikator Sasaran'
-      },
-      {
-        id: 'kebijakan',
-        accessorKey: 'kebijakan',
-        header: 'Kebijakan'
-      },
+      // {
+      //   id: 'namaInstansi',
+      //   accessorKey: 'instansi.namaInstansi',
+      //   header: 'Nama Instansi'
+      // },
+      // {
+      //   id: 'sasaran',
+      //   accessorKey: 'sasaran',
+      //   header: 'Sasaran'
+      // },
+      // {
+      //   id: 'indikatorSasaran',
+      //   accessorKey: 'indikatorSasaran',
+      //   header: 'Indikator Sasaran'
+      // },
+      // {
+      //   id: 'kebijakan',
+      //   accessorKey: 'kebijakan',
+      //   header: 'Kebijakan'
+      // },
       {
         id: 'namaProgram',
         accessorKey: 'namaProgram',
         header: 'Nama Program'
       },
-      {
-        id: 'indikatorKinerjaProgram',
-        accessorKey: 'indikatorKinerjaProgram',
-        header: 'Indikator Kinerja'
-      },
-      {
-        id: 'paguProgram',
-        accessorKey: 'paguProgram',
-        accessorFn: (row) => `Rp${String(row.paguProgram).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
-        header: 'Pagu'
-      },
+      // {
+      //   id: 'indikatorKinerjaProgram',
+      //   accessorKey: 'indikatorKinerjaProgram',
+      //   header: 'Indikator Kinerja'
+      // },
+      // {
+      //   id: 'paguProgram',
+      //   accessorKey: 'paguProgram',
+      //   accessorFn: (row) => `Rp${String(row.paguProgram).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
+      //   header: 'Pagu'
+      // },
       {
         id: 'aksi',
         header: 'Aksi',
@@ -93,11 +94,11 @@ const ProgramPage = () => {
           }
         }) => (
           <Box sx={{ display: 'flex' }}>
-            <Tooltip title="Update Pagu">
+            {/* <Tooltip title="Update Pagu">
               <IconButton onClick={() => {}} size="medium">
                 <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <FormProgram isEdit program={data} dataInstansi={fetchInstansi.data} />
             <DeleteDialog id={data.id} deleteFunc={deleteProgram} mutationKey="program" />
           </Box>
@@ -131,7 +132,7 @@ const ProgramPage = () => {
 
   return (
     <Page {...pageProps}>
-      <MainCard content={false}>
+      <MainCard>
         {fetchProgram.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
@@ -181,7 +182,9 @@ const ProgramPage = () => {
             </CardContent>
             {/* table */}
             {!fetchProgram.isLoading && (
-              <AppTable stickyHeader columns={columns} initialData={fetchProgram.data ?? []} globalFilter={debouncedValue} />
+              <SubCard content={false}>
+                <AppTable stickyHeader columns={columns} initialData={fetchProgram.data ?? []} globalFilter={debouncedValue} />
+              </SubCard>
             )}
           </>
         )}

@@ -9,7 +9,6 @@ export async function getBidangUrusan({ signal, params }) {
 
 export async function getBidangUrusanById(id) {
   const response = await axiosService.get(`/${ENDPOINT}/${id}`);
-
   return response.data;
 }
 

@@ -3,7 +3,7 @@ import axiosService from 'utils/axios';
 const ENDPOINT = 'subkegiatan';
 
 export async function getSubKegiatan({ signal, params }) {
-  const response = await axiosService.get(`/${ENDPOINT}relasi`, { signal, params });
+  const response = await axiosService.get(`/${ENDPOINT}`, { signal, params });
   return response.data;
 }
 

@@ -2,18 +2,22 @@ import axiosService from 'utils/axios';
 
 const ENDPOINT = 'keluarga';
 
-export async function getKeluargaByKabupatenKotaId(kabupatenKotaId) {
-  const response = await axiosService.get(`/${ENDPOINT}/${kabupatenKotaId}`);
+export async function getAllKeluarga() {
+  const response = await axiosService.get(`/${ENDPOINT}`);
+  return response.data;
+}
+export async function getKeluarga(params) {
+  const response = await axiosService.get(`/${ENDPOINT}/search`, { params });
   return response.data;
 }
 
-export async function getKeluargaById(kabupatenKotaId, id) {
-  const response = await axiosService.get(`/${ENDPOINT}/detail/${kabupatenKotaId}/${id}`);
+export async function getKeluargaById(id) {
+  const response = await axiosService.get(`/${ENDPOINT}/${id}`);
   return response.data;
 }
 
-export async function getKeluargaByIdKeluarga(kabupatenKotaId, idKeluarga) {
-  const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${kabupatenKotaId}/${idKeluarga}`);
+export async function getKeluargaByIdKeluarga(idKeluarga) {
+  const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${idKeluarga}`);
   console.log(response.data);
   return response.data;
 }

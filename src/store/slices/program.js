@@ -3,8 +3,7 @@ import axiosService from 'utils/axios';
 const ENDPOINT = 'program';
 
 export async function getProgram({ signal, params }) {
-  const response = await axiosService.get(`/${ENDPOINT}relasi`, { signal, params });
-  console.log(response.data);
+  const response = await axiosService.get(`/${ENDPOINT}`, { signal, params });
   return response.data;
 }
 

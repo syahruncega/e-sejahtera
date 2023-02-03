@@ -24,7 +24,6 @@ import { LoadingButton } from '@mui/lab';
 import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getKeluargaByKabupatenKotaId } from 'store/slices/keluarga';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
@@ -34,6 +33,7 @@ import Link from 'Link';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
+import { getKeluarga } from 'store/slices/keluarga';
 
 const VerifikasiP3KEPage = () => {
   const [search, setSearch] = useState('');
@@ -45,7 +45,7 @@ const VerifikasiP3KEPage = () => {
   const [keyKelurahan, setKeyKelurahan] = useState(false);
 
   const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
-  const fetchKeluarga = useQuery(['keluarga'], () => getKeluargaByKabupatenKotaId(kabupaten.id));
+  const fetchKeluarga = useQuery(['keluarga'], () => getKeluarga({ kabupatenKotaId: kabupaten.id }));
 
   const columns = useMemo(
     () => [

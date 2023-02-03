@@ -3,8 +3,7 @@ import axiosService from 'utils/axios';
 const ENDPOINT = 'instansi';
 
 export async function getInstansi({ signal, params }) {
-  const response = await axiosService.get(`/${ENDPOINT}relasi`, { signal, params });
-  console.log(response.data);
+  const response = await axiosService.get(`/${ENDPOINT}`, { signal, params });
   return response.data;
 }
 

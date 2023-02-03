@@ -33,6 +33,7 @@ import DeleteDialog from 'components/dialog/DeleteDialog';
 import { useState, useMemo } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import AppTable from 'components/AppTable';
+import SubCard from 'components/ui-component/cards/SubCard';
 
 const KegiatanPage = () => {
   const [search, setSearch] = useState('');
@@ -48,27 +49,27 @@ const KegiatanPage = () => {
         id: 'no',
         header: 'No'
       },
-      {
-        id: 'namaProgram',
-        accessorKey: 'program.namaProgram',
-        header: 'Nama Program'
-      },
+      // {
+      //   id: 'namaProgram',
+      //   accessorKey: 'program.namaProgram',
+      //   header: 'Nama Program'
+      // },
       {
         id: 'namaKegiatan',
         accessorKey: 'namaKegiatan',
         header: 'Nama Kegiatan'
       },
-      {
-        id: 'indikatorKinerjaKegiata ',
-        accessorKey: 'indikatorKinerjaKegiatan',
-        header: 'Indikator Kinerja'
-      },
-      {
-        id: 'paguKegiatan',
-        accessorKey: 'paguKegiatan',
-        accessorFn: (row) => `Rp${String(row.paguKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
-        header: 'Pagu'
-      },
+      // {
+      //   id: 'indikatorKinerjaKegiata ',
+      //   accessorKey: 'indikatorKinerjaKegiatan',
+      //   header: 'Indikator Kinerja'
+      // },
+      // {
+      //   id: 'paguKegiatan',
+      //   accessorKey: 'paguKegiatan',
+      //   accessorFn: (row) => `Rp${String(row.paguKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
+      //   header: 'Pagu'
+      // },
       {
         id: 'aksi',
         header: 'Aksi',
@@ -78,11 +79,11 @@ const KegiatanPage = () => {
           }
         }) => (
           <Box sx={{ display: 'flex' }}>
-            <Tooltip title="Update Pagu">
+            {/* <Tooltip title="Update Pagu">
               <IconButton onClick={() => {}} size="medium">
                 <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <FormKegiatan isEdit kegiatan={data} dataProgram={fetchProgram.data} />
             <DeleteDialog id={data.id} deleteFunc={deleteKegiatan} mutationKey="kegiatan" />
           </Box>
@@ -118,7 +119,7 @@ const KegiatanPage = () => {
   // Success
   return (
     <Page {...pageProps}>
-      <MainCard content={false}>
+      <MainCard>
         {fetchKegiatan.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
@@ -170,7 +171,9 @@ const KegiatanPage = () => {
             {/* table */}
 
             {!fetchKegiatan.isLoading && (
-              <AppTable stickyHeader columns={columns} initialData={fetchKegiatan.data ?? []} globalFilter={debouncedValue} />
+              <SubCard content={false}>
+                <AppTable stickyHeader columns={columns} initialData={fetchKegiatan.data ?? []} globalFilter={debouncedValue} />
+              </SubCard>
             )}
           </>
         )}

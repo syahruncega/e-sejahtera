@@ -37,6 +37,7 @@ import { getKegiatan } from 'store/slices/kegiatan';
 import { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import AppTable from 'components/AppTable';
+import SubCard from 'components/ui-component/cards/SubCard';
 
 const SubKegiatanPage = () => {
   const [search, setSearch] = useState('');
@@ -52,46 +53,46 @@ const SubKegiatanPage = () => {
         id: 'no',
         header: 'No'
       },
-      {
-        id: 'namaKegiatan',
-        accessorKey: 'kegiatan.namaKegiatan',
-        header: 'Kegiatan'
-      },
+      // {
+      //   id: 'namaKegiatan',
+      //   accessorKey: 'kegiatan.namaKegiatan',
+      //   header: 'Kegiatan'
+      // },
       {
         id: 'namaSubKegiatan',
         accessorKey: 'namaSubKegiatan',
         header: 'Sub Kegiatan'
       },
-      {
-        id: 'indikatorKinerjaSubKegiatan',
-        accessorKey: 'indikatorKinerjaSubKegiatan',
-        header: 'Indikator Kinerja'
-      },
-      {
-        id: 'paguSubKegiatan',
-        accessorKey: 'paguSubKegiatan',
-        accessorFn: (row) => `Rp${String(row.paguSubKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
-        header: 'Pagu'
-      },
-      {
-        id: 'fokus-belanja',
-        header: 'Detail',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
-          <Tooltip title="Fokus Belanja">
-            <IconButton
-              LinkComponent={Link}
-              href={`/kemiskinan/dashboard/master/sub-kegiatan/fokus-belanja?subKegiatanId=${data.id}`}
-              size="medium"
-            >
-              <AddIcon fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
-            </IconButton>
-          </Tooltip>
-        )
-      },
+      // {
+      //   id: 'indikatorKinerjaSubKegiatan',
+      //   accessorKey: 'indikatorKinerjaSubKegiatan',
+      //   header: 'Indikator Kinerja'
+      // },
+      // {
+      //   id: 'paguSubKegiatan',
+      //   accessorKey: 'paguSubKegiatan',
+      //   accessorFn: (row) => `Rp${String(row.paguSubKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
+      //   header: 'Pagu'
+      // },
+      // {
+      //   id: 'fokus-belanja',
+      //   header: 'Detail',
+      //   cell: ({
+      //     cell: {
+      //       row: { original: data }
+      //     }
+      //   }) => (
+      //     <Tooltip title="Fokus Belanja">
+      //       <IconButton
+      //         LinkComponent={Link}
+      //         href={`/kemiskinan/dashboard/master/sub-kegiatan/fokus-belanja?subKegiatanId=${data.id}`}
+      //         size="medium"
+      //       >
+      //         <AddIcon fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
+      //       </IconButton>
+      //     </Tooltip>
+      //   )
+      // },
       {
         id: 'aksi',
         header: 'Aksi',
@@ -101,11 +102,11 @@ const SubKegiatanPage = () => {
           }
         }) => (
           <Box sx={{ display: 'flex' }}>
-            <Tooltip title="Update Pagu">
+            {/* <Tooltip title="Update Pagu">
               <IconButton onClick={() => {}} size="medium">
                 <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
             <FormSubKegiatan isEdit subKegiatan={data} dataKegiatan={fetchKegiatan.data} />
             <DeleteDialog id={data.id} deleteFunc={deleteSubKegiatan} mutationKey="subKegiatan" />
           </Box>
@@ -136,7 +137,7 @@ const SubKegiatanPage = () => {
   // Success
   return (
     <Page {...pageProps}>
-      <MainCard content={false}>
+      <MainCard>
         {fetchSubKegiatan.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
@@ -187,7 +188,9 @@ const SubKegiatanPage = () => {
             {/* table */}
 
             {!fetchSubKegiatan.isLoading && (
-              <AppTable stickyHeader columns={columns} initialData={fetchSubKegiatan.data ?? []} globalFilter={debouncedValue} />
+              <SubCard content={false}>
+                <AppTable stickyHeader columns={columns} initialData={fetchSubKegiatan.data ?? []} globalFilter={debouncedValue} />
+              </SubCard>
             )}
           </>
         )}

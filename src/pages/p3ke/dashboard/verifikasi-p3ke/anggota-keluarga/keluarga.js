@@ -18,9 +18,7 @@ import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
 const KeluargaPage = () => {
   const router = useRouter();
 
-  const fetchKeluargaByIdKeluarga = useQuery(['keluargaByIdKeluarga'], () =>
-    getKeluargaByIdKeluarga(router.query.kabupatenKotaId, router.query.idKeluarga)
-  );
+  const fetchKeluargaByIdKeluarga = useQuery(['keluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));
 
   const pageProps = {
     title: 'Keluarga',
