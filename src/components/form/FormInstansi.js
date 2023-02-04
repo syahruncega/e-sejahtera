@@ -21,9 +21,9 @@ const validationSchema = yup.object({
   namaInstansi: yup.string().required('Instansi wajib diisi')
 });
 
-const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
+const FormInstansi = ({ isEdit, instansi }) => {
   const [open, setOpen] = useState(false);
-  const [bidangUrusan, setBidangUrusan] = useState(isEdit ? instansi.bidangUrusan : null);
+  // const [bidangUrusan, setBidangUrusan] = useState(isEdit ? instansi.bidangUrusan : null);
 
   const queryClient = useQueryClient();
 
@@ -34,7 +34,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
       // queryClient.setQueriesData(['instansi'], (oldData) => [newInstansi, ...(oldData ?? [])]);
       queryClient.invalidateQueries('instansi');
       setOpen(false);
-      setBidangUrusan(null);
+      // setBidangUrusan(null);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
     }
@@ -166,8 +166,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
 
 FormInstansi.propTypes = {
   isEdit: PropTypes.bool,
-  instansi: PropTypes.any,
-  dataBidangUrusan: PropTypes.array
+  instansi: PropTypes.any
 };
 
 export default FormInstansi;

@@ -52,15 +52,16 @@ const InstansiPage = () => {
         header: 'No'
       },
       {
+        id: 'id',
+        accessorKey: 'id',
+        header: 'ID Instansi'
+      },
+      {
         id: 'namaInstansi',
         accessorKey: 'namaInstansi',
         header: 'Nama Instansi'
       },
-      // {
-      //   id: 'bidangUrusan',
-      //   accessorKey: 'bidangUrusan.namaBidangUrusan',
-      //   header: 'Bidang Urusan'
-      // },
+
       {
         id: 'aksi',
         header: 'Aksi',

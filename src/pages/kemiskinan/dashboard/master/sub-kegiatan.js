@@ -1,31 +1,45 @@
+import Link from 'Link';
+
 // material-ui
-import { Alert, AlertTitle, CardContent, CircularProgress, Grid, IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
+import {
+  Alert,
+  AlertTitle,
+  CardContent,
+  CircularProgress,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TableContainer,
+  TextField,
+  Tooltip
+} from '@mui/material';
 
 // project imports
 import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
-import { deleteProgram, getProgram } from 'store/slices/program';
+import { deleteSubKegiatan, getSubKegiatan } from 'store/slices/sub-kegiatan';
 
 // assets
+
 import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
 import { useQuery } from '@tanstack/react-query';
 import { Box } from '@mui/system';
-import FormProgram from 'components/form/FormProgram';
+import FormSubKegiatan from 'components/form/FormSubKegiatan';
 import DeleteDialog from 'components/dialog/DeleteDialog';
+import { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
-import { useState, useMemo } from 'react';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
 
-const ProgramPage = () => {
+const SubKegiatanPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchProgram = useQuery(['program'], getProgram);
+  const fetchSubKegiatan = useQuery(['subKegiatan'], getSubKegiatan);
 
   const columns = useMemo(
     () => [
@@ -37,12 +51,12 @@ const ProgramPage = () => {
       {
         id: 'id',
         accessorKey: 'id',
-        header: 'ID Program'
+        header: 'ID Sub Kegiatan'
       },
       {
-        id: 'namaProgram',
-        accessorKey: 'namaProgram',
-        header: 'Nama Program'
+        id: 'namaSubKegiatan',
+        accessorKey: 'namaSubKegiatan',
+        header: 'Sub Kegiatan'
       },
       {
         id: 'aksi',
@@ -53,8 +67,8 @@ const ProgramPage = () => {
           }
         }) => (
           <Box sx={{ display: 'flex' }}>
-            <FormProgram isEdit program={data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteProgram} mutationKey="program" />
+            <FormSubKegiatan isEdit subKegiatan={data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteSubKegiatan} mutationKey="subKegiatan" />
           </Box>
         )
       }
@@ -64,36 +78,32 @@ const ProgramPage = () => {
   );
 
   const pageProps = {
-    title: 'Program',
-    navigation: [
-      {
-        title: 'Program',
-        url: '/kemiskinan/dashboard/master/program'
-      }
-    ]
+    title: 'Sub Kegiatan',
+    navigation: [{ title: 'Sub Kegiatan', url: '/kemiskinan/dashboard/master/sub-kegiatan' }]
   };
 
-  if (fetchProgram.isError) {
+  // Error
+  if (fetchSubKegiatan.isError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
           <AlertTitle>Error</AlertTitle>
-          {fetchProgram.error.message}
+          {fetchSubKegiatan.error.message}
         </Alert>
       </Page>
     );
   }
 
+  // Success
   return (
     <Page {...pageProps}>
       <MainCard>
-        {fetchProgram.isLoading && (
+        {fetchSubKegiatan.isLoading && (
           <Box sx={{ display: 'flex', width: 'full', justifyContent: 'center ', marginY: 4 }}>
             <CircularProgress />
           </Box>
         )}
-
-        {!fetchProgram.isLoading && (
+        {!fetchSubKegiatan.isLoading && (
           <>
             <Grid container justifyContent="space-between" alignItems="center" spacing={2} mb={3}>
               <Grid item xs={12} sm={6}>
@@ -106,7 +116,7 @@ const ProgramPage = () => {
                     )
                   }}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari Program"
+                  placeholder="Cari Sub Kegiatan"
                   value={search}
                   size="small"
                 />
@@ -129,14 +139,15 @@ const ProgramPage = () => {
                 </Tooltip>
 
                 {/* product add & dialog */}
-                <FormProgram />
+                <FormSubKegiatan />
               </Grid>
             </Grid>
 
             {/* table */}
-            {!fetchProgram.isLoading && (
+
+            {!fetchSubKegiatan.isLoading && (
               <SubCard content={false}>
-                <AppTable stickyHeader columns={columns} initialData={fetchProgram.data ?? []} globalFilter={debouncedValue} />
+                <AppTable stickyHeader columns={columns} initialData={fetchSubKegiatan.data ?? []} globalFilter={debouncedValue} />
               </SubCard>
             )}
           </>
@@ -146,8 +157,8 @@ const ProgramPage = () => {
   );
 };
 
-ProgramPage.getLayout = function getLayout(page) {
+SubKegiatanPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default ProgramPage;
+export default SubKegiatanPage;

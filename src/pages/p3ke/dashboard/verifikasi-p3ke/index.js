@@ -45,7 +45,7 @@ const VerifikasiP3KEPage = () => {
   const [keyKelurahan, setKeyKelurahan] = useState(false);
 
   const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
-  const fetchKeluarga = useQuery(['keluarga'], () => getKeluarga({ kabupatenKotaId: kabupaten.id }));
+  const fetchKeluarga = useQuery(['keluarga'], () => getKeluarga({ kabupatenKotaId: '7206' }));
 
   const columns = useMemo(
     () => [

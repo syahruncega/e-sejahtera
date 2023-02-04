@@ -20,19 +20,14 @@ import MainCard from 'components/ui-component/cards/MainCard';
 
 // assets
 
-import { FormattedMessage } from 'react-intl';
-import { LoadingButton } from '@mui/lab';
-import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getKeluargaByKabupatenKotaId } from 'store/slices/keluarga';
+// import { getKeluargaByKabupatenKotaId } from 'store/slices/keluarga';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
-import { gridSpacing } from 'store/constant';
 import { PublishedWithChangesTwoTone } from '@mui/icons-material';
 import Link from 'Link';
-import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import { useRouter } from 'next/router';
 import { getIndividuByIdKeluarga } from 'store/slices/individu';
 import useDebounce from 'hooks/useDebounce';

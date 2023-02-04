@@ -51,11 +51,6 @@ const BidangUrusanPage = () => {
         header: 'No'
       },
       {
-        id: 'id',
-        accessorKey: 'id',
-        header: 'ID Bidang Urusan'
-      },
-      {
         id: 'namaBidangUrusan',
         accessorKey: 'namaBidangUrusan',
         header: 'Bidang Urusan'
