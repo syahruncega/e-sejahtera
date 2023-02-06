@@ -13,9 +13,8 @@ export async function getBidangUrusanById(id) {
 }
 
 export async function createBidangUrusan(newBidangUrusan) {
-  console.log(newBidangUrusan);
   const response = await axiosService.post(`/${ENDPOINT}`, newBidangUrusan);
-  console.log(response.data);
+
   return response.data;
 }
 

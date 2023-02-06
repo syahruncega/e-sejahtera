@@ -39,9 +39,7 @@ const KeluargaPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchAnggotaKeluarga = useQuery(['kabupatenKota'], () =>
-    getIndividuByIdKeluarga(router.query.kabupatenKotaId, router.query.idKeluarga)
-  );
+  const fetchAnggotaKeluarga = useQuery(['kabupatenKota'], () => getIndividuByIdKeluarga(router.query.idKeluarga));
 
   const columns = useMemo(
     () => [
@@ -85,7 +83,7 @@ const KeluargaPage = () => {
                 color="primary"
                 size="medium"
                 aria-label="Ubah"
-                href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/?kabupatenKotaId=${data.kabupatenKotaId}&idKeluarga=${data.idKeluarga}&id=${data.id}`}
+                href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/?idKeluarga=${data.idKeluarga}&id=${data.id}`}
               >
                 <PublishedWithChangesTwoTone fontSize="small" />
               </IconButton>

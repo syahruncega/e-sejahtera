@@ -17,7 +17,7 @@ import FormVerifikasiIndividu from 'components/form/FormVerifikasiIndividu';
 const IndividuPage = () => {
   const router = useRouter();
 
-  const fetchIndividuById = useQuery(['individuById'], () => getIndividuById(router.query.kabupatenKotaId, router.query.id));
+  const fetchIndividuById = useQuery(['individuById'], () => getIndividuById(router.query.id));
 
   const pageProps = {
     title: 'Review',
@@ -25,7 +25,7 @@ const IndividuPage = () => {
       { title: 'Verifikasi P3KE', url: '/p3ke/dashboard/verifikasi-p3ke' },
       {
         title: 'Anggota Keluarga',
-        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?kabupatenKotaId=${router.query.kabupatenKotaId}&idKeluarga=${router.query.idKeluarga}`
+        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${router.query.idKeluarga}`
       },
       { title: 'Individu', url: router.asPath }
     ]

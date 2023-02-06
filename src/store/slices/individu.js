@@ -8,14 +8,14 @@ const ENDPOINT = 'individu';
 //   return response.data;
 // }
 
-export async function getIndividuByIdKeluarga(kabupatenKotaId, idKeluarga) {
-  const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${kabupatenKotaId}/${idKeluarga}`);
+export async function getIndividuByIdKeluarga(idKeluarga) {
+  const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${idKeluarga}`);
   console.log(response.data);
   return response.data;
 }
 
-export async function getIndividuById(kabupatenKotaId, id) {
-  const response = await axiosService.get(`/${ENDPOINT}/detail/${kabupatenKotaId}/${id}`);
+export async function getIndividuById(id) {
+  const response = await axiosService.get(`/${ENDPOINT}/${id}`);
   return response.data;
 }
 

@@ -38,14 +38,14 @@ import { getKeluarga } from 'store/slices/keluarga';
 const VerifikasiP3KEPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
-  const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
-  const [dataKecamatan, setDataKecamatan] = useState([]);
-  const [dataKelurahan, setDataKelurahan] = useState([]);
-  const [keyKecamatan, setKeyKecamatan] = useState(false);
-  const [keyKelurahan, setKeyKelurahan] = useState(false);
+  // const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
+  // const [dataKecamatan, setDataKecamatan] = useState([]);
+  // const [dataKelurahan, setDataKelurahan] = useState([]);
+  // const [keyKecamatan, setKeyKecamatan] = useState(false);
+  // const [keyKelurahan, setKeyKelurahan] = useState(false);
 
-  const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
-  const fetchKeluarga = useQuery(['keluarga'], () => getKeluarga({ kabupatenKotaId: '7206' }));
+  // const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
+  const fetchKeluarga = useQuery(['keluarga'], () => getKeluarga({ kelurahanId: '7205080013', desilKesejahteraan: '1' }));
 
   const columns = useMemo(
     () => [
@@ -94,7 +94,7 @@ const VerifikasiP3KEPage = () => {
                 color="primary"
                 size="medium"
                 aria-label="Ubah"
-                href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${data.idKeluarga}&kabupatenKotaId=${data.kabupatenKotaId}`}
+                href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${data.idKeluarga}`}
               >
                 <PublishedWithChangesTwoTone fontSize="small" />
               </IconButton>
@@ -137,7 +137,7 @@ const VerifikasiP3KEPage = () => {
 
           {!fetchKeluarga.isLoading && (
             <Grid container spacing={gridSpacing}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <SubCard title="Filter">
                   <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                     <Grid item xs={12} lg={4}>
@@ -204,16 +204,11 @@ const VerifikasiP3KEPage = () => {
                         renderInput={(params) => <TextField {...params} />}
                       />
                     </Grid>
-                    {/* <Grid item xs={12} lg={4}>
-                      <InputLabel>Nama</InputLabel>
-                      <TextField type="password" fullWidth placeholder="Cara Nama" />
-                    </Grid> */}
                     <Grid item xs={12} lg={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                       <LoadingButton
                         variant="contained"
                         startIcon={<IconSearch size={18} />}
                         onClick={() => {
-                          // queryClient.invalidateQueries(['keluarga']);
                           fetchKeluarga.refetch();
                         }}
                       >
@@ -222,7 +217,7 @@ const VerifikasiP3KEPage = () => {
                     </Grid>
                   </Grid>
                 </SubCard>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12}>
                 <TextField
                   InputProps={{
