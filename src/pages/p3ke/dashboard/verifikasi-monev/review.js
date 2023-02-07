@@ -21,8 +21,6 @@ const ReviewMonevPage = () => {
 
   const fetchMonevById = useQuery(['MonevById'], () => getMonevById(router.query.kabupatenKotaId, router.query.id));
 
-  console.log(fetchMonevById.data);
-
   const pageProps = {
     title: 'Review',
     navigation: [

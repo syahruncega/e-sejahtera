@@ -49,7 +49,7 @@ const IndividuPage = () => {
             <FormVerifikasiKeluarga initialData={fetchIndividuById.data ?? []} readOnly />
           </Grid> */}
           <Grid item xs={12} lg={12}>
-            <FormVerifikasiIndividu initialData={fetchIndividuById.data ?? []} />
+            <FormVerifikasiIndividu initialData={fetchIndividuById.data ?? {}} />
           </Grid>
         </Grid>
       </Page>

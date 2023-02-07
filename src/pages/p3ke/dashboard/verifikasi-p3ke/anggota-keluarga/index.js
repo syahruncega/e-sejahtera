@@ -26,7 +26,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
-import { PublishedWithChangesTwoTone } from '@mui/icons-material';
+import { CheckCircleOutlineTwoTone, PublishedWithChangesTwoTone } from '@mui/icons-material';
 import Link from 'Link';
 import { useRouter } from 'next/router';
 import { getIndividuByIdKeluarga } from 'store/slices/individu';
@@ -77,17 +77,25 @@ const KeluargaPage = () => {
           }
         }) => (
           <div className="flex">
-            <Tooltip title="Verifikasi Individu">
-              <IconButton
-                LinkComponent={Link}
-                color="primary"
-                size="medium"
-                aria-label="Ubah"
-                href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/?idKeluarga=${data.idKeluarga}&id=${data.id}`}
-              >
-                <PublishedWithChangesTwoTone fontSize="small" />
-              </IconButton>
-            </Tooltip>
+            {data.statusVerifikasi ? (
+              <Tooltip title="Telah Diverifikasi">
+                <IconButton color="success" size="medium" aria-label="Ubah" onClick={() => {}}>
+                  <CheckCircleOutlineTwoTone fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Verifikasi Individu">
+                <IconButton
+                  LinkComponent={Link}
+                  color="primary"
+                  size="medium"
+                  aria-label="Ubah"
+                  href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/?idKeluarga=${data.idKeluarga}&id=${data.id}`}
+                >
+                  <PublishedWithChangesTwoTone fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
         )
       }

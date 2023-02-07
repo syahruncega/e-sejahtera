@@ -140,16 +140,6 @@ const FirebaseLogin = ({ ...others }) => {
           } else if (router.pathname === '/kemiskinan/login') {
             router.push('/kemiskinan/dashboard');
           }
-          // try {
-          //   console.log('first');
-          // } catch (err) {
-          //   console.error(err);
-          //   if (scriptedRef.current) {
-          //     setStatus({ success: false });
-          //     setErrors({ submit: err.message });
-          //     setSubmitting(false);
-          //   }
-          // }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (

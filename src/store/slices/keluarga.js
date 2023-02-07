@@ -18,6 +18,5 @@ export async function getKeluargaById(id) {
 
 export async function getKeluargaByIdKeluarga(idKeluarga) {
   const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${idKeluarga}`);
-  console.log(response.data);
   return response.data;
 }
