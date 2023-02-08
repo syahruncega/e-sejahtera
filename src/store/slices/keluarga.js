@@ -20,3 +20,8 @@ export async function getKeluargaByIdKeluarga(idKeluarga) {
   const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${idKeluarga}`);
   return response.data;
 }
+
+export async function updateKeluarga(id, newKeluarga) {
+  const response = await axiosService.patch(`/${ENDPOINT}/${id}`, newKeluarga);
+  return response.data;
+}

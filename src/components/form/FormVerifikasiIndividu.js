@@ -65,7 +65,7 @@ const validationSchema = yup.object({
   penerimaPKH: yup.string().required('Penerima Program Keluarga Harapan (PKH) wajib diisi'),
   penerimaSembako: yup.string().required('Penerima Bantuan Sembako wajib diisi'),
   penerimaLainnya: yup.string().nullable().optional(),
-  statusResponden: yup.mixed().oneOf(['dapatDiverifikasi', 'tidakDapatDitemui', 'meninggalDunia']),
+  statusResponden: yup.mixed().oneOf(['Dapat Diverifikasi', 'Tidak Dapat Ditemui', 'Meninggal Dunia']),
   userId: yup.number().required('User ID wajib diisi').typeError('User ID harus berupa angka'),
   mahasiswaId: yup.number().required('Mahasiswa ID wajib diisi').typeError('Mahasiswa ID harus berupa angka')
 });
@@ -81,14 +81,12 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
     },
     onSuccess: async (newIndividuVerifikasi) => {
       queryClient.invalidateQueries(['individuById']);
-      // eslint-disable-next-line no-use-before-define
-      formik.resetForm();
       await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });
     }
   });
 
   const queryUpdateIndividuVerifikasi = useMutation({
-    mutationFn: (newIndividuVerifikasi) => updateIndividuVerfikasi(individu.id, newIndividuVerifikasi),
+    mutationFn: (newIndividuVerifikasi) => updateIndividuVerfikasi(initialData.id, newIndividuVerifikasi),
     onSuccess: (newIndividuVerifikasi) => {
       queryClient.invalidateQueries(['inidividuById']);
     }
@@ -120,21 +118,23 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
       penerimaBST: initialData?.penerimaBST ?? 'Tidak',
       penerimaPKH: initialData?.penerimaPKH ?? 'Tidak',
       penerimaSembako: initialData?.penerimaSembako ?? 'Tidak',
-      statusResponden: 'dapatDiverifikasi',
+      statusResponden: 'Dapat Diverifikasi',
       penerimaLainnya: '',
       userId: 7,
       mahasiswaId: 2,
       kategoriUsia: '6 Tahun'
     },
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: (values) => {
       const data = {
         ...values,
         penerimaLainnya: values.penerimaLainnya || '-',
         tanggalLahir: dayjs(new Date(values.tanggalLahir)).format('MM/DD/YYYY')
       };
       toast.promise(
-        isEdit ? queryUpdateIndividuVerifikasi.mutateAsync(data) : queryCreateIndividuVerifikasi.mutateAsync(data),
+        initialData.statusResponden === 1
+          ? queryUpdateIndividuVerifikasi.mutateAsync(data)
+          : queryCreateIndividuVerifikasi.mutateAsync(data),
         {
           loading: 'Sedang menyimpan...',
           success: `Data Individu berhasil ${isEdit ? 'diubah' : 'diverifikasi'} `,
@@ -156,22 +156,49 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
   return (
     <>
       <MainCard>
-        <form onSubmit={formik.handleSubmit}>
+        <form>
           <Grid container spacing={3}>
             <Grid item lg={12} xs={12}>
               <SubCard title="Status Responden">
-                <FormControl>
-                  <RadioGroup row aria-labelledby="statusResponden" value={formik.values.statusResponden} onChange={formik.handleChange}>
-                    <FormControlLabel name="statusResponden" value="dapatDiverifikasi" control={<Radio />} label="Dapat Diverifikasi" />
-                    <FormControlLabel name="statusResponden" value="tidakDapatDitemui" control={<Radio />} label="Tidak Dapat Temui" />
-                    <FormControlLabel name="statusResponden" value="meninggalDunia" control={<Radio />} label="Meninggal Dunia" />
-                  </RadioGroup>
-                </FormControl>
-                {formik.values.statusResponden !== 'dapatDiverifikasi' && <Button variant="contained">Verifikasi</Button>}
+                <Grid container spacing={2} direction="column">
+                  <Grid item>
+                    <FormControl>
+                      <RadioGroup
+                        row
+                        aria-labelledby="statusResponden"
+                        value={formik.values.statusResponden}
+                        onChange={formik.handleChange}
+                      >
+                        <FormControlLabel
+                          name="statusResponden"
+                          value="Dapat Diverifikasi"
+                          control={<Radio />}
+                          label="Dapat Diverifikasi"
+                        />
+                        <FormControlLabel
+                          name="statusResponden"
+                          value="Tidak Dapat Ditemui"
+                          control={<Radio />}
+                          label="Tidak Dapat Temui"
+                        />
+                        <FormControlLabel name="statusResponden" value="Meninggal Dunia" control={<Radio />} label="Meninggal Dunia" />
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                  {formik.values.statusResponden !== 'Dapat Diverifikasi' && (
+                    <Grid item>
+                      <ConfirmVerifikasiDialog
+                        handleFunc={formik.handleSubmit}
+                        title="Verifikasi Individu"
+                        isLoading={queryCreateIndividuVerifikasi.isLoading || queryUpdateIndividuVerifikasi.isLoading}
+                      />
+                    </Grid>
+                  )}
+                </Grid>
               </SubCard>
             </Grid>
             <Grid item lg={12} xs={12} sx={{ backdropFilter: 'blur(6px)' }}>
-              {formik.values.statusResponden === 'dapatDiverifikasi' && (
+              {formik.values.statusResponden === 'Dapat Diverifikasi' && (
                 <SubCard title="Keluarga/Kepala Keluarga">
                   <FormControl disabled>
                     <FormLabel sx={labelStyle} id="desilKesejahteraan">
@@ -451,7 +478,7 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
                   <Divider sx={{ marginY: 2 }} />
                   <ConfirmVerifikasiDialog
                     handleFunc={formik.handleSubmit}
-                    title="Verifikasi Data"
+                    title="Verifikasi Individu"
                     isLoading={queryCreateIndividuVerifikasi.isLoading || queryUpdateIndividuVerifikasi.isLoading}
                   />
                 </SubCard>

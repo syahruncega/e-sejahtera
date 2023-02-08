@@ -2,19 +2,7 @@
 import { FormattedMessage } from 'react-intl';
 
 // assets
-import {
-  IconDashboard,
-  IconApps,
-  IconBox,
-  IconHelp,
-  IconSitemap,
-  IconBuildingSkyscraper,
-  IconFocus2,
-  IconBookmarks,
-  IconUserCheck,
-  IconUserSearch,
-  IconChecks
-} from '@tabler/icons';
+import { IconDashboard, IconUserCheck, IconUserSearch, IconChecks } from '@tabler/icons';
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -27,7 +15,7 @@ const mainP3KE = {
       id: 'dashboard',
       title: 'Dashboard',
       type: 'item',
-      url: 'p3ke/dashboard',
+      url: '/p3ke/dashboard',
       icon: IconDashboard
     },
     {

@@ -28,7 +28,7 @@ import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
-import { PublishedWithChangesTwoTone } from '@mui/icons-material';
+import { PersonSearch, PersonSearchTwoTone, PublishedWithChangesTwoTone } from '@mui/icons-material';
 import Link from 'Link';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import useDebounce from 'hooks/useDebounce';
@@ -96,7 +96,7 @@ const VerifikasiP3KEPage = () => {
                 aria-label="Ubah"
                 href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${data.idKeluarga}`}
               >
-                <PublishedWithChangesTwoTone fontSize="small" />
+                <PersonSearchTwoTone fontSize="small" />
               </IconButton>
             </Tooltip>
           </div>

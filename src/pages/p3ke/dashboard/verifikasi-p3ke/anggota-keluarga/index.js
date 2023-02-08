@@ -33,13 +33,15 @@ import { getIndividuByIdKeluarga } from 'store/slices/individu';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import dayjs from 'dayjs';
+import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
 
 const KeluargaPage = () => {
   const router = useRouter();
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchAnggotaKeluarga = useQuery(['kabupatenKota'], () => getIndividuByIdKeluarga(router.query.idKeluarga));
+  const fetchKeluargaByIdKeluarga = useQuery(['KeluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));
+  const fetchAnggotaKeluarga = useQuery(['AnggotaKeluarga'], () => getIndividuByIdKeluarga(router.query.idKeluarga));
 
   const columns = useMemo(
     () => [
@@ -79,7 +81,7 @@ const KeluargaPage = () => {
           <div className="flex">
             {data.statusVerifikasi ? (
               <Tooltip title="Telah Diverifikasi">
-                <IconButton color="success" size="medium" aria-label="Ubah" onClick={() => {}}>
+                <IconButton color="success" size="medium" aria-label="Ubah" sx={{ cursor: 'default' }}>
                   <CheckCircleOutlineTwoTone fontSize="small" />
                 </IconButton>
               </Tooltip>
@@ -153,20 +155,27 @@ const KeluargaPage = () => {
                     size="small"
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                  <Button
-                    LinkComponent={Link}
-                    href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga?kabupatenKotaId=${router.query.kabupatenKotaId}&idKeluarga=${router.query.idKeluarga}`}
-                    variant="contained"
-                  >
-                    Verifikasi Keluarga
-                  </Button>
-                </Grid>
+                {fetchKeluargaByIdKeluarga.data?.statusVerifikasi === 0 && (
+                  <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                    <Button
+                      LinkComponent={Link}
+                      href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga?&idKeluarga=${router.query.idKeluarga}`}
+                      variant="contained"
+                    >
+                      Verifikasi Keluarga
+                    </Button>
+                  </Grid>
+                )}
               </Grid>
 
               <SubCard content={false}>
                 {!fetchAnggotaKeluarga.isLoading && (
-                  <AppTable columns={columns} globalFilter={debouncedValue} initialData={fetchAnggotaKeluarga.data || []} />
+                  <AppTable
+                    columns={columns}
+                    globalFilter={debouncedValue}
+                    initialData={fetchAnggotaKeluarga.data || []}
+                    columnVisibility={{ aksi: fetchKeluargaByIdKeluarga.data?.statusVerifikasi || false }}
+                  />
                 )}
               </SubCard>
             </>

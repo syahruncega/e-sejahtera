@@ -21,7 +21,8 @@ const ConfirmVerifikasiDialog = ({ handleFunc, title, description, isLoading }) 
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (isLoading && reason && reason === 'backdropClick') return;
     setOpen(false);
     setIsCheck(false);
   };
@@ -53,7 +54,6 @@ const ConfirmVerifikasiDialog = ({ handleFunc, title, description, isLoading }) 
             disabled={!isCheck}
             onClick={async () => {
               await handleFunc();
-              setOpen(false);
             }}
             autoFocus
             loading={isLoading}

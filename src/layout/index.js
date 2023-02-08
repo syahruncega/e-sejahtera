@@ -15,7 +15,16 @@ function Layout({ variant = LAYOUT.main, children }) {
     case LAYOUT.minimal:
       return (
         <MinimalLayout>
-          <Toaster />
+          <Toaster
+            toastOptions={{
+              success: {
+                duration: 4000
+              },
+              error: {
+                duration: 6000
+              }
+            }}
+          />
           {children}
         </MinimalLayout>
       );
@@ -23,7 +32,16 @@ function Layout({ variant = LAYOUT.main, children }) {
     case LAYOUT.noauth:
       return (
         <GuestGuard>
-          <Toaster />
+          <Toaster
+            toastOptions={{
+              success: {
+                duration: 4000
+              },
+              error: {
+                duration: 6000
+              }
+            }}
+          />
           <MinimalLayout>{children}</MinimalLayout>
         </GuestGuard>
       );
@@ -31,7 +49,16 @@ function Layout({ variant = LAYOUT.main, children }) {
     default:
       return (
         <AuthGuard>
-          <Toaster />
+          <Toaster
+            toastOptions={{
+              success: {
+                duration: 4000
+              },
+              error: {
+                duration: 6000
+              }
+            }}
+          />
           <MainLayout>{children}</MainLayout>
         </AuthGuard>
       );

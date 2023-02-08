@@ -23,8 +23,8 @@ const SigiPage = () => {
   const pageProps = {
     title: 'Kabupaten Sigi',
     navigation: [
-      { title: <FormattedMessage id="statistik" defaultMessage="Statistik" />, url: '/dashboard' },
-      { title: <FormattedMessage id="sigi" defaultMessage="Sigi" />, url: '/dashboard/stats/sigi' }
+      { title: <FormattedMessage id="statistik" defaultMessage="Statistik" />, url: '/p3ke/dashboard' },
+      { title: <FormattedMessage id="sigi" defaultMessage="Sigi" />, url: '/p3ke/dashboard/stats/sigi' }
     ]
   };
 

@@ -65,8 +65,8 @@ const P3KEBarChart = () => {
         },
         events: {
           xAxisLabelClick: (val) => {
-            if (val.target.textContent === 'Donggala') Router.push('/dashboard/stats/donggala');
-            else if (val.target.textContent === 'Sigi') Router.push('/dashboard/stats/sigi');
+            if (val.target.textContent === 'Donggala') Router.push('/p3ke/dashboard/stats/donggala');
+            else if (val.target.textContent === 'Sigi') Router.push('/p3ke/dashboard/stats/sigi');
           }
         }
       },
