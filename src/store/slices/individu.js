@@ -2,6 +2,11 @@ import axiosService from 'utils/axios';
 
 const ENDPOINT = 'individu';
 
+export async function getIndividu(params) {
+  const response = await axiosService.get(`/${ENDPOINT}/search`, { params });
+  return response.data;
+}
+
 export async function getIndividuByIdKeluarga(idKeluarga) {
   const response = await axiosService.get(`/${ENDPOINT}/idkeluarga/${idKeluarga}`);
   return response.data;

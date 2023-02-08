@@ -14,7 +14,7 @@ import MainCard from 'components/ui-component/cards/MainCard';
 import { getIndividuById } from 'store/slices/individu';
 import FormVerifikasiIndividu from 'components/form/FormVerifikasiIndividu';
 
-const IndividuPage = () => {
+const IndividuCreatePage = () => {
   const router = useRouter();
 
   const fetchIndividuById = useQuery(['individuById'], () => getIndividuById(router.query.id));
@@ -57,8 +57,8 @@ const IndividuPage = () => {
   );
 };
 
-IndividuPage.getLayout = function getLayout(page) {
+IndividuCreatePage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default IndividuPage;
+export default IndividuCreatePage;

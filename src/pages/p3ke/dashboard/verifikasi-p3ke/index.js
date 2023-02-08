@@ -3,6 +3,7 @@ import {
   Alert,
   AlertTitle,
   Autocomplete,
+  Chip,
   CircularProgress,
   Grid,
   IconButton,
@@ -24,7 +25,7 @@ import { LoadingButton } from '@mui/lab';
 import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Box } from '@mui/system';
+import { Box, fontWeight } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
@@ -70,14 +71,36 @@ const VerifikasiP3KEPage = () => {
         header: 'Kepala Keluarga'
       },
       {
-        id: 'kecamatan',
-        accessorKey: 'kecamatan.nama',
-        header: 'Kecamatan'
-      },
-      {
         id: 'kelurahan',
         accessorKey: 'kelurahan.nama',
         header: 'Desa/Kelurahan'
+      },
+      {
+        id: 'aksi',
+        header: 'Status',
+        cell: ({
+          cell: {
+            row: { original: data }
+          }
+        }) => (
+          <div className="flex">
+            {data.statusVerifikasi ? (
+              <Chip
+                variant="filled"
+                label="Telah Diverifikasi"
+                size="small"
+                sx={{ color: 'white', fontWeight: '500', backgroundColor: 'success.dark' }}
+              />
+            ) : (
+              <Chip
+                variant="filled"
+                label="Belum Diverifikasi"
+                size="small"
+                sx={{ color: 'white', fontWeight: '500', backgroundColor: 'warning.dark' }}
+              />
+            )}
+          </div>
+        )
       },
       {
         id: 'aksi',
@@ -109,7 +132,7 @@ const VerifikasiP3KEPage = () => {
 
   const pageProps = {
     title: 'Verifikasi P3KE',
-    navigation: [{ title: 'Verifikasi P3KE', url: '/dashboard/verifikasi-p3ke' }]
+    navigation: [{ title: 'Verifikasi P3KE', url: '/p3ke/dashboard/verifikasi-p3ke' }]
   };
 
   // Error

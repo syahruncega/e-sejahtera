@@ -15,7 +15,7 @@ import FormVerifikasiKeluarga from 'components/form/FormVerifikasiKeluarga';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
 
-const KeluargaPage = () => {
+const KeluargaCreatePage = () => {
   const router = useRouter();
 
   const fetchKeluargaByIdKeluarga = useQuery(['keluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));
@@ -26,7 +26,7 @@ const KeluargaPage = () => {
       { title: 'Verifikasi P3KE', url: '/dashboard/verifikasi-p3ke' },
       {
         title: 'Anggota Keluarga',
-        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?kabupatenKotaId=${router.query.kabupatenKotaId}&idKeluarga=${router.query.idKeluarga}`
+        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${router.query.idKeluarga}`
       },
       { title: 'Keluarga', url: router.asPath }
     ]
@@ -58,8 +58,8 @@ const KeluargaPage = () => {
   );
 };
 
-KeluargaPage.getLayout = function getLayout(page) {
+KeluargaCreatePage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default KeluargaPage;
+export default KeluargaCreatePage;

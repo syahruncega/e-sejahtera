@@ -26,10 +26,10 @@ import { useQuery } from '@tanstack/react-query';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
-import { AddCircleOutlineTwoTone, CheckCircleOutlineTwoTone } from '@mui/icons-material';
+import { CheckCircleOutlineTwoTone, PublishedWithChangesTwoTone } from '@mui/icons-material';
 import Link from 'Link';
 import { useRouter } from 'next/router';
-import { getIndividuByIdKeluarga } from 'store/slices/individu';
+import { getIndividu, getIndividuByIdKeluarga } from 'store/slices/individu';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import dayjs from 'dayjs';
@@ -41,7 +41,9 @@ const AnggotaKeluargaPage = () => {
   const debouncedValue = useDebounce(search, 400);
 
   const fetchKeluargaByIdKeluarga = useQuery(['KeluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));
-  const fetchAnggotaKeluarga = useQuery(['AnggotaKeluarga'], () => getIndividuByIdKeluarga(router.query.idKeluarga));
+  const fetchAnggotaKeluarga = useQuery(['AnggotaKeluarga'], () =>
+    getIndividu({ idKeluarga: router.query.idKeluarga, statusVerifikasi: 1 })
+  );
 
   const columns = useMemo(
     () => [
@@ -80,13 +82,13 @@ const AnggotaKeluargaPage = () => {
         }) => (
           <div className="flex">
             {data.statusVerifikasi ? (
-              <Tooltip title="Telah Diverifikasi">
+              <Tooltip title="Ubah">
                 <IconButton
                   LinkComponent={Link}
                   color="success"
                   size="medium"
                   aria-label="Ubah"
-                  href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/update?idKeluarga=${data.idKeluarga}&id=${data.id}`}
+                  href={`/p3ke/dashboard/hasil-verifikasi/anggota-keluarga/individu/update?idKeluarga=${data.idKeluarga}&id=${data.id}`}
                 >
                   <CheckCircleOutlineTwoTone fontSize="small" />
                 </IconButton>
@@ -98,9 +100,9 @@ const AnggotaKeluargaPage = () => {
                   color="primary"
                   size="medium"
                   aria-label="Ubah"
-                  href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/create?idKeluarga=${data.idKeluarga}&id=${data.id}`}
+                  href={`/p3ke/dashboard/hasil-verifikasi/anggota-keluarga/individu/?idKeluarga=${data.idKeluarga}&id=${data.id}`}
                 >
-                  <AddCircleOutlineTwoTone fontSize="small" />
+                  <PublishedWithChangesTwoTone fontSize="small" />
                 </IconButton>
               </Tooltip>
             )}
@@ -115,7 +117,7 @@ const AnggotaKeluargaPage = () => {
   const pageProps = {
     title: 'Anggota Keluarga',
     navigation: [
-      { title: 'Verifikasi P3KE', url: '/p3ke/dashboard/verifikasi-p3ke' },
+      { title: 'Hasil Verifikasi', url: '/p3ke/dashboard/hasil-verifikasi' },
       { title: 'Anggota Keluarga', url: router.asPath }
     ]
   };
@@ -165,7 +167,7 @@ const AnggotaKeluargaPage = () => {
                   <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
                     <Button
                       LinkComponent={Link}
-                      href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga/create?&idKeluarga=${router.query.idKeluarga}`}
+                      href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga?&idKeluarga=${router.query.idKeluarga}`}
                       variant="contained"
                     >
                       Verifikasi Keluarga
