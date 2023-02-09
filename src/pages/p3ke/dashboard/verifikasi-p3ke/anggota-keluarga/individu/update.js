@@ -13,11 +13,13 @@ import MainCard from 'components/ui-component/cards/MainCard';
 
 import { getIndividuById } from 'store/slices/individu';
 import FormVerifikasiIndividu from 'components/form/FormVerifikasiIndividu';
+import { getIndividuVerifikasiById } from 'store/slices/individu-verifikasi';
 
 const IndividuUpdatePage = () => {
   const router = useRouter();
 
   const fetchIndividuById = useQuery(['individuById'], () => getIndividuById(router.query.id));
+  const fetchIndividuVerifikasiById = useQuery(['individuVerifikasiById'], () => getIndividuVerifikasiById(router.query.id));
 
   const pageProps = {
     title: 'Review',
@@ -54,7 +56,7 @@ const IndividuUpdatePage = () => {
             <FormVerifikasiKeluarga initialData={fetchIndividuById.data ?? []} readOnly />
           </Grid> */}
           <Grid item xs={12} lg={12}>
-            <FormVerifikasiIndividu initialData={fetchIndividuById.data ?? {}} />
+            <FormVerifikasiIndividu isEdit initialData={fetchIndividuById.data ?? {}} individu={fetchIndividuVerifikasiById.data ?? {}} />
           </Grid>
         </Grid>
       </Page>

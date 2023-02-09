@@ -10,7 +10,8 @@ import {
   InputAdornment,
   InputLabel,
   TextField,
-  Tooltip
+  Tooltip,
+  useTheme
 } from '@mui/material';
 
 // project imports
@@ -36,6 +37,7 @@ import dayjs from 'dayjs';
 import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
 
 const AnggotaKeluargaPage = () => {
+  const theme = useTheme();
   const router = useRouter();
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
@@ -161,14 +163,30 @@ const AnggotaKeluargaPage = () => {
                     size="small"
                   />
                 </Grid>
-                {fetchKeluargaByIdKeluarga.data?.statusVerifikasi === 0 && (
+                {fetchKeluargaByIdKeluarga.data?.statusVerifikasi === 0 ? (
                   <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
                     <Button
                       LinkComponent={Link}
                       href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga/create?&idKeluarga=${router.query.idKeluarga}`}
                       variant="contained"
+                      startIcon={<AddCircleOutlineTwoTone />}
                     >
                       Verifikasi Keluarga
+                    </Button>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                    <Button
+                      LinkComponent={Link}
+                      href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga/update?&idKeluarga=${router.query.idKeluarga}`}
+                      variant="contained"
+                      startIcon={<CheckCircleOutlineTwoTone />}
+                      sx={{
+                        background: theme.palette.success.dark,
+                        '&:hover': { background: theme.palette.success.main }
+                      }}
+                    >
+                      Ubah Verifikasi Keluarga
                     </Button>
                   </Grid>
                 )}

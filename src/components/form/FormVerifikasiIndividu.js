@@ -80,46 +80,47 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
       createIndividuVerifikasi(newIndividuVerifikasi);
     },
     onSuccess: async (newIndividuVerifikasi) => {
-      queryClient.invalidateQueries(['individuById']);
+      // queryClient.invalidateQueries(['individuById']);
       await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });
     }
   });
 
   const queryUpdateIndividuVerifikasi = useMutation({
     mutationFn: (newIndividuVerifikasi) => updateIndividuVerfikasi(initialData.id, newIndividuVerifikasi),
-    onSuccess: (newIndividuVerifikasi) => {
-      queryClient.invalidateQueries(['inidividuById']);
+    onSuccess: async (newIndividuVerifikasi) => {
+      // queryClient.invalidateQueries(['individuById']);
+      await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });
     }
   });
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      id: initialData.id,
-      idKeluarga: initialData.idKeluarga,
-      provinsiId: initialData.provinsiId,
-      kabupatenKotaId: initialData.kabupatenKotaId,
-      kecamatanId: initialData.kecamatanId,
+      id: initialData?.id,
+      idKeluarga: initialData?.idKeluarga,
+      provinsiId: initialData?.provinsiId,
+      kabupatenKotaId: initialData?.kabupatenKotaId,
+      kecamatanId: initialData?.kecamatanId,
       kelurahanId: initialData.kelurahanId,
-      desilKesejahteraan: initialData.desilKesejahteraan ?? '',
-      idIndividu: initialData.idIndividu,
-      nama: initialData?.nama ?? '',
-      nik: initialData?.nik ?? '',
-      alamat: initialData?.alamat ?? '',
-      padanDukcapil: initialData?.padanDukcapil ?? 'Ya',
-      jenisKelamin: initialData?.jenisKelamin ?? 'Laki-laki',
-      tanggalLahir: initialData?.tanggalLahir ? new Date(initialData.tanggalLahir) : new Date(),
-      pekerjaan: initialData?.pekerjaan ?? 'Tidak/Belum Bekerja',
-      pendidikan: initialData?.pendidikan ?? 'Tidak/Belum Sekolah',
-      hubungan: initialData?.hubungan ?? 'Anak',
-      statusKawin: initialData?.statusKawin ?? 'Belum Kawin',
-      penerimaBPNT: initialData?.penerimaBPNT ?? 'Tidak',
-      penerimaBPUM: initialData?.penerimaBPUM ?? 'Tidak',
-      penerimaBST: initialData?.penerimaBST ?? 'Tidak',
-      penerimaPKH: initialData?.penerimaPKH ?? 'Tidak',
-      penerimaSembako: initialData?.penerimaSembako ?? 'Tidak',
+      desilKesejahteraan: initialData?.desilKesejahteraan ?? '1',
+      idIndividu: initialData?.idIndividu,
+      nama: (isEdit ? individu?.nama : initialData?.nama) ?? '',
+      nik: (isEdit ? individu?.nik : initialData?.nik) ?? '',
+      alamat: (isEdit ? individu?.alamat : initialData?.alamat) ?? '',
+      padanDukcapil: (isEdit ? individu?.padanDukcapil : initialData?.padanDukcapil) ?? 'Ya',
+      jenisKelamin: (isEdit ? individu?.jenisKelamin : initialData?.jenisKelamin) ?? 'Laki-laki',
+      tanggalLahir: (isEdit ? new Date(individu?.tanggalLahir) : new Date(initialData?.tanggalLahir)) ?? new Date(),
+      pekerjaan: (isEdit ? individu?.pekerjaan : initialData?.pekerjaan) ?? 'Tidak/Belum Bekerja',
+      pendidikan: (isEdit ? individu?.pendidikan : initialData?.pendidikan) ?? 'Tidak/Belum Sekolah',
+      hubungan: (isEdit ? individu?.hubungan : initialData?.hubungan) ?? 'Anak',
+      statusKawin: (isEdit ? individu?.statusKawin : initialData?.statusKawin) ?? 'Belum Kawin',
+      penerimaBPNT: (isEdit ? individu?.penerimaBPNT : initialData?.penerimaBPNT) ?? 'Tidak',
+      penerimaBPUM: (isEdit ? individu?.penerimaBPUM : initialData?.penerimaBPUM) ?? 'Tidak',
+      penerimaBST: (isEdit ? individu?.penerimaBST : initialData?.penerimaBST) ?? 'Tidak',
+      penerimaPKH: (isEdit ? individu?.penerimaPKH : initialData?.penerimaPKH) ?? 'Tidak',
+      penerimaSembako: (isEdit ? individu?.penerimaSembako : initialData?.penerimaSembako) ?? 'Tidak',
       statusResponden: 'Dapat Diverifikasi',
-      penerimaLainnya: '',
+      penerimaLainnya: individu?.penerimaLainnya ?? '',
       userId: 7,
       mahasiswaId: 2,
       kategoriUsia: '6 Tahun'
@@ -132,7 +133,7 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
         tanggalLahir: dayjs(new Date(values.tanggalLahir)).format('MM/DD/YYYY')
       };
       toast.promise(
-        initialData.statusResponden === 1
+        isEdit || initialData.statusResponden === 1
           ? queryUpdateIndividuVerifikasi.mutateAsync(data)
           : queryCreateIndividuVerifikasi.mutateAsync(data),
         {
@@ -312,6 +313,7 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
                         onChange={(e) => {
                           formik.setFieldValue('tanggalLahir', new Date(e));
                         }}
+                        inputFormat="DD-MM-YYYY"
                         renderInput={(params) => <TextField {...params} fullWidth name="tanggalLahir" />}
                       />
                     </LocalizationProvider>

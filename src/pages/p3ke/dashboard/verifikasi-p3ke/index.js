@@ -76,7 +76,7 @@ const VerifikasiP3KEPage = () => {
         header: 'Desa/Kelurahan'
       },
       {
-        id: 'aksi',
+        id: 'status',
         header: 'Status',
         cell: ({
           cell: {

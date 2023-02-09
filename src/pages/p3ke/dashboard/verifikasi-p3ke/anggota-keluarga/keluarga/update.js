@@ -14,11 +14,15 @@ import { useQuery } from '@tanstack/react-query';
 import FormVerifikasiKeluarga from 'components/form/FormVerifikasiKeluarga';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
+import { getKeluargaVerifikasiByIdKeluarga } from 'store/slices/keluarga-verifikasi';
 
 const KeluargaUpdatePage = () => {
   const router = useRouter();
 
   const fetchKeluargaByIdKeluarga = useQuery(['keluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));
+  const fetchKeluargaVerifikasiByIdKeluarga = useQuery(['keluargaVerifikasiByIdKeluarga'], () =>
+    getKeluargaVerifikasiByIdKeluarga(router.query.idKeluarga)
+  );
 
   const pageProps = {
     title: 'Keluarga',
@@ -55,7 +59,11 @@ const KeluargaUpdatePage = () => {
             <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? []} readOnly />
           </Grid> */}
           <Grid item xs={12} lg={12}>
-            <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? []} />
+            <FormVerifikasiKeluarga
+              isEdit
+              initialData={fetchKeluargaByIdKeluarga.data ?? {}}
+              keluarga={fetchKeluargaVerifikasiByIdKeluarga.data ?? {}}
+            />
           </Grid>
         </Grid>
       </Page>
