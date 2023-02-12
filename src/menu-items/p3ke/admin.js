@@ -11,6 +11,7 @@ const adminP3KE = {
   title: 'Admin',
   icon: IconKey,
   type: 'group',
+  roles: ['admin'],
   children: [
     {
       id: 'pengguna',

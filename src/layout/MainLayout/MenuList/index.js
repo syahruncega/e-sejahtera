@@ -11,12 +11,14 @@ import { HORIZONTAL_MAX_ITEM } from 'config';
 import useConfig from 'hooks/useConfig';
 import { useRouter } from 'next/router';
 import { menuItemsKemiskinan, menuItemsP3KE, menuItemsStunting } from 'menu-items';
+import useAuth from 'hooks/useAuth';
 
 // ==============================|| SIDEBAR MENU LIST ||============================== //
 
 const MenuList = () => {
   const theme = useTheme();
   const router = useRouter();
+  const { user } = useAuth();
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
 
   const menuToShow = useMemo(() => {
@@ -50,7 +52,13 @@ const MenuList = () => {
   const navItems = menuToShow.items.slice(0, lastItemIndex + 1).map((item) => {
     switch (item.type) {
       case 'group':
-        return <NavGroup key={item.id} item={item} lastItem={lastItem} remItems={remItems} lastItemId={lastItemId} />;
+        if (!item.roles) {
+          return <NavGroup key={item.id} item={item} lastItem={lastItem} remItems={remItems} lastItemId={lastItemId} />;
+        }
+        if (item.roles?.includes(user.role)) {
+          return <NavGroup key={item.id} item={item} lastItem={lastItem} remItems={remItems} lastItemId={lastItemId} />;
+        }
+        return null;
       default:
         return (
           <Typography key={item.id} variant="h6" color="error" align="center">

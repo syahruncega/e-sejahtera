@@ -14,8 +14,10 @@ import { useQuery } from '@tanstack/react-query';
 import FormVerifikasiKeluarga from 'components/form/FormVerifikasiKeluarga';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
+import useGuard from 'hooks/useGuard';
 
 const KeluargaCreatePage = () => {
+  useGuard(['admin', 'mahasiswa']);
   const router = useRouter();
 
   const fetchKeluargaByIdKeluarga = useQuery(['keluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));

@@ -1,5 +1,4 @@
 // third-party
-import { FormattedMessage } from 'react-intl';
 
 // assets
 import { IconDashboard, IconUserCheck, IconUserSearch, IconChecks } from '@tabler/icons';
@@ -23,7 +22,8 @@ const mainP3KE = {
       title: 'Verifikasi P3KE',
       type: 'item',
       url: '/p3ke/dashboard/verifikasi-p3ke',
-      icon: IconUserCheck
+      icon: IconUserCheck,
+      roles: ['admin', 'mahasiswa']
     },
     // {
     //   id: 'verifikasi-monev',
@@ -37,21 +37,24 @@ const mainP3KE = {
       title: 'Monitor Mahasiswa',
       type: 'item',
       url: '/p3ke/dashboard/monitor-mahasiswa',
-      icon: IconUserSearch
+      icon: IconUserSearch,
+      roles: ['admin', 'dosen']
     },
     {
       id: 'monitor-dosen',
       title: 'Monitor Dosen',
       type: 'item',
       url: '/p3ke/dashboard/monitor-dosen',
-      icon: IconUserSearch
+      icon: IconUserSearch,
+      roles: ['admin', 'pusbang']
     },
     {
       id: 'hasil-verifikasi',
       title: 'Hasil Verifikasi',
       type: 'item',
       url: '/p3ke/dashboard/hasil-verifikasi',
-      icon: IconChecks
+      icon: IconChecks,
+      roles: ['admin', 'mahasiswa']
     }
   ]
 };

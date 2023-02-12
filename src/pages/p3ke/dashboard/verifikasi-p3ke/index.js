@@ -35,8 +35,10 @@ import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/d
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import { getKeluarga } from 'store/slices/keluarga';
+import useGuard from 'hooks/useGuard';
 
 const VerifikasiP3KEPage = () => {
+  useGuard(['admin', 'mahasiswa']);
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
   // const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });

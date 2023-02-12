@@ -32,6 +32,7 @@ import { dispatch, useSelector } from 'store';
 // assets
 import { IconChevronDown, IconChevronRight, IconMinusVertical } from '@tabler/icons';
 import { activeID } from 'store/slices/menu';
+import useAuth from 'hooks/useAuth';
 
 // mini-menu - wrapper
 const PopperStyled = styled(Popper)(({ theme }) => ({
@@ -65,6 +66,7 @@ const NavGroup = ({ item, lastItem, remItems, lastItemId }) => {
   const matchDownMd = useMediaQuery(theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentItem, setCurrentItem] = useState(item);
+  const { user } = useAuth();
 
   const openMini = Boolean(anchorEl);
 
@@ -131,7 +133,13 @@ const NavGroup = ({ item, lastItem, remItems, lastItemId }) => {
       case 'collapse':
         return <NavCollapse key={menu.id} menu={menu} level={1} parentId={currentItem.id} />;
       case 'item':
-        return <NavItem key={menu.id} item={menu} level={1} parentId={currentItem.id} />;
+        if (!menu.roles) {
+          return <NavItem key={menu.id} item={menu} level={1} parentId={currentItem.id} />;
+        }
+        if (menu.roles?.includes(user.role)) {
+          return <NavItem key={menu.id} item={menu} level={1} parentId={currentItem.id} />;
+        }
+        return null;
       default:
         return (
           <Typography key={menu.id} variant="h6" color="error" align="center">
@@ -153,7 +161,13 @@ const NavGroup = ({ item, lastItem, remItems, lastItemId }) => {
           case 'collapse':
             return <NavCollapse key={menu.id} menu={menu} level={1} parentId={currentItem.id} />;
           case 'item':
-            return <NavItem key={menu.id} item={menu} level={1} parentId={currentItem.id} />;
+            if (!menu.roles) {
+              return <NavItem key={menu.id} item={menu} level={1} parentId={currentItem.id} />;
+            }
+            if (menu.roles?.includes(user.role)) {
+              return <NavItem key={menu.id} item={menu} level={1} parentId={currentItem.id} />;
+            }
+            return null;
           default:
             return (
               <Typography key={menu.id} variant="h6" color="error" align="center">

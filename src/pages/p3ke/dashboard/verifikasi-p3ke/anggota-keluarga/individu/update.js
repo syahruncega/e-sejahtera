@@ -14,8 +14,10 @@ import MainCard from 'components/ui-component/cards/MainCard';
 import { getIndividuById } from 'store/slices/individu';
 import FormVerifikasiIndividu from 'components/form/FormVerifikasiIndividu';
 import { getIndividuVerifikasiById } from 'store/slices/individu-verifikasi';
+import useGuard from 'hooks/useGuard';
 
 const IndividuUpdatePage = () => {
+  useGuard(['admin', 'mahasiswa']);
   const router = useRouter();
 
   const fetchIndividuById = useQuery(['individuById'], () => getIndividuById(router.query.id));

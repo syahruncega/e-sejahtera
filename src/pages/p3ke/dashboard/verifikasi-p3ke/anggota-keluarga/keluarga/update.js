@@ -15,8 +15,10 @@ import FormVerifikasiKeluarga from 'components/form/FormVerifikasiKeluarga';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
 import { getKeluargaVerifikasiByIdKeluarga } from 'store/slices/keluarga-verifikasi';
+import useGuard from 'hooks/useGuard';
 
 const KeluargaUpdatePage = () => {
+  useGuard(['admin', 'mahasiswa']);
   const router = useRouter();
 
   const fetchKeluargaByIdKeluarga = useQuery(['keluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));

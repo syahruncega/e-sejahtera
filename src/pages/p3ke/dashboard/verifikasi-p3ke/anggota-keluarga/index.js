@@ -35,8 +35,10 @@ import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import dayjs from 'dayjs';
 import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
+import useGuard from 'hooks/useGuard';
 
 const AnggotaKeluargaPage = () => {
+  useGuard(['admin', 'mahasiswa']);
   const theme = useTheme();
   const router = useRouter();
   const [search, setSearch] = useState('');
