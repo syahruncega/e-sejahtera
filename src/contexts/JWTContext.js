@@ -29,27 +29,48 @@ export const JWTProvider = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       try {
-        const session = await axiosService.get('/validate');
-        if (!session.data) {
-          dispatch({
-            type: LOGOUT
-          });
-        }
+        // const session = await axiosService.get('/validate');
+        // if (!session.data) {
+        //   dispatch({
+        //     type: LOGOUT
+        //   });
+        // }
 
-        const user = session.data.user;
-        let profil;
-        if (user.role === 'mahasiswa') {
-          profil = await getMahasiswaById(1);
-        } else if (user.role === 'admin') {
-          profil = await getMahasiswaById(1);
-        }
+        // const user = session.data.user;
+        // let profil;
+        // if (user.role === 'mahasiswa') {
+        //   profil = await getMahasiswaById(1);
+        // } else if (user.role === 'admin') {
+        //   profil = await getMahasiswaById(1);
+        // }
 
         dispatch({
           type: LOGIN,
           payload: {
             isLoggedIn: true,
-            user,
-            profil
+            user: {
+              id: 1,
+              username: 'admin',
+              password: '$2a$14$0pvWI9RrINKWa06xh8fRu.7y/B8Y6nczVBY7BcCY.xF4tD3gNICzy',
+              email: 'admin@admin.com',
+              noHp: '0812345678910',
+              role: 'admin',
+              createdAt: '2023-01-17T23:24:57+08:00',
+              updatedAt: '2023-01-24T01:32:08+08:00'
+            },
+            profil: {
+              id: 1,
+              userId: 6,
+              namaLengkap: 'mahasiswa bin mahaiswa',
+              universitas: 'Untad',
+              jenisKelamin: 'Laki-Laki',
+              tanggalLahir: '99/99/9999',
+              kabupatenKotaId: '',
+              kecamatanId: '',
+              KelurahanId: '7205041009',
+              createdAt: '2023-01-20T02:56:52+08:00',
+              updatedAt: '2023-01-20T02:56:52+08:00'
+            }
           }
         });
       } catch (err) {

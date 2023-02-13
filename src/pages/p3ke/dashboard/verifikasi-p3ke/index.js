@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 // material-ui
 import {
   Alert,
@@ -5,12 +6,16 @@ import {
   Autocomplete,
   Chip,
   CircularProgress,
+  FormControl,
   Grid,
   IconButton,
   InputAdornment,
   InputLabel,
+  MenuItem,
+  Select,
   TextField,
-  Tooltip
+  Tooltip,
+  Typography
 } from '@mui/material';
 
 // project imports
@@ -20,9 +25,6 @@ import MainCard from 'components/ui-component/cards/MainCard';
 
 // assets
 
-import { FormattedMessage } from 'react-intl';
-import { LoadingButton } from '@mui/lab';
-import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Box, fontWeight } from '@mui/system';
@@ -36,10 +38,17 @@ import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import { getKeluarga } from 'store/slices/keluarga';
 import useGuard from 'hooks/useGuard';
+import useAuth from 'hooks/useAuth';
+import { useRouter } from 'next/router';
+import AppTablePagination from 'components/table/AppTablePagination';
 
 const VerifikasiP3KEPage = () => {
   useGuard(['admin', 'mahasiswa']);
+  const { profil } = useAuth();
+  const router = useRouter();
   const [search, setSearch] = useState('');
+  const [pageSize, setPageSize] = useState(Number(router.query?.pageSize) || 25);
+  const [page, setPage] = useState(Number(router.query?.page) || 1);
   const debouncedValue = useDebounce(search, 400);
   // const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
   // const [dataKecamatan, setDataKecamatan] = useState([]);
@@ -48,12 +57,18 @@ const VerifikasiP3KEPage = () => {
   // const [keyKelurahan, setKeyKelurahan] = useState(false);
 
   // const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
-  const fetchKeluarga = useQuery(['keluarga'], () => getKeluarga({ kelurahanId: '7205080013', desilKesejahteraan: '1' }));
+  const fetchKeluarga = useQuery(
+    ['keluarga', pageSize, page],
+    () => getKeluarga({ kelurahanId: profil.KelurahanId, desilKesejahteraan: '1', pagerow: pageSize, halaman: page }),
+    { keepPreviousData: true }
+  );
+
+  console.log(fetchKeluarga.data);
 
   const columns = useMemo(
     () => [
       {
-        accessorFn: (row, index) => `${index + 1}`,
+        accessorFn: (row, index) => `${index + 1 + pageSize * (Number(router.query?.page || 1) - 1)}`,
         id: 'no',
         header: 'No'
       },
@@ -129,7 +144,7 @@ const VerifikasiP3KEPage = () => {
       }
     ],
 
-    []
+    [pageSize, router.query?.page]
   );
 
   const pageProps = {
@@ -138,7 +153,7 @@ const VerifikasiP3KEPage = () => {
   };
 
   // Error
-  if (fetchKeluarga.isError) {
+  if (fetchKeluarga.isError || fetchKeluarga.isRefetchError) {
     return (
       <Page {...pageProps}>
         <Alert severity="error">
@@ -261,7 +276,23 @@ const VerifikasiP3KEPage = () => {
               <Grid item xs={12}>
                 <SubCard content={false}>
                   {!fetchKeluarga.isLoading && (
-                    <AppTable columns={columns} globalFilter={debouncedValue} stickyHeader initialData={fetchKeluarga.data || []} />
+                    <>
+                      <AppTable
+                        columns={columns}
+                        globalFilter={debouncedValue}
+                        stickyHeader
+                        initialData={fetchKeluarga.data.data || []}
+                        disablePagination
+                      />
+                      <AppTablePagination
+                        jumlahHalaman={fetchKeluarga.data.jumlahHalaman}
+                        totalData={fetchKeluarga.data.totalData}
+                        pageSize={pageSize}
+                        setPageSize={setPageSize}
+                        page={page}
+                        setPage={setPage}
+                      />
+                    </>
                   )}
                 </SubCard>
               </Grid>
