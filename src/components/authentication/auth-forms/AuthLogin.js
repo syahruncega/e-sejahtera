@@ -58,8 +58,8 @@ const JWTLogin = ({ loginProp, ...others }) => {
         password: 'admin'
       }}
       validationSchema={Yup.object().shape({
-        username: Yup.string().max(255).required('username is required'),
-        password: Yup.string().max(255).required('Password is required')
+        username: Yup.string().max(255).required('Username wajib diisi'),
+        password: Yup.string().max(255).required('Password wajib diisi')
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
         try {
@@ -82,7 +82,7 @@ const JWTLogin = ({ loginProp, ...others }) => {
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
         <form noValidate onSubmit={handleSubmit} {...others}>
           <FormControl fullWidth error={Boolean(touched.username && errors.username)} sx={{ ...theme.typography.customInput }}>
-            <InputLabel htmlFor="outlined-adornment-username-login">username Address / Username</InputLabel>
+            <InputLabel htmlFor="outlined-adornment-username-login">Username</InputLabel>
             <OutlinedInput
               id="outlined-adornment-username-login"
               type="username"
@@ -137,7 +137,7 @@ const JWTLogin = ({ loginProp, ...others }) => {
                 control={
                   <Checkbox checked={checked} onChange={(event) => setChecked(event.target.checked)} name="checked" color="primary" />
                 }
-                label="Keep me logged in"
+                label="Ingat saya"
               />
             </Grid>
             <Grid item>

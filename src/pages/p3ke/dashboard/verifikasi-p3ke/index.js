@@ -41,20 +41,22 @@ import useGuard from 'hooks/useGuard';
 import useAuth from 'hooks/useAuth';
 import { useRouter } from 'next/router';
 import AppTablePagination from 'components/table/AppTablePagination';
+import { LoadingButton } from '@mui/lab';
+import { IconSearch } from '@tabler/icons';
 
 const VerifikasiP3KEPage = () => {
   useGuard(['admin', 'mahasiswa']);
-  const { profil } = useAuth();
+  const { user, profil } = useAuth();
   const router = useRouter();
   const [search, setSearch] = useState('');
   const [pageSize, setPageSize] = useState(Number(router.query?.pageSize) || 25);
   const [page, setPage] = useState(Number(router.query?.page) || 1);
   const debouncedValue = useDebounce(search, 400);
-  // const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
-  // const [dataKecamatan, setDataKecamatan] = useState([]);
-  // const [dataKelurahan, setDataKelurahan] = useState([]);
-  // const [keyKecamatan, setKeyKecamatan] = useState(false);
-  // const [keyKelurahan, setKeyKelurahan] = useState(false);
+  const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
+  const [dataKecamatan, setDataKecamatan] = useState([]);
+  const [dataKelurahan, setDataKelurahan] = useState([]);
+  const [keyKecamatan, setKeyKecamatan] = useState(false);
+  const [keyKelurahan, setKeyKelurahan] = useState(false);
 
   // const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
   const fetchKeluarga = useQuery(
@@ -63,7 +65,7 @@ const VerifikasiP3KEPage = () => {
     { keepPreviousData: true }
   );
 
-  console.log(fetchKeluarga.data);
+  const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
 
   const columns = useMemo(
     () => [
@@ -177,87 +179,90 @@ const VerifikasiP3KEPage = () => {
 
           {!fetchKeluarga.isLoading && (
             <Grid container spacing={gridSpacing}>
-              {/* <Grid item xs={12}>
-                <SubCard title="Filter">
-                  <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-                    <Grid item xs={12} lg={4}>
-                      <InputLabel>Kabupaten/Kota</InputLabel>
-                      <Autocomplete
-                        name="kabupaten"
-                        disableClearable
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        getOptionLabel={(option) => option.nama}
-                        value={kabupaten}
-                        onChange={async (e, value) => {
-                          setKabupaten(value);
-                          if (value !== null) {
-                            const kecamatan = await getKecamatan(value.id);
-                            setDataKecamatan(kecamatan);
-                            setKeyKecamatan(!keyKecamatan);
-                            setKeyKelurahan(!keyKelurahan);
-                          } else {
-                            setDataKecamatan([]);
-                            setDataKelurahan([]);
-                          }
-                        }}
-                        options={fetchKabupatenKota.data || []}
-                        sx={{ width: 'auto' }}
-                        renderInput={(params) => <TextField fullWidth {...params} />}
-                      />
-                    </Grid>
-                    <Grid item xs={12} lg={4}>
-                      <InputLabel>Kecamatan</InputLabel>
-                      <Autocomplete
-                        disablePortal
-                        key={`kecamatan${keyKecamatan}`}
-                        name="kecamatanId"
-                        // value={kecamatanId}
-                        disabled={!(dataKecamatan.length > 0)}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        getOptionLabel={(option) => option.nama}
-                        onChange={async (e, value) => {
-                          if (value !== null) {
-                            const desaKelurahan = await getDesaKelurahan(value.id);
-                            setDataKelurahan(desaKelurahan);
+              <Grid item xs={12}>
+                {user.role === 'mahasiswa' && (
+                  <SubCard title="Filter">
+                    <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
+                      <Grid item xs={12} lg={4}>
+                        <InputLabel>Kabupaten/Kota</InputLabel>
+                        <Autocomplete
+                          name="kabupaten"
+                          disableClearable
+                          isOptionEqualToValue={(option, value) => option.id === value.id}
+                          getOptionLabel={(option) => option.nama}
+                          // value={kabupaten}
+                          onChange={async (e, value) => {
+                            setKabupaten(value);
+                            if (value !== null) {
+                              const kecamatan = await getKecamatan(value.id);
+                              setDataKecamatan(kecamatan);
+                              setKeyKecamatan(!keyKecamatan);
+                              setKeyKelurahan(!keyKelurahan);
+                            } else {
+                              setDataKecamatan([]);
+                              setDataKelurahan([]);
+                            }
+                          }}
+                          options={fetchKabupatenKota.data || []}
+                          sx={{ width: 'auto' }}
+                          renderInput={(params) => <TextField placeholder="Pilih Kabupaten/Kota" fullWidth {...params} />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} lg={4}>
+                        <InputLabel>Kecamatan</InputLabel>
+                        <Autocomplete
+                          disablePortal
+                          key={`kecamatan${keyKecamatan}`}
+                          name="kecamatanId"
+                          // value={kecamatanId}
+                          disabled={!(dataKecamatan.length > 0)}
+                          isOptionEqualToValue={(option, value) => option.id === value.id}
+                          getOptionLabel={(option) => option.nama}
+                          onChange={async (e, value) => {
+                            if (value !== null) {
+                              const desaKelurahan = await getDesaKelurahan(value.id);
+                              setDataKelurahan(desaKelurahan);
 
-                            setKeyKelurahan(!keyKelurahan);
-                          } else {
-                            setKeyKelurahan([]);
-                          }
-                        }}
-                        options={dataKecamatan || []}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
+                              setKeyKelurahan(!keyKelurahan);
+                            } else {
+                              setKeyKelurahan([]);
+                            }
+                          }}
+                          options={dataKecamatan || []}
+                          renderInput={(params) => <TextField placeholder="Pilih Kecamatan" {...params} />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} lg={4}>
+                        <InputLabel>Desa/Kelurahan</InputLabel>
+                        <Autocomplete
+                          disablePortal
+                          key={`kelurahan${keyKelurahan}`}
+                          name="kelurahanId"
+                          // value={kelurahanId}
+
+                          disabled={!(dataKelurahan.length > 0)}
+                          isOptionEqualToValue={(option, value) => option.id === value.id}
+                          getOptionLabel={(option) => option.nama}
+                          onChange={async (e, value) => {}}
+                          options={dataKelurahan || []}
+                          renderInput={(params) => <TextField placeholder="Pilih Desa/Kelurahan" {...params} />}
+                        />
+                      </Grid>
+                      <Grid item xs={12} lg={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                        <LoadingButton
+                          variant="contained"
+                          startIcon={<IconSearch size={18} />}
+                          onClick={() => {
+                            fetchKeluarga.refetch();
+                          }}
+                        >
+                          Cari
+                        </LoadingButton>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12} lg={4}>
-                      <InputLabel>Desa/Kelurahan</InputLabel>
-                      <Autocomplete
-                        disablePortal
-                        key={`kelurahan${keyKelurahan}`}
-                        name="kelurahanId"
-                        // value={kelurahanId}
-                        disabled={!(dataKelurahan.length > 0)}
-                        isOptionEqualToValue={(option, value) => option.id === value.id}
-                        getOptionLabel={(option) => option.nama}
-                        onChange={async (e, value) => {}}
-                        options={dataKelurahan || []}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
-                    </Grid>
-                    <Grid item xs={12} lg={12} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                      <LoadingButton
-                        variant="contained"
-                        startIcon={<IconSearch size={18} />}
-                        onClick={() => {
-                          fetchKeluarga.refetch();
-                        }}
-                      >
-                        Cari
-                      </LoadingButton>
-                    </Grid>
-                  </Grid>
-                </SubCard>
-              </Grid> */}
+                  </SubCard>
+                )}
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   InputProps={{

@@ -43,6 +43,7 @@ const User1 = '/assets/images/users/user-round.svg';
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
+  const { logout } = useAuth();
   const theme = useTheme();
   const { borderRadius } = useConfig();
 
@@ -59,7 +60,7 @@ const ProfileSection = () => {
   const anchorRef = useRef(null);
   const handleLogout = async () => {
     try {
-      console.log('first');
+      await logout();
     } catch (err) {
       console.error(err);
     }
@@ -265,9 +266,9 @@ const ProfileSection = () => {
                           <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 1}
-                            onClick={(event) => handleListItemClick(event, 1)}
+                            // onClick={(event) => handleListItemClick(event, 1)}
                             LinkComponent={Link}
-                            href="/dashboard/profil"
+                            href="/p3ke/dashboard/profil"
                           >
                             <ListItemIcon>
                               <IconUser stroke={1.5} size="20px" />

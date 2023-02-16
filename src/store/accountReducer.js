@@ -1,5 +1,5 @@
 // action - state management
-import { LOGIN, LOGOUT, REGISTER } from './actions';
+import { LOGIN, LOGOUT, REGISTER, STATE_CHANGED } from './actions';
 
 // ==============================|| ACCOUNT REDUCER ||============================== //
 
@@ -22,6 +22,16 @@ const accountReducer = (state = initialState, action) => {
       };
     }
     case LOGIN: {
+      const { user, profil } = action.payload;
+      return {
+        ...state,
+        isLoggedIn: true,
+        isInitialized: true,
+        user,
+        profil
+      };
+    }
+    case STATE_CHANGED: {
       const { user, profil } = action.payload;
       return {
         ...state,

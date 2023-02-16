@@ -1,6 +1,3 @@
-// third-party
-import { FormattedMessage } from 'react-intl';
-
 // assets
 import { IconKey, IconBug, IconUserCheck, IconUserCircle } from '@tabler/icons';
 
