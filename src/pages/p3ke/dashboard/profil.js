@@ -23,6 +23,9 @@ import UbahKataSandi from 'components/dashboard/Profil/UbahKataSandi';
 import { FormattedMessage } from 'react-intl';
 import useAuth from 'hooks/useAuth';
 import FormProfilAdmin from 'components/dashboard/Profil/FormProfilAdmin';
+import FormProfilDosen from 'components/dashboard/Profil/FormProfilDosen';
+import FormProfilPusbang from 'components/dashboard/Profil/FormProfilPusbang';
+import FormProfilAnalis from 'components/dashboard/Profil/FormProfilAnalis';
 
 // tabs panel
 function TabPanel({ children, value, index, ...other }) {
@@ -125,6 +128,9 @@ const ProfilPage = () => {
             <TabPanel value={value} index={0}>
               {user.role === 'admin' && <FormProfilAdmin />}
               {user.role === 'mahasiswa' && <FormProfilMahasiswa />}
+              {user.role === 'dosen' && <FormProfilDosen />}
+              {user.role === 'pusbang' && <FormProfilPusbang />}
+              {user.role === 'analis' && <FormProfilAnalis />}
             </TabPanel>
             <TabPanel value={value} index={1}>
               <UbahKataSandi />

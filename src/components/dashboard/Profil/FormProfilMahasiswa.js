@@ -21,8 +21,8 @@ import { gridSpacing } from 'store/constant';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useRouter } from 'next/router';
-import { useState, useReducer, useEffect } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -32,9 +32,6 @@ import { createMahasiswa, updateMahasiswa } from 'store/slices/mahasiswa';
 import { toast } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import dayjs from 'dayjs';
-
-import accountReducer from 'store/accountReducer';
-import { LOGIN, STATE_CHANGED } from 'store/actions';
 import axiosService from 'utils/axios';
 
 // assets
@@ -50,24 +47,15 @@ const validationSchema = yup.object({
   jenisKelamin: yup.string().required('Jenis kelamin wajib diisi'),
   noHp: yup.string().required('No HP wajib diisi'),
   username: yup.string().required('Stambuk wajib diisi'),
-  kabupatenkotaId: yup.string().required('Kabupaten/Kota wajib diisi'),
+  kabupatenKotaId: yup.string().required('Kabupaten/Kota wajib diisi'),
   kecamatanId: yup.string().required('Kecamatan wajib diisi'),
   kelurahanId: yup.string().required('Desa/Kelurahan wajib diisi')
 });
 
 const FormProfilMahasiswa = () => {
-  const router = useRouter();
   const { user, profil, updateSession } = useAuth();
+  const router = useRouter();
   const isEdit = router.pathname !== '/biodata';
-
-  const initialState = {
-    isLoggedIn: true,
-    isInitialized: true,
-    user,
-    profil
-  };
-
-  const [state, dispatch] = useReducer(accountReducer, initialState);
 
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
@@ -81,14 +69,12 @@ const FormProfilMahasiswa = () => {
 
   const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
 
-  console.log(profil);
-
   useEffect(() => {
     const getLokasi = async () => {
       if (isEdit) {
-        const kabupaten = axiosService.get(`/kabupatenkota/7205`);
+        const kabupaten = axiosService.get(`/kabupatenkota/${profil.kabupatenKotaId}`);
         const kecamatan = axiosService.get(`/kecamatan/${profil.kecamatanId}`);
-        const kelurahan = axiosService.get(`/kelurahan/${profil.KelurahanId}`);
+        const kelurahan = axiosService.get(`/kelurahan/${profil.kelurahanId}`);
         const res = await Promise.all([kabupaten, kecamatan, kelurahan]);
         setKabupatenKotaValue(res[0].data);
         setKecamatanValue(res[1].data);
@@ -136,16 +122,16 @@ const FormProfilMahasiswa = () => {
     validationSchema,
     enableReinitialize: true,
     initialValues: {
-      namaLengkap: profil.namaLengkap || '',
+      namaLengkap: profil?.namaLengkap || '',
       email: user.email || '',
-      jenisKelamin: profil.jenisKelamin || 'Laki-laki',
-      tanggalLahir: new Date(profil.tanggalLahir) || new Date(),
-      universitas: profil.universitas || 'Universitas Tadulako',
+      jenisKelamin: profil?.jenisKelamin || 'Laki-laki',
+      tanggalLahir: new Date(profil?.tanggalLahir) || new Date(),
+      universitas: profil?.universitas || 'Universitas Tadulako',
       noHp: user.noHp || '',
       username: user.username || '',
-      kabupatenkotaId: profil.kabupatenkotaId || '',
-      kecamatanId: profil.kecamatanId || '',
-      desaKelurahan: profil.kelurahanId || ''
+      kabupatenKotaId: profil?.kabupatenKotaId || '',
+      kecamatanId: profil?.kecamatanId || '',
+      kelurahanId: profil?.kelurahanId || ''
     },
     onSubmit: (values) => {
       toast.promise(
@@ -306,13 +292,13 @@ const FormProfilMahasiswa = () => {
             <Grid item md={6} xs={12}>
               <Autocomplete
                 disablePortal
-                name="kabupatenkotaId"
+                name="kabupatenKotaId"
                 value={kabupatenKotaValue}
                 isOptionEqualToValue={(option, value) => option.id === value.id}
                 getOptionLabel={(option) => option.nama}
                 onChange={async (e, value) => {
                   if (value !== null) {
-                    formik.setFieldValue('kabupatenkotaId', value.id);
+                    formik.setFieldValue('kabupatenKotaId', value.id);
                     const kecamatan = await getKecamatan(value.id);
                     setDataKecamatan(kecamatan);
                     formik.setFieldValue('kecamatanId', '');
@@ -320,7 +306,7 @@ const FormProfilMahasiswa = () => {
                     setKeyKecamatan(!keyKecamatan);
                     setKeyKelurahan(!keyKelurahan);
                   } else {
-                    formik.setFieldValue('kabupatenkotaId', '');
+                    formik.setFieldValue('kabupatenKotaId', '');
                     setDataKecamatan([]);
                     setDataKelurahan([]);
                   }
@@ -332,9 +318,9 @@ const FormProfilMahasiswa = () => {
                 renderInput={(params) => (
                   <TextField
                     label="Kabupaten/Kota"
-                    value={formik.values.kabupatenkotaId}
-                    helperText={formik.touched.kabupatenkotaId && formik.errors.kabupatenkotaId}
-                    error={formik.touched.kabupatenkotaId && Boolean(formik.errors.kabupatenkotaId)}
+                    value={formik.values.kabupatenKotaId}
+                    helperText={formik.touched.kabupatenKotaId && formik.errors.kabupatenKotaId}
+                    error={formik.touched.kabupatenKotaId && Boolean(formik.errors.kabupatenKotaId)}
                     {...params}
                   />
                 )}
@@ -406,13 +392,15 @@ const FormProfilMahasiswa = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <LoadingButton
-                loading={queryCreateMahasiswa.isLoading || queryUpdateMahasiswa.isLoading}
-                onClick={formik.handleSubmit}
-                variant="contained"
-              >
-                Simpan
-              </LoadingButton>
+              <Stack direction="row" display="flex" justifyContent="flex-end">
+                <LoadingButton
+                  loading={queryCreateMahasiswa.isLoading || queryUpdateMahasiswa.isLoading}
+                  onClick={formik.handleSubmit}
+                  variant="contained"
+                >
+                  Simpan
+                </LoadingButton>
+              </Stack>
             </Grid>
           </Grid>
         </SubCard>

@@ -12,8 +12,8 @@ import * as yup from 'yup';
 import useAuth from 'hooks/useAuth';
 import { LoadingButton } from '@mui/lab';
 import { updateUser } from 'store/slices/user';
-import { createDosen, updateDosen } from 'store/slices/dosen';
 import { toast } from 'react-hot-toast';
+import { createPusbang, updatePusbang } from 'store/slices/pusbang';
 
 // assets
 const Avatar1 = '/assets/images/users/avatar-1.png';
@@ -30,35 +30,35 @@ const validationSchema = yup.object({
   // nip: yup.string().required('NIP wajib diisi')
 });
 
-const FormProfilDosen = () => {
+const FormProfilPusbang = () => {
   const { user, profil, updateSession } = useAuth();
   const router = useRouter();
   const isEdit = router.pathname !== '/biodata';
 
-  const queryCreateDosen = useMutation({
+  const queryCreatePusbang = useMutation({
     mutationFn: (values) => {
       const { email, noHp, ...rest } = values;
       const putUser = updateUser(user.id, { email, noHp, role: user.role });
-      const postDosen = createDosen({
+      const postPusbang = createPusbang({
         userId: user.id,
         ...rest
       });
-      return Promise.all([putUser, postDosen]);
+      return Promise.all([putUser, postPusbang]);
     },
     onSuccess: () => {
       router.push('/p3ke/dashboard');
     }
   });
 
-  const queryUpdateDosen = useMutation({
+  const queryUpdatePusbang = useMutation({
     mutationFn: (values) => {
       const { email, noHp, ...rest } = values;
       const putUser = updateUser(user.id, { email, noHp, role: user.role });
-      const putDosen = updateDosen(profil.id, {
+      const putPusbang = updatePusbang(profil.id, {
         userId: user.id,
         ...rest
       });
-      return Promise.all([putUser, putDosen]);
+      return Promise.all([putUser, putPusbang]);
     },
     onSuccess: async () => {
       await updateSession();
@@ -76,7 +76,7 @@ const FormProfilDosen = () => {
     },
     onSubmit: (values) => {
       toast.promise(
-        isEdit ? queryUpdateDosen.mutateAsync(values) : queryCreateDosen.mutateAsync(values),
+        isEdit ? queryUpdatePusbang.mutateAsync(values) : queryCreatePusbang.mutateAsync(values),
         {
           loading: 'Sedang menyimpan...',
           success: `Profil berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
@@ -172,7 +172,7 @@ const FormProfilDosen = () => {
             <Grid item xs={12}>
               <Stack direction="row" display="flex" justifyContent="flex-end">
                 <LoadingButton
-                  loading={queryCreateDosen.isLoading || queryUpdateDosen.isLoading}
+                  loading={queryCreatePusbang.isLoading || queryUpdatePusbang.isLoading}
                   onClick={formik.handleSubmit}
                   variant="contained"
                 >
@@ -187,4 +187,4 @@ const FormProfilDosen = () => {
   );
 };
 
-export default FormProfilDosen;
+export default FormProfilPusbang;
