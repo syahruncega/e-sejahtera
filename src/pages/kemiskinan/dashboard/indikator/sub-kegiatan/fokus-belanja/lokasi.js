@@ -38,27 +38,6 @@ import { IconBookmark, IconBookmarks } from '@tabler/icons';
 import ConfirmDialog from 'components/dialog/ConfirmDialog';
 import SubCard from 'components/ui-component/cards/SubCard';
 
-const headCells = [
-  {
-    id: 'kabupatenKota',
-    numeric: false,
-    label: 'Kabupaten / Kota',
-    align: 'left'
-  },
-  {
-    id: 'kecamatan',
-    numeric: false,
-    label: 'Kecamatan',
-    align: 'left'
-  },
-  {
-    id: 'desaKelurahan',
-    numeric: false,
-    label: 'Desa / Kelurahan',
-    align: 'left'
-  }
-];
-
 const LokasiDetailSubKegiatanPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);

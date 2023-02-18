@@ -16,7 +16,7 @@ import { useMemo } from 'react';
 
 // ==============================|| PROFILE 1 - CHANGE PASSWORD ||============================== //
 
-const UbahKataSandi = () => {
+const FormUbahPassword = () => {
   const theme = useTheme();
   const { user } = useAuth();
 
@@ -129,4 +129,4 @@ const UbahKataSandi = () => {
   );
 };
 
-export default UbahKataSandi;
+export default FormUbahPassword;

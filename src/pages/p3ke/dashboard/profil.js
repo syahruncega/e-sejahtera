@@ -19,13 +19,15 @@ import LibraryBooksTwoToneIcon from '@mui/icons-material/LibraryBooksTwoTone';
 import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
 import FormProfilMahasiswa from 'components/dashboard/Profil/FormProfilMahasiswa';
-import UbahKataSandi from 'components/dashboard/Profil/UbahKataSandi';
+import FormUbahPassword from 'components/dashboard/Profil/FormUbahPassword';
 import { FormattedMessage } from 'react-intl';
 import useAuth from 'hooks/useAuth';
 import FormProfilAdmin from 'components/dashboard/Profil/FormProfilAdmin';
 import FormProfilDosen from 'components/dashboard/Profil/FormProfilDosen';
 import FormProfilPusbang from 'components/dashboard/Profil/FormProfilPusbang';
 import FormProfilAnalis from 'components/dashboard/Profil/FormProfilAnalis';
+import { LocationOnTwoTone } from '@mui/icons-material';
+import TabLokasiDosen from 'components/dashboard/Profil/TabLokasiDosen';
 
 // tabs panel
 function TabPanel({ children, value, index, ...other }) {
@@ -55,10 +57,13 @@ const tabsOption = [
     label: 'Profil',
     icon: <AccountCircleTwoToneIcon sx={{ fontSize: '1.3rem' }} />
   },
-
   {
     label: 'Ubah Kata Sandi',
     icon: <LockTwoToneIcon sx={{ fontSize: '1.3rem' }} />
+  },
+  {
+    label: 'Lokasi KKN',
+    icon: <LocationOnTwoTone sx={{ fontSize: '1.3rem' }} />
   }
 ];
 
@@ -133,8 +138,13 @@ const ProfilPage = () => {
               {user.role === 'analis' && <FormProfilAnalis />}
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <UbahKataSandi />
+              <FormUbahPassword />
             </TabPanel>
+            {user.role === 'dosen' && (
+              <TabPanel value={value} index={2}>
+                <TabLokasiDosen />{' '}
+              </TabPanel>
+            )}
           </Grid>
         </Grid>
       </MainCard>
