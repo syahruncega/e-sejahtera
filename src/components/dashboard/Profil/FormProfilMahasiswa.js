@@ -55,7 +55,7 @@ const validationSchema = yup.object({
 const FormProfilMahasiswa = () => {
   const { user, profil, updateSession } = useAuth();
   const router = useRouter();
-  const isEdit = router.pathname !== '/biodata';
+  const isEdit = router.pathname !== '/p3ke/biodata';
 
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
@@ -72,9 +72,9 @@ const FormProfilMahasiswa = () => {
   useEffect(() => {
     const getLokasi = async () => {
       if (isEdit) {
-        const kabupaten = axiosService.get(`/kabupatenkota/${profil.kabupatenKotaId}`);
-        const kecamatan = axiosService.get(`/kecamatan/${profil.kecamatanId}`);
-        const kelurahan = axiosService.get(`/kelurahan/${profil.kelurahanId}`);
+        const kabupaten = axiosService.get(`/kabupatenkota/${profil?.kabupatenKotaId}`);
+        const kecamatan = axiosService.get(`/kecamatan/${profil?.kecamatanId}`);
+        const kelurahan = axiosService.get(`/kelurahan/${profil?.kelurahanId}`);
         const res = await Promise.all([kabupaten, kecamatan, kelurahan]);
         setKabupatenKotaValue(res[0].data);
         setKecamatanValue(res[1].data);
@@ -123,12 +123,12 @@ const FormProfilMahasiswa = () => {
     enableReinitialize: true,
     initialValues: {
       namaLengkap: profil?.namaLengkap || '',
-      email: user.email || '',
+      email: user?.email || '',
       jenisKelamin: profil?.jenisKelamin || 'Laki-laki',
-      tanggalLahir: new Date(profil?.tanggalLahir) || new Date(),
+      tanggalLahir: profil?.tanggalLahir ? new Date(profil?.tanggalLahir) : new Date(),
       universitas: profil?.universitas || 'Universitas Tadulako',
-      noHp: user.noHp || '',
-      username: user.username || '',
+      noHp: user?.noHp || '',
+      username: user?.username || '',
       kabupatenKotaId: profil?.kabupatenKotaId || '',
       kecamatanId: profil?.kecamatanId || '',
       kelurahanId: profil?.kelurahanId || ''

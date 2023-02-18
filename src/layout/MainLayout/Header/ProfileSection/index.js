@@ -168,27 +168,10 @@ const ProfileSection = () => {
                         </Stack>
                         <Typography variant="subtitle2">{user.role}</Typography>
                       </Stack>
-                      <OutlinedInput
-                        sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
-                        id="input-search-profile"
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        placeholder="Search profile options"
-                        startAdornment={
-                          <InputAdornment position="start">
-                            <IconSearch stroke={1.5} size="16px" color={theme.palette.grey[500]} />
-                          </InputAdornment>
-                        }
-                        aria-describedby="search-helper-text"
-                        inputProps={{
-                          'aria-label': 'weight'
-                        }}
-                      />
-                      <Divider />
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                       <Box sx={{ p: 2, pt: 0 }}>
-                        <Card
+                        {/* <Card
                           sx={{
                             bgcolor: theme.palette.mode === 'dark' ? theme.palette.dark[800] : theme.palette.primary.light,
                             my: 2
@@ -230,7 +213,7 @@ const ProfileSection = () => {
                             </Grid>
                           </CardContent>
                         </Card>
-                        <Divider />
+                        <Divider /> */}
                         <List
                           component="nav"
                           sx={{
@@ -247,7 +230,7 @@ const ProfileSection = () => {
                             }
                           }}
                         >
-                          <ListItemButton
+                          {/* <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 0}
                             onClick={(event) => handleListItemClick(event, 0)}
@@ -262,7 +245,7 @@ const ProfileSection = () => {
                                 </Typography>
                               }
                             />
-                          </ListItemButton>
+                          </ListItemButton> */}
                           <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 1}

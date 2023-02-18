@@ -32,7 +32,7 @@ export const JWTProvider = ({ children }) => {
         const res = await Promise.all([axiosService.get('/auth/session'), axiosService.get('/auth/profile')]);
 
         const user = res[0].data;
-        const profil = res[1].data || null;
+        const profil = res[1].data;
 
         if (!user) {
           dispatch({

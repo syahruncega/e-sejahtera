@@ -12,26 +12,29 @@ import useAuth from 'hooks/useAuth';
  * Authentication guard for routes
  * @param {PropTypes.node} children children element/node
  */
-const AuthGuard = ({ children }) => {
+const ProfileGuard = ({ children }) => {
   const { isLoggedIn, profil } = useAuth();
   const router = useRouter();
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/p3ke/login');
     }
-    if (!profil) {
+    if (isLoggedIn && !profil) {
       router.push('/p3ke/biodata');
+    }
+    if (isLoggedIn && profil) {
+      router.push('/p3ke/dashboard');
     }
     // eslint-disable-next-line
   }, [isLoggedIn, profil]);
 
-  if (!isLoggedIn || !profil) return <Loader />;
+  if (!isLoggedIn || profil) return <Loader />;
 
   return children;
 };
 
-AuthGuard.propTypes = {
+ProfileGuard.propTypes = {
   children: PropTypes.node
 };
 
-export default AuthGuard;
+export default ProfileGuard;

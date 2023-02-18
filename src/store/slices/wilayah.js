@@ -14,3 +14,8 @@ export async function getDesaKelurahan(kecamatanId) {
   const response = await axiosService.get(`/kelurahan?kecamatanid=${kecamatanId}`);
   return response.data;
 }
+
+export async function getDesaKelurahanById(kelurahanId) {
+  const response = await axiosService.get(`/kelurahan/${kelurahanId}`);
+  return response.data;
+}

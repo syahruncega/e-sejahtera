@@ -48,11 +48,8 @@ const KeluargaCreatePage = () => {
               </Alert>
             </MainCard>
           </Grid>
-          {/* <Grid item xs={12} lg={6}>
-            <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? []} readOnly />
-          </Grid> */}
           <Grid item xs={12} lg={12}>
-            <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? []} />
+            <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? {}} />
           </Grid>
         </Grid>
       </Page>

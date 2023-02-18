@@ -61,9 +61,11 @@ const VerifikasiP3KEPage = () => {
   // const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
   const fetchKeluarga = useQuery(
     ['keluarga', pageSize, page],
-    () => getKeluarga({ kelurahanId: profil.KelurahanId, desilKesejahteraan: '1', pagerow: pageSize, halaman: page }),
+    () => getKeluarga({ kelurahanId: profil.kelurahanId, desilKesejahteraan: '1', pagerow: pageSize, halaman: page }),
     { keepPreviousData: true }
   );
+
+  console.log(fetchKeluarga.data);
 
   const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
 
@@ -179,8 +181,8 @@ const VerifikasiP3KEPage = () => {
 
           {!fetchKeluarga.isLoading && (
             <Grid container spacing={gridSpacing}>
-              <Grid item xs={12}>
-                {user.role === 'mahasiswa' && (
+              {user.role === 'admin' && (
+                <Grid item xs={12}>
                   <SubCard title="Filter">
                     <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
                       <Grid item xs={12} lg={4}>
@@ -261,8 +263,8 @@ const VerifikasiP3KEPage = () => {
                       </Grid>
                     </Grid>
                   </SubCard>
-                )}
-              </Grid>
+                </Grid>
+              )}
               <Grid item xs={12}>
                 <TextField
                   InputProps={{
