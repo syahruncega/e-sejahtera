@@ -26,6 +26,10 @@ import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
 import ConfirmDialog from 'components/dialog/ConfirmDialog';
 import ConfirmVerifikasiDialog from 'components/dialog/ConfirmVerifikasiDialog';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createIndividuVerifikasi, updateIndividuVerfikasi } from 'store/slices/individu-verifikasi';
+import { updateIndividu } from 'store/slices/individu';
+import { useRouter } from 'next/router';
 
 const UpdateChip = () => (
   <Chip
@@ -37,14 +41,21 @@ const UpdateChip = () => (
 );
 
 const validationSchema = yup.object({
+  id: yup.number().required('ID wajib diisi').typeError('ID harus berupa angka'),
+  idKeluarga: yup.string().required('ID Keluarga wajib diisi'),
+  provinsiId: yup.string().required('Provinsi ID wajib diisi'),
+  kabupatenKotaId: yup.string().required('Kabupaten Kota ID wajib diisi'),
+  kecamatanId: yup.string().required('Kecamatan ID wajib diisi'),
+  kelurahanId: yup.string().required('Kelurahan ID wajib diisi'),
   desilKesejahteraan: yup.string().required('Desil kesejahteraan wajib diisi'),
+  alamat: yup.string().required('Alamat wajib diisi'),
+  idIndividu: yup.string().required('ID Individu wajib diisi'),
   nama: yup.string().required('Kepala keluarga wajib diisi'),
   nik: yup.string().required('NIK wajib diisi'),
-  alamat: yup.string().required('Alamat wajib diisi'),
   padanDukcapil: yup.string().required('Padan Dukcapil wajib diisi'),
   jenisKelamin: yup.string().required('Jenis Kelamin wajib diisi'),
-  tanggalLahir: yup.date().required('Tanggal Lahir wajib diisi'),
   hubungan: yup.string().required('Hubungan dengan kepala keluarga wajib diisi'),
+  tanggalLahir: yup.date().required('Tanggal Lahir wajib diisi'),
   statusKawin: yup.string().required('Status Kawin wajib diisi'),
   pekerjaan: yup.string().required('Pekerjaan wajib diisi'),
   pendidikan: yup.string().required('Pendidikan wajib diisi'),
@@ -53,36 +64,85 @@ const validationSchema = yup.object({
   penerimaBST: yup.string().required('Penerima Bantuan Sosial Tunai (BST) wajib diisi'),
   penerimaPKH: yup.string().required('Penerima Program Keluarga Harapan (PKH) wajib diisi'),
   penerimaSembako: yup.string().required('Penerima Bantuan Sembako wajib diisi'),
-  statusResponden: yup.mixed().oneOf(['dapatDiverifikasi', 'tidakDapatDitemui', 'meninggalDunia']),
-  penerimaBantuanLainnya: yup.string().required('Penerima bantuan lainnya wajib diisi')
+  penerimaLainnya: yup.string().nullable().optional(),
+  statusResponden: yup.mixed().oneOf(['Dapat Diverifikasi', 'Tidak Dapat Ditemui', 'Meninggal Dunia']),
+  userId: yup.number().required('User ID wajib diisi').typeError('User ID harus berupa angka'),
+  mahasiswaId: yup.number().required('Mahasiswa ID wajib diisi').typeError('Mahasiswa ID harus berupa angka')
 });
 
-const FormVerifikasiIndividu = ({ isEdit, initialData }) => {
+const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const queryCreateIndividuVerifikasi = useMutation({
+    mutationFn: (newIndividuVerifikasi) => {
+      updateIndividu(initialData.id, { ...initialData, statusVerifikasi: 1 });
+      createIndividuVerifikasi(newIndividuVerifikasi);
+    },
+    onSuccess: async (newIndividuVerifikasi) => {
+      // queryClient.invalidateQueries(['individuById']);
+      await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });
+    }
+  });
+
+  const queryUpdateIndividuVerifikasi = useMutation({
+    mutationFn: (newIndividuVerifikasi) => updateIndividuVerfikasi(initialData.id, newIndividuVerifikasi),
+    onSuccess: async (newIndividuVerifikasi) => {
+      // queryClient.invalidateQueries(['individuById']);
+      await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });
+    }
+  });
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
+      id: initialData?.id,
+      idKeluarga: initialData?.idKeluarga,
+      provinsiId: initialData?.provinsiId,
+      kabupatenKotaId: initialData?.kabupatenKotaId,
+      kecamatanId: initialData?.kecamatanId,
+      kelurahanId: initialData.kelurahanId,
       desilKesejahteraan: initialData?.desilKesejahteraan ?? '1',
-      nama: initialData?.nama ?? '',
-      nik: initialData?.nik ?? '',
-      alamat: initialData?.alamat ?? '',
-      padanDukcapil: initialData?.padanDukcapil ?? 'Ya',
-      jenisKelamin: initialData?.jenisKelamin ?? 'Laki-laki',
-      tanggalLahir: initialData?.tanggalLahir ? new Date(initialData.tanggalLahir) : new Date(),
-      pekerjaan: initialData?.pekerjaan ?? 'Tidak/Belum Bekerja',
-      pendidikan: initialData?.pendidikan ?? 'Tidak/Belum Sekolah',
-      hubungan: initialData?.hubungan ?? 'Anak',
-      statusKawin: initialData?.statusKawin ?? 'Belum Kawin',
-      penerimaBPNT: initialData?.penerimaBPNT ?? 'Tidak',
-      penerimaBPUM: initialData?.penerimaBPUM ?? 'Tidak',
-      penerimaBST: initialData?.penerimaBST ?? 'Tidak',
-      penerimaPKH: initialData?.penerimaPKH ?? 'Tidak',
-      penerimaSembako: initialData?.penerimaSembako ?? 'Tidak',
-      statusResponden: 'dapatDiverifikasi',
-      penerimaBantuanLainnya: ''
+      idIndividu: initialData?.idIndividu,
+      nama: (isEdit ? individu?.nama : initialData?.nama) ?? '',
+      nik: (isEdit ? individu?.nik : initialData?.nik) ?? '',
+      alamat: (isEdit ? individu?.alamat : initialData?.alamat) ?? '',
+      padanDukcapil: (isEdit ? individu?.padanDukcapil : initialData?.padanDukcapil) ?? 'Ya',
+      jenisKelamin: (isEdit ? individu?.jenisKelamin : initialData?.jenisKelamin) ?? 'Laki-laki',
+      tanggalLahir: (isEdit ? new Date(individu?.tanggalLahir) : new Date(initialData?.tanggalLahir)) ?? new Date(),
+      pekerjaan: (isEdit ? individu?.pekerjaan : initialData?.pekerjaan) ?? 'Tidak/Belum Bekerja',
+      pendidikan: (isEdit ? individu?.pendidikan : initialData?.pendidikan) ?? 'Tidak/Belum Sekolah',
+      hubungan: (isEdit ? individu?.hubungan : initialData?.hubungan) ?? 'Anak',
+      statusKawin: (isEdit ? individu?.statusKawin : initialData?.statusKawin) ?? 'Belum Kawin',
+      penerimaBPNT: (isEdit ? individu?.penerimaBPNT : initialData?.penerimaBPNT) ?? 'Tidak',
+      penerimaBPUM: (isEdit ? individu?.penerimaBPUM : initialData?.penerimaBPUM) ?? 'Tidak',
+      penerimaBST: (isEdit ? individu?.penerimaBST : initialData?.penerimaBST) ?? 'Tidak',
+      penerimaPKH: (isEdit ? individu?.penerimaPKH : initialData?.penerimaPKH) ?? 'Tidak',
+      penerimaSembako: (isEdit ? individu?.penerimaSembako : initialData?.penerimaSembako) ?? 'Tidak',
+      statusResponden: 'Dapat Diverifikasi',
+      penerimaLainnya: individu?.penerimaLainnya ?? '',
+      userId: 7,
+      mahasiswaId: 2,
+      kategoriUsia: '6 Tahun'
     },
     validationSchema,
     onSubmit: (values) => {
-      toast.success('Data berhasil diverifikasi');
+      const data = {
+        ...values,
+        penerimaLainnya: values.penerimaLainnya || '-',
+        tanggalLahir: dayjs(new Date(values.tanggalLahir)).format('MM/DD/YYYY')
+      };
+      toast.promise(
+        isEdit || initialData.statusResponden === 1
+          ? queryUpdateIndividuVerifikasi.mutateAsync(data)
+          : queryCreateIndividuVerifikasi.mutateAsync(data),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Data Individu berhasil ${isEdit ? 'diubah' : 'diverifikasi'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -97,36 +157,69 @@ const FormVerifikasiIndividu = ({ isEdit, initialData }) => {
   return (
     <>
       <MainCard>
-        <form onSubmit={formik.handleSubmit}>
+        <form>
           <Grid container spacing={3}>
             <Grid item lg={12} xs={12}>
               <SubCard title="Status Responden">
-                <FormControl>
-                  <RadioGroup row aria-labelledby="statusResponden" value={formik.values.statusResponden} onChange={formik.handleChange}>
-                    <FormControlLabel name="statusResponden" value="dapatDiverifikasi" control={<Radio />} label="Dapat Diverifikasi" />
-                    <FormControlLabel name="statusResponden" value="tidakDapatDitemui" control={<Radio />} label="Tidak Dapat Temui" />
-                    <FormControlLabel name="statusResponden" value="meninggalDunia" control={<Radio />} label="Meninggal Dunia" />
-                  </RadioGroup>
-                </FormControl>
-                {formik.values.statusResponden !== 'dapatDiverifikasi' && <Button variant="contained">Verifikasi</Button>}
+                <Grid container spacing={2} direction="column">
+                  <Grid item>
+                    <FormControl>
+                      <RadioGroup
+                        row
+                        aria-labelledby="statusResponden"
+                        value={formik.values.statusResponden}
+                        onChange={formik.handleChange}
+                      >
+                        <FormControlLabel
+                          name="statusResponden"
+                          value="Dapat Diverifikasi"
+                          control={<Radio />}
+                          label="Dapat Diverifikasi"
+                        />
+                        <FormControlLabel
+                          name="statusResponden"
+                          value="Tidak Dapat Ditemui"
+                          control={<Radio />}
+                          label="Tidak Dapat Temui"
+                        />
+                        <FormControlLabel name="statusResponden" value="Meninggal Dunia" control={<Radio />} label="Meninggal Dunia" />
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                  {formik.values.statusResponden !== 'Dapat Diverifikasi' && (
+                    <Grid item>
+                      <ConfirmVerifikasiDialog
+                        handleFunc={formik.handleSubmit}
+                        title="Verifikasi Individu"
+                        isLoading={queryCreateIndividuVerifikasi.isLoading || queryUpdateIndividuVerifikasi.isLoading}
+                      />
+                    </Grid>
+                  )}
+                </Grid>
               </SubCard>
             </Grid>
             <Grid item lg={12} xs={12} sx={{ backdropFilter: 'blur(6px)' }}>
-              {formik.values.statusResponden === 'dapatDiverifikasi' && (
+              {formik.values.statusResponden === 'Dapat Diverifikasi' && (
                 <SubCard title="Keluarga/Kepala Keluarga">
                   <FormControl disabled>
-                    <FormLabel sx={labelStyle} id="desil">
+                    <FormLabel sx={labelStyle} id="desilKesejahteraan">
                       Status Kesejahteraan/Desil
                     </FormLabel>
-                    <RadioGroup row aria-labelledby="desil" value={formik.values.desilKesejahteraan} onChange={formik.handleChange}>
-                      <FormControlLabel name="desilKesejahteraan" value="1" control={<Radio />} label="1" />
-                      <FormControlLabel name="desilKesejahteraan" value="2" control={<Radio />} label="2" />
-                      <FormControlLabel name="desilKesejahteraan" value="3" control={<Radio />} label="3" />
-                      <FormControlLabel name="desilKesejahteraan" value="4" control={<Radio />} label="4" />
-                      <FormControlLabel name="desilKesejahteraan" value="4+" control={<Radio />} label="4+" />
-                      <FormControlLabel name="desilKesejahteraan" value="5" control={<Radio />} label="5" />
-                      <FormControlLabel name="desilKesejahteraan" value="6" control={<Radio />} label="6" />
-                      <FormControlLabel name="desilKesejahteraan" value="7" control={<Radio />} label="7" />
+                    <RadioGroup
+                      row
+                      aria-labelledby="desilKesejahteraan"
+                      name="desilKesejahteraan"
+                      value={formik.values.desilKesejahteraan}
+                      onChange={formik.handleChange}
+                    >
+                      <FormControlLabel value="1" control={<Radio />} label="1" />
+                      <FormControlLabel value="2" control={<Radio />} label="2" />
+                      <FormControlLabel value="3" control={<Radio />} label="3" />
+                      <FormControlLabel value="4" control={<Radio />} label="4" />
+                      <FormControlLabel value="4+" control={<Radio />} label="4+" />
+                      <FormControlLabel value="5" control={<Radio />} label="5" />
+                      <FormControlLabel value="6" control={<Radio />} label="6" />
+                      <FormControlLabel value="7" control={<Radio />} label="7" />
                     </RadioGroup>
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
@@ -172,9 +265,15 @@ const FormVerifikasiIndividu = ({ isEdit, initialData }) => {
                     {initialData.padanDukcapil !== formik.values.padanDukcapil && (
                       <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.padanDukcapil}</FormHelperText>
                     )}
-                    <RadioGroup row aria-labelledby="padanDukcapil" value={formik.values.padanDukcapil} onChange={formik.handleChange}>
-                      <FormControlLabel name="padanDukcapil" value="Ya" control={<Radio />} label="Ya" />
-                      <FormControlLabel name="padanDukcapil" value="Tidak" control={<Radio />} label="Tidak" />
+                    <RadioGroup
+                      row
+                      aria-labelledby="padanDukcapil"
+                      name="padanDukcapil"
+                      value={formik.values.padanDukcapil}
+                      onChange={formik.handleChange}
+                    >
+                      <FormControlLabel value="Ya" control={<Radio />} label="Ya" />
+                      <FormControlLabel value="Tidak" control={<Radio />} label="Tidak" />
                     </RadioGroup>
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
@@ -214,6 +313,7 @@ const FormVerifikasiIndividu = ({ isEdit, initialData }) => {
                         onChange={(e) => {
                           formik.setFieldValue('tanggalLahir', new Date(e));
                         }}
+                        inputFormat="DD-MM-YYYY"
                         renderInput={(params) => <TextField {...params} fullWidth name="tanggalLahir" />}
                       />
                     </LocalizationProvider>
@@ -366,24 +466,23 @@ const FormVerifikasiIndividu = ({ isEdit, initialData }) => {
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl fullWidth>
-                    <FormLabel sx={labelStyle} id="penerimaBantuanLainnya">
+                    <FormLabel sx={labelStyle} id="penerimaLainnya">
                       Penerima Bantuan Lainnya
                     </FormLabel>
                     <TextField
                       multiline
                       rows={3}
-                      name="penerimaBantuanLainnya"
-                      value={formik.values.penerimaBantuanLainnya}
+                      name="penerimaLainnya"
+                      value={formik.values.penerimaLainnya}
                       onChange={formik.handleChange}
                     />
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
-                  {/* <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Button variant="contained" type="submit" fullWidth>
-                      Verifikasi
-                    </Button>
-                  </Box> */}
-                  <ConfirmVerifikasiDialog title="Verifikasi Data" />
+                  <ConfirmVerifikasiDialog
+                    handleFunc={formik.handleSubmit}
+                    title="Verifikasi Individu"
+                    isLoading={queryCreateIndividuVerifikasi.isLoading || queryUpdateIndividuVerifikasi.isLoading}
+                  />
                 </SubCard>
               )}
             </Grid>
@@ -396,7 +495,8 @@ const FormVerifikasiIndividu = ({ isEdit, initialData }) => {
 
 FormVerifikasiIndividu.propTypes = {
   isEdit: PropTypes.bool,
-  initialData: PropTypes.any
+  initialData: PropTypes.object,
+  individu: PropTypes.object
 };
 
 export default FormVerifikasiIndividu;

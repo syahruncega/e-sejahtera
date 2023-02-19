@@ -23,7 +23,6 @@ import FilterListIcon from '@mui/icons-material/FilterListTwoTone';
 import PrintIcon from '@mui/icons-material/PrintTwoTone';
 import FileCopyIcon from '@mui/icons-material/FileCopyTwoTone';
 import SearchIcon from '@mui/icons-material/Search';
-import { FormattedMessage } from 'react-intl';
 import { useQuery } from '@tanstack/react-query';
 import { SyncOutlined } from '@mui/icons-material';
 import { Box } from '@mui/system';
@@ -40,7 +39,6 @@ const KegiatanPage = () => {
   const debouncedValue = useDebounce(search, 400);
 
   const fetchKegiatan = useQuery(['kegiatan'], getKegiatan);
-  const fetchProgram = useQuery(['program'], getProgram);
 
   const columns = useMemo(
     () => [
@@ -49,27 +47,16 @@ const KegiatanPage = () => {
         id: 'no',
         header: 'No'
       },
-      // {
-      //   id: 'namaProgram',
-      //   accessorKey: 'program.namaProgram',
-      //   header: 'Nama Program'
-      // },
+      {
+        id: 'id',
+        accessorKey: 'id',
+        header: 'ID Kegiatan'
+      },
       {
         id: 'namaKegiatan',
         accessorKey: 'namaKegiatan',
         header: 'Nama Kegiatan'
       },
-      // {
-      //   id: 'indikatorKinerjaKegiata ',
-      //   accessorKey: 'indikatorKinerjaKegiatan',
-      //   header: 'Indikator Kinerja'
-      // },
-      // {
-      //   id: 'paguKegiatan',
-      //   accessorKey: 'paguKegiatan',
-      //   accessorFn: (row) => `Rp${String(row.paguKegiatan).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`,
-      //   header: 'Pagu'
-      // },
       {
         id: 'aksi',
         header: 'Aksi',
@@ -79,19 +66,14 @@ const KegiatanPage = () => {
           }
         }) => (
           <Box sx={{ display: 'flex' }}>
-            {/* <Tooltip title="Update Pagu">
-              <IconButton onClick={() => {}} size="medium">
-                <SyncOutlined fontSize="small" aria-controls="menu-popular-card-1" aria-haspopup="true" sx={{ color: 'grey.500' }} />
-              </IconButton>
-            </Tooltip> */}
-            <FormKegiatan isEdit kegiatan={data} dataProgram={fetchProgram.data} />
+            <FormKegiatan isEdit kegiatan={data} />
             <DeleteDialog id={data.id} deleteFunc={deleteKegiatan} mutationKey="kegiatan" />
           </Box>
         )
       }
     ],
 
-    [fetchProgram.data]
+    []
   );
 
   const pageProps = {
@@ -128,45 +110,43 @@ const KegiatanPage = () => {
 
         {!fetchKegiatan.isLoading && (
           <>
-            <CardContent>
-              <Grid container justifyContent="space-between" alignItems="center" spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <SearchIcon fontSize="small" />
-                        </InputAdornment>
-                      )
-                    }}
-                    onChange={(e) => setSearch(e.target.value)}
-                    placeholder="Cari Kegiatan"
-                    value={search}
-                    size="small"
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                  <Tooltip title="Copy">
-                    <IconButton size="large">
-                      <FileCopyIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Print">
-                    <IconButton size="large">
-                      <PrintIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Filter">
-                    <IconButton size="large">
-                      <FilterListIcon />
-                    </IconButton>
-                  </Tooltip>
-
-                  {/* product add & dialog */}
-                  <FormKegiatan dataProgram={fetchProgram.data} />
-                </Grid>
+            <Grid container justifyContent="space-between" alignItems="center" spacing={2} mb={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon fontSize="small" />
+                      </InputAdornment>
+                    )
+                  }}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Cari Kegiatan"
+                  value={search}
+                  size="small"
+                />
               </Grid>
-            </CardContent>
+              <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                <Tooltip title="Copy">
+                  <IconButton size="large">
+                    <FileCopyIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Print">
+                  <IconButton size="large">
+                    <PrintIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Filter">
+                  <IconButton size="large">
+                    <FilterListIcon />
+                  </IconButton>
+                </Tooltip>
+
+                {/* Create Kegiatan Form */}
+                <FormKegiatan />
+              </Grid>
+            </Grid>
 
             {/* table */}
 

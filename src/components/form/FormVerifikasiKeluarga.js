@@ -25,6 +25,11 @@ import { Box } from '@mui/system';
 import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
 import ConfirmVerifikasiDialog from 'components/dialog/ConfirmVerifikasiDialog';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { updateIndividu } from 'store/slices/individu';
+import { createKeluargaVerifikasi, updateKeluargaVerfikasi } from 'store/slices/keluarga-verifikasi';
+import { updateKeluarga } from 'store/slices/keluarga';
 
 const UpdateChip = () => (
   <Chip
@@ -36,10 +41,17 @@ const UpdateChip = () => (
 );
 
 const validationSchema = yup.object({
+  id: yup.number().required('ID Wajib diisi').typeError('ID harus berupa angka'),
+  idKeluarga: yup.string().required('ID Keluarga Wajib diisi'),
+  provinsiId: yup.string().required('Provinsi ID wajib diisi'),
+  kabupatenKotaId: yup.string().required('Kabupaten Kota ID wajib diisi'),
+  kecamatanId: yup.string().required('Kecamatan ID wajib diisi'),
+  kelurahanId: yup.string().required('Kelurahan ID wajib diisi'),
   desilKesejahteraan: yup.string().required('Desil kesejahteraan wajib diisi'),
   kepalaKeluarga: yup.string().required('Kepala keluarga wajib diisi'),
   nik: yup.string().required('NIK wajib diisi'),
   alamat: yup.string().required('Alamat wajib diisi'),
+  padanDukcapil: yup.string().required('Padan Dukcapil wajib diisi'),
   jenisKelamin: yup.string().required('Jenis Kelamin wajib diisi'),
   tanggalLahir: yup.date().required('Tanggal Lahir wajib diisi'),
   pekerjaan: yup.string().required('Pekerjaan wajib diisi'),
@@ -58,42 +70,90 @@ const validationSchema = yup.object({
   penerimaBST: yup.string().required('Penerima Bantuan Sosial Tunai (BST) wajib diisi'),
   penerimaPKH: yup.string().required('Penerima Program Keluarga Harapan (PKH) wajib diisi'),
   penerimaSembako: yup.string().required('Penerima Bantuan Sembako wajib diisi'),
-  statusResponden: yup.mixed().oneOf(['dapatDiverifikasi', 'tidakDapatDitemui', 'meninggalDunia']),
-  penerimaBantuanLainnya: yup.string().required('Penerima bantuan lainnya wajib diisi')
+  statusResponden: yup.mixed().oneOf(['Dapat Diverifikasi', 'Tidak Dapat Ditemui', 'Meninggal Dunia']),
+  penerimaLainnya: yup.string().nullable().optional(),
+  userId: yup.number().required('User ID wajib diisi').typeError('User ID harus berupa angka'),
+  mahasiswaId: yup.number().required('Mahasiswa ID wajib diisi').typeError('Mahasiswa ID harus berupa angka')
 });
 
-const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
+const FormVerifikasiKeluarga = ({ isEdit, initialData, keluarga }) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+
+  const queryCreateKeluargaVerifikasi = useMutation({
+    mutationFn: (newKeluargaVerifikasi) => {
+      updateKeluarga(initialData.id, { ...initialData, statusVerifikasi: 1 });
+      createKeluargaVerifikasi(newKeluargaVerifikasi);
+    },
+    onSuccess: async (newKeluargaVerifikasi) => {
+      // queryClient.invalidateQueries(['individuById']);
+      await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });
+    }
+  });
+
+  const queryUpdateKeluargaVerifikasi = useMutation({
+    mutationFn: (newKeluargaVerifikasi) => updateKeluargaVerfikasi(initialData.id, newKeluargaVerifikasi),
+    onSuccess: async (newKeluargaVerifikasi) => {
+      // queryClient.invalidateQueries(['inidividuById']);
+      await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });
+    }
+  });
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      desilKesejahteraan: initialData?.desilKesejahteraan ?? '1',
+      id: initialData?.id,
+      idKeluarga: initialData?.idKeluarga,
+      provinsiId: initialData?.provinsiId,
+      kabupatenKotaId: initialData?.kabupatenKotaId,
+      kecamatanId: initialData?.kecamatanId,
+      kelurahanId: initialData?.kelurahanId,
+      desilKesejahteraan: initialData?.desilKesejahteraan ?? '',
       kepalaKeluarga: initialData?.kepalaKeluarga ?? '',
-      nik: initialData?.nik ?? '',
-      alamat: initialData?.alamat ?? '',
-      jenisKelamin: initialData?.jenisKelamin ?? 'Laki-laki',
-      tanggalLahir: initialData?.tanggalLahir ? new Date(initialData.tanggalLahir) : new Date(),
-      pekerjaan: initialData?.pekerjaan ?? 'Tidak/Belum Bekerja',
-      pendidikan: initialData?.pendidikan ?? 'Tidak/Belum Sekolah',
-      simpanan: initialData?.simpanan ?? 'Tidak',
-      kepemilikanRumah: initialData?.kepemilikanRumah ?? 'Lainnya',
-      jenisAtap: initialData?.jenisAtap ?? 'Lainnya',
-      jenisDinding: initialData?.jenisDinding ?? 'Lainnya',
-      jenisLantai: initialData?.jenisLantai ?? 'Lainnya',
-      sumberPenerangan: initialData?.sumberPenerangan ?? 'Non-Listrik',
-      sumberAirMinum: initialData?.sumberAirMinum ?? 'Lainnya',
-      fasilitasBuangAirBesar: initialData?.fasilitasBuangAirBesar ?? 'Lainnya',
-      bahanBakarMemasak: initialData?.bahanBakarMemasak ?? 'Lainnya',
-      penerimaBPNT: initialData?.penerimaBPNT ?? 'Tidak',
-      penerimaBPUM: initialData?.penerimaBPUM ?? 'Tidak',
-      penerimaBST: initialData?.penerimaBST ?? 'Tidak',
-      penerimaPKH: initialData?.penerimaPKH ?? 'Tidak',
-      penerimaSembako: initialData?.penerimaSembako ?? 'Tidak',
-      statusResponden: 'dapatDiverifikasi',
-      penerimaBantuanLainnya: ''
+      nik: (isEdit ? keluarga?.nik : initialData?.nik) ?? '',
+      alamat: (isEdit ? keluarga?.alamat : initialData?.alamat) ?? '',
+      padanDukcapil: (isEdit ? keluarga?.padanDukcapil : initialData?.padanDukcapil) ?? 'Ya',
+      jenisKelamin: (isEdit ? keluarga?.jenisKelamin : initialData?.jenisKelamin) ?? 'Laki-laki',
+      tanggalLahir: (isEdit ? new Date(keluarga?.tanggalLahir) : new Date(initialData?.tanggalLahir)) ?? new Date(),
+      pekerjaan: (isEdit ? keluarga?.pekerjaan : initialData?.pekerjaan) ?? 'Tidak/Belum Bekerja',
+      pendidikan: (isEdit ? keluarga?.pendidikan : initialData?.pendidikan) ?? 'Tidak/Belum Sekolah',
+      simpanan: (isEdit ? keluarga?.simpanan : initialData?.simpanan) ?? 'Tidak',
+      kepemilikanRumah: (isEdit ? keluarga?.kepemilikanRumah : initialData?.kepemilikanRumah) ?? 'Lainnya',
+      jenisAtap: (isEdit ? keluarga?.jenisAtap : initialData?.jenisAtap) ?? 'Lainnya',
+      jenisDinding: (isEdit ? keluarga?.jenisDinding : initialData?.jenisDinding) ?? 'Lainnya',
+      jenisLantai: (isEdit ? keluarga?.jenisLantai : initialData?.jenisLantai) ?? 'Lainnya',
+      sumberPenerangan: (isEdit ? keluarga?.sumberPenerangan : initialData?.sumberPenerangan) ?? 'Non-Listrik',
+      sumberAirMinum: (isEdit ? keluarga?.sumberAirMinum : initialData?.sumberAirMinum) ?? 'Lainnya',
+      fasilitasBuangAirBesar: (isEdit ? keluarga?.fasilitasBuangAirBesar : initialData?.fasilitasBuangAirBesar) ?? 'Lainnya',
+      bahanBakarMemasak: (isEdit ? keluarga?.bahanBakarMemasak : initialData?.bahanBakarMemasak) ?? 'Lainnya',
+      penerimaBPNT: (isEdit ? keluarga?.penerimaBPNT : initialData?.penerimaBPNT) ?? 'Tidak',
+      penerimaBPUM: (isEdit ? keluarga?.penerimaBPUM : initialData?.penerimaBPUM) ?? 'Tidak',
+      penerimaBST: (isEdit ? keluarga?.penerimaBST : initialData?.penerimaBST) ?? 'Tidak',
+      penerimaPKH: (isEdit ? keluarga?.penerimaPKH : initialData?.penerimaPKH) ?? 'Tidak',
+      penerimaSembako: (isEdit ? keluarga?.penerimaSembako : initialData?.penerimaSembako) ?? 'Tidak',
+      statusResponden: 'Dapat Diverifikasi',
+      penerimaLainnya: keluarga?.penerimaLainnya ?? '',
+      userId: 7,
+      mahasiswaId: 2
     },
     validationSchema,
-    onSubmit: (values) => {
-      toast.success('Data berhasil diverifikasi');
+    onSubmit: async (values) => {
+      const data = {
+        ...values,
+        penerimaLainnya: values.penerimaLainnya || '-',
+        tanggalLahir: dayjs(new Date(values.tanggalLahir)).format('MM/DD/YYYY')
+      };
+      toast.promise(
+        isEdit || initialData.statusResponden === 1
+          ? queryUpdateKeluargaVerifikasi.mutateAsync(data)
+          : queryCreateKeluargaVerifikasi.mutateAsync(data),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Data Individu berhasil ${isEdit ? 'diubah' : 'diverifikasi'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -108,22 +168,49 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
   return (
     <>
       <MainCard>
-        <form onSubmit={formik.handleSubmit}>
+        <form>
           <Grid container spacing={3}>
             <Grid item lg={12} xs={12}>
               <SubCard title="Status Responden">
-                <FormControl>
-                  <RadioGroup row aria-labelledby="statusResponden" value={formik.values.statusResponden} onChange={formik.handleChange}>
-                    <FormControlLabel name="statusResponden" value="dapatDiverifikasi" control={<Radio />} label="Dapat Diverifikasi" />
-                    <FormControlLabel name="statusResponden" value="tidakDapatDitemui" control={<Radio />} label="Tidak Dapat Temui" />
-                    <FormControlLabel name="statusResponden" value="meninggalDunia" control={<Radio />} label="Meninggal Dunia" />
-                  </RadioGroup>
-                </FormControl>
-                {formik.values.statusResponden !== 'dapatDiverifikasi' && <Button variant="contained">Verifikasi</Button>}
+                <Grid container spacing={2} direction="column">
+                  <Grid item>
+                    <FormControl>
+                      <RadioGroup
+                        row
+                        aria-labelledby="statusResponden"
+                        value={formik.values.statusResponden}
+                        onChange={formik.handleChange}
+                      >
+                        <FormControlLabel
+                          name="statusResponden"
+                          value="Dapat Diverifikasi"
+                          control={<Radio />}
+                          label="Dapat Diverifikasi"
+                        />
+                        <FormControlLabel
+                          name="statusResponden"
+                          value="Tidak Dapat Ditemui"
+                          control={<Radio />}
+                          label="Tidak Dapat Temui"
+                        />
+                        <FormControlLabel name="statusResponden" value="Meninggal Dunia" control={<Radio />} label="Meninggal Dunia" />
+                      </RadioGroup>
+                    </FormControl>
+                  </Grid>
+                  {formik.values.statusResponden !== 'Dapat Diverifikasi' && (
+                    <Grid item>
+                      <ConfirmVerifikasiDialog
+                        handleFunc={formik.handleSubmit}
+                        title="Verifikasi Keluarga"
+                        isLoading={queryCreateKeluargaVerifikasi.isLoading || queryUpdateKeluargaVerifikasi.isLoading}
+                      />
+                    </Grid>
+                  )}
+                </Grid>
               </SubCard>
             </Grid>
             <Grid item lg={12} xs={12} sx={{ backdropFilter: 'blur(6px)' }}>
-              {formik.values.statusResponden === 'dapatDiverifikasi' && (
+              {formik.values.statusResponden === 'Dapat Diverifikasi' && (
                 <SubCard title="Keluarga/Kepala Keluarga">
                   <FormControl disabled>
                     <FormLabel sx={labelStyle} id="desil">
@@ -181,6 +268,26 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
+                    <FormLabel sx={labelStyle} id="padanDukcapil">
+                      Padan Dukcapil
+                      {initialData.padanDukcapil !== formik.values.padanDukcapil && <UpdateChip />}
+                    </FormLabel>
+                    {initialData.padanDukcapil !== formik.values.padanDukcapil && (
+                      <FormHelperText sx={{ margin: 0 }}>Sebelumnya: {initialData.padanDukcapil}</FormHelperText>
+                    )}
+                    <RadioGroup
+                      row
+                      aria-labelledby="padanDukcapil"
+                      name="padanDukcapil"
+                      value={formik.values.padanDukcapil}
+                      onChange={formik.handleChange}
+                    >
+                      <FormControlLabel value="Ya" control={<Radio />} label="Ya" />
+                      <FormControlLabel value="Tidak" control={<Radio />} label="Tidak" />
+                    </RadioGroup>
+                  </FormControl>
+                  <Divider sx={{ marginY: 2 }} />
+                  <FormControl>
                     <FormLabel sx={labelStyle} id="jenisKelamin">
                       Jenis Kelamin
                       {initialData.jenisKelamin !== formik.values.jenisKelamin && <UpdateChip />}
@@ -216,22 +323,12 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                         onChange={(e) => {
                           formik.setFieldValue('tanggalLahir', new Date(e));
                         }}
+                        inputFormat="DD-MM-YYYY"
                         renderInput={(params) => <TextField {...params} fullWidth name="tanggalLahir" />}
                       />
                     </LocalizationProvider>
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
-                  {/* <FormControl>
-                  <FormLabel sx={labelStyle} id="statusKawin">
-                    Status Kawin
-                  </FormLabel>
-                  <RadioGroup row aria-labelledby="statusKawin" value={formik.values.tanggalLahir} onChange={formik.handleChange}>
-                    <FormControlLabel value="Belum Kawin" control={<Radio />} label="Belum Kawin" />
-                    <FormControlLabel value="Kawin" control={<Radio />} label="Kawin" />
-                    <FormControlLabel value="Cerai Hidup" control={<Radio />} label="Cerai Hidup" />
-                    <FormControlLabel value="Cerai Mati" control={<Radio />} label="Cerai Mati" />
-                  </RadioGroup>
-                </FormControl> */}
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl>
                     <FormLabel sx={labelStyle} id="pekerjaan">
@@ -587,19 +684,23 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
                   <FormControl fullWidth>
-                    <FormLabel sx={labelStyle} id="penerimaBantuanLainnya">
+                    <FormLabel sx={labelStyle} id="penerimaLainnya">
                       Penerima Bantuan Lainnya
                     </FormLabel>
                     <TextField
                       multiline
                       rows={3}
-                      name="penerimaBantuanLainnya"
-                      value={formik.values.penerimaBantuanLainnya}
+                      name="penerimaLainnya"
+                      value={formik.values.penerimaLainnya}
                       onChange={formik.handleChange}
                     />
                   </FormControl>
                   <Divider sx={{ marginY: 2 }} />
-                  <ConfirmVerifikasiDialog title="Verifikasi Data" />
+                  <ConfirmVerifikasiDialog
+                    title="Verifikasi Keluarga"
+                    handleFunc={formik.handleSubmit}
+                    isLoading={queryCreateKeluargaVerifikasi.isLoading || queryUpdateKeluargaVerifikasi.isLoading}
+                  />
                 </SubCard>
               )}
             </Grid>
@@ -612,7 +713,8 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData }) => {
 
 FormVerifikasiKeluarga.propTypes = {
   isEdit: PropTypes.bool,
-  initialData: PropTypes.any
+  initialData: PropTypes.object,
+  keluarga: PropTypes.object
 };
 
 export default FormVerifikasiKeluarga;

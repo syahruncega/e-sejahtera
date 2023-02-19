@@ -4,7 +4,6 @@ const ENDPOINT = 'monev';
 
 // export async function getMonev({ signal, params }) {
 //   const response = await axiosService.get(`/${ENDPOINT}/`, { signal, params });
-//   console.log(response.data);
 //   return response.data;
 // }
 

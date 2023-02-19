@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 
 // project imports
 import Loader from 'components/ui-component/Loader';
+import useAuth from 'hooks/useAuth';
 
 // ==============================|| AUTH GUARD ||============================== //
 
@@ -11,18 +12,24 @@ import Loader from 'components/ui-component/Loader';
  * Authentication guard for routes
  * @param {PropTypes.node} children children element/node
  */
-const AuthGuard = ({ children }) =>
-  // const router = useRouter();
-  // useEffect(() => {
-  //   if (!isLoggedIn) {
-  //     router.push('/login');
-  //   }
-  //   // eslint-disable-next-line
-  // }, [isLoggedIn]);
+const AuthGuard = ({ children }) => {
+  const { isLoggedIn, profil } = useAuth();
+  const router = useRouter();
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/p3ke/login');
+    }
+    if (!profil) {
+      router.push('/p3ke/biodata');
+    }
+    // eslint-disable-next-line
+  }, [isLoggedIn, profil]);
 
-  // if (!isLoggedIn) return <Loader />;
+  if (!isLoggedIn || !profil) return <Loader />;
 
-  children;
+  return children;
+};
+
 AuthGuard.propTypes = {
   children: PropTypes.node
 };

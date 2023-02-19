@@ -10,7 +10,8 @@ import {
   InputAdornment,
   InputLabel,
   TextField,
-  Tooltip
+  Tooltip,
+  useTheme
 } from '@mui/material';
 
 // project imports
@@ -20,33 +21,31 @@ import MainCard from 'components/ui-component/cards/MainCard';
 
 // assets
 
-import { FormattedMessage } from 'react-intl';
-import { LoadingButton } from '@mui/lab';
-import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getKeluargaByKabupatenKotaId } from 'store/slices/keluarga';
+// import { getKeluargaByKabupatenKotaId } from 'store/slices/keluarga';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
-import { gridSpacing } from 'store/constant';
-import { PublishedWithChangesTwoTone } from '@mui/icons-material';
+import { AddCircleOutlineTwoTone, CheckCircleOutlineTwoTone } from '@mui/icons-material';
 import Link from 'Link';
-import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import { useRouter } from 'next/router';
 import { getIndividuByIdKeluarga } from 'store/slices/individu';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import dayjs from 'dayjs';
+import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
+import useGuard from 'hooks/useGuard';
 
-const KeluargaPage = () => {
+const AnggotaKeluargaPage = () => {
+  useGuard(['admin', 'mahasiswa']);
+  const theme = useTheme();
   const router = useRouter();
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchAnggotaKeluarga = useQuery(['kabupatenKota'], () =>
-    getIndividuByIdKeluarga(router.query.kabupatenKotaId, router.query.idKeluarga)
-  );
+  const fetchKeluargaByIdKeluarga = useQuery(['KeluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));
+  const fetchAnggotaKeluarga = useQuery(['AnggotaKeluarga'], () => getIndividuByIdKeluarga(router.query.idKeluarga));
 
   const columns = useMemo(
     () => [
@@ -84,17 +83,31 @@ const KeluargaPage = () => {
           }
         }) => (
           <div className="flex">
-            <Tooltip title="Verifikasi Individu">
-              <IconButton
-                LinkComponent={Link}
-                color="primary"
-                size="medium"
-                aria-label="Ubah"
-                href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/?kabupatenKotaId=${data.kabupatenKotaId}&idKeluarga=${data.idKeluarga}&id=${data.id}`}
-              >
-                <PublishedWithChangesTwoTone fontSize="small" />
-              </IconButton>
-            </Tooltip>
+            {data.statusVerifikasi ? (
+              <Tooltip title="Telah Diverifikasi">
+                <IconButton
+                  LinkComponent={Link}
+                  color="success"
+                  size="medium"
+                  aria-label="Ubah"
+                  href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/update?idKeluarga=${data.idKeluarga}&id=${data.id}`}
+                >
+                  <CheckCircleOutlineTwoTone fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Verifikasi Individu">
+                <IconButton
+                  LinkComponent={Link}
+                  color="primary"
+                  size="medium"
+                  aria-label="Ubah"
+                  href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/individu/create?idKeluarga=${data.idKeluarga}&id=${data.id}`}
+                >
+                  <AddCircleOutlineTwoTone fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            )}
           </div>
         )
       }
@@ -152,20 +165,43 @@ const KeluargaPage = () => {
                     size="small"
                   />
                 </Grid>
-                <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-                  <Button
-                    LinkComponent={Link}
-                    href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga?kabupatenKotaId=${router.query.kabupatenKotaId}&idKeluarga=${router.query.idKeluarga}`}
-                    variant="contained"
-                  >
-                    Verifikasi Keluarga
-                  </Button>
-                </Grid>
+                {fetchKeluargaByIdKeluarga.data?.statusVerifikasi === 0 ? (
+                  <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                    <Button
+                      LinkComponent={Link}
+                      href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga/create?&idKeluarga=${router.query.idKeluarga}`}
+                      variant="contained"
+                      startIcon={<AddCircleOutlineTwoTone />}
+                    >
+                      Verifikasi Keluarga
+                    </Button>
+                  </Grid>
+                ) : (
+                  <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+                    <Button
+                      LinkComponent={Link}
+                      href={`/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga/keluarga/update?&idKeluarga=${router.query.idKeluarga}`}
+                      variant="contained"
+                      startIcon={<CheckCircleOutlineTwoTone />}
+                      sx={{
+                        background: theme.palette.success.dark,
+                        '&:hover': { background: theme.palette.success.main }
+                      }}
+                    >
+                      Ubah Verifikasi Keluarga
+                    </Button>
+                  </Grid>
+                )}
               </Grid>
 
               <SubCard content={false}>
                 {!fetchAnggotaKeluarga.isLoading && (
-                  <AppTable columns={columns} globalFilter={debouncedValue} initialData={fetchAnggotaKeluarga.data || []} />
+                  <AppTable
+                    columns={columns}
+                    globalFilter={debouncedValue}
+                    initialData={fetchAnggotaKeluarga.data || []}
+                    columnVisibility={{ aksi: fetchKeluargaByIdKeluarga.data?.statusVerifikasi || false }}
+                  />
                 )}
               </SubCard>
             </>
@@ -176,8 +212,8 @@ const KeluargaPage = () => {
   );
 };
 
-KeluargaPage.getLayout = function getLayout(page) {
+AnggotaKeluargaPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default KeluargaPage;
+export default AnggotaKeluargaPage;

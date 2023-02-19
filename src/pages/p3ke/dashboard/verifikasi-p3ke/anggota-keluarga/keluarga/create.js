@@ -14,8 +14,10 @@ import { useQuery } from '@tanstack/react-query';
 import FormVerifikasiKeluarga from 'components/form/FormVerifikasiKeluarga';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { getKeluargaByIdKeluarga } from 'store/slices/keluarga';
+import useGuard from 'hooks/useGuard';
 
-const KeluargaPage = () => {
+const KeluargaCreatePage = () => {
+  useGuard(['admin', 'mahasiswa']);
   const router = useRouter();
 
   const fetchKeluargaByIdKeluarga = useQuery(['keluargaByIdKeluarga'], () => getKeluargaByIdKeluarga(router.query.idKeluarga));
@@ -26,7 +28,7 @@ const KeluargaPage = () => {
       { title: 'Verifikasi P3KE', url: '/dashboard/verifikasi-p3ke' },
       {
         title: 'Anggota Keluarga',
-        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?kabupatenKotaId=${router.query.kabupatenKotaId}&idKeluarga=${router.query.idKeluarga}`
+        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${router.query.idKeluarga}`
       },
       { title: 'Keluarga', url: router.asPath }
     ]
@@ -46,11 +48,8 @@ const KeluargaPage = () => {
               </Alert>
             </MainCard>
           </Grid>
-          {/* <Grid item xs={12} lg={6}>
-            <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? []} readOnly />
-          </Grid> */}
           <Grid item xs={12} lg={12}>
-            <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? []} />
+            <FormVerifikasiKeluarga initialData={fetchKeluargaByIdKeluarga.data ?? {}} />
           </Grid>
         </Grid>
       </Page>
@@ -58,8 +57,8 @@ const KeluargaPage = () => {
   );
 };
 
-KeluargaPage.getLayout = function getLayout(page) {
+KeluargaCreatePage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default KeluargaPage;
+export default KeluargaCreatePage;

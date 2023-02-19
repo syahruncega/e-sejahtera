@@ -13,7 +13,6 @@ export async function getDetailLokasiById(id) {
 }
 
 export async function createDetailLokasi(newDetailLokasi) {
-  console.log(newDetailLokasi);
   const response = await axiosService.post(`/${ENDPOINT}`, newDetailLokasi);
   return response.data;
 }

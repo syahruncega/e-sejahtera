@@ -6,11 +6,14 @@ import SubCard from 'components/ui-component/cards/SubCard';
 import AnimateButton from 'components/ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { getKabupatenKota } from 'store/slices/detail-lokasi';
+import { useMutation } from '@tanstack/react-query';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import useAuth from 'hooks/useAuth';
+import { LoadingButton } from '@mui/lab';
+import { updateUser } from 'store/slices/user';
+import { createDosen, updateDosen } from 'store/slices/dosen';
+import { toast } from 'react-hot-toast';
 
 // assets
 const Avatar1 = '/assets/images/users/avatar-1.png';
@@ -21,40 +24,66 @@ const validationSchema = yup.object({
   namaLengkap: yup.string().required('Nama lengkap wajib diisi'),
   email: yup.string().email().required('Email wajib diisi'),
   universitas: yup.string().required('Universitas wajib diisi'),
+  noHp: yup.string().required('No HP wajib diisi')
   //   tanggalLahir: yup.date().required('Tanggal lahir wajib diisi'),
   //   jenisKelamin: yup.string().required('Jenis kelamin wajib diisi'),
-  noHP: yup.string().required('No HP wajib diisi'),
-  nip: yup.string().required('NIP wajib diisi')
+  // nip: yup.string().required('NIP wajib diisi')
 });
 
 const FormProfilDosen = () => {
+  const { user, profil, updateSession } = useAuth();
   const router = useRouter();
-  const queryClient = useQueryClient();
-  // const isEdit = router.pathname !== '/biodata';
+  const isEdit = router.pathname !== '/biodata';
 
-  const [dataKecamatan, setDataKecamatan] = useState([]);
-  const [dataKelurahan, setDataKelurahan] = useState([]);
-  const [keyKecamatan, setKeyKecamatan] = useState(false);
-  const [keyKelurahan, setKeyKelurahan] = useState(false);
+  const queryCreateDosen = useMutation({
+    mutationFn: (values) => {
+      const { email, noHp, ...rest } = values;
+      const putUser = updateUser(user.id, { email, noHp, role: user.role });
+      const postDosen = createDosen({
+        userId: user.id,
+        ...rest
+      });
+      return Promise.all([putUser, postDosen]);
+    },
+    onSuccess: () => {
+      router.push('/p3ke/dashboard');
+    }
+  });
 
-  const [kabupatenKotaValue, setKabupatenKotaValue] = useState(null);
-  const [kecamatanValue, setKecamatanValue] = useState(null);
-  const [desaKelurahanValue, setDesaKelurahanValue] = useState(null);
-  const [universitasValue, setUniversitasValue] = useState(null);
-
-  const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
+  const queryUpdateDosen = useMutation({
+    mutationFn: (values) => {
+      const { email, noHp, ...rest } = values;
+      const putUser = updateUser(user.id, { email, noHp, role: user.role });
+      const putDosen = updateDosen(profil.id, {
+        userId: user.id,
+        ...rest
+      });
+      return Promise.all([putUser, putDosen]);
+    },
+    onSuccess: async () => {
+      await updateSession();
+    }
+  });
 
   const formik = useFormik({
     validationSchema,
-    // enableReinitialize: true,
+    enableReinitialize: true,
     initialValues: {
-      namaLengkap: 'Fulan',
-      email: 'example@mail.com',
-      //   jenisKelamin: 'Laki-laki',
-      //   tanggalLahir: new Date(),
-      universitas: 'Universitas Tadulako',
-      noHP: '0822-3333-4444',
-      nip: 'F55123000'
+      namaLengkap: profil?.namaLengkap || '',
+      email: user?.email || '',
+      universitas: profil?.universitas || '',
+      noHp: user?.noHp || ''
+    },
+    onSubmit: (values) => {
+      toast.promise(
+        isEdit ? queryUpdateDosen.mutateAsync(values) : queryCreateDosen.mutateAsync(values),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Profil berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -106,34 +135,6 @@ const FormProfilDosen = () => {
                 helperText={formik.touched.email && formik.errors.email}
               />
             </Grid>
-            {/* <Grid item md={6} xs={12}>
-              <FormControl sx={{ display: 'flex' }}>
-                <FormLabel sx={{ display: 'flex', fontSize: '11px' }} id="jenisKelamin">
-                  Jenis Kelamin
-                </FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="jenisKelamin"
-                  name="jenisKelamin"
-                  value={formik.values.jenisKelamin}
-                  onChange={formik.handleChange}
-                >
-                  <FormControlLabel value="Laki-laki" control={<Radio size="small" />} label="Laki-laki" />
-                  <FormControlLabel value="Perempuan" control={<Radio size="small" />} label="Perempuan" />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  value={formik.values.tanggalLahir}
-                  onChange={(e) => {
-                    formik.setFieldValue('tanggalLahir', new Date(e));
-                  }}
-                  renderInput={(params) => <TextField {...params} label="Tanggal Lahir" fullWidth name="tanggalLahir" />}
-                />
-              </LocalizationProvider>
-            </Grid> */}
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
@@ -144,32 +145,8 @@ const FormProfilDosen = () => {
                 error={formik.touched.universitas && Boolean(formik.errors.universitas)}
                 helperText={formik.touched.universitas && formik.errors.universitas}
               />
-              {/* <Autocomplete
-                  disablePortal
-                  disableClearable
-                  name="universitasId"
-                  value={kabupatenKotaValue}
-                  isOptionEqualToValue={(option, value) => option.id === value.id}
-                  getOptionLabel={(option) => option.value}
-                  onChange={(e, value) => {
-                    if (value !== null) {
-                      formik.setFieldValue('universitasId', value.value);
-                    }
-                    setUniversitasValue(value);
-                  }}
-                  options={[{ label: 'Universitas Tadulako', value: 'Universitas Tadulako' }]}
-                  renderInput={(params) => (
-                    <TextField
-                      label="Universitas"
-                      value={formik.values.universitasId}
-                      helperText={formik.touched.universitasId && formik.errors.universitasId}
-                      error={formik.touched.universitasId && Boolean(formik.errors.universitasId)}
-                      {...params}
-                    />
-                  )}
-                /> */}
             </Grid>
-            <Grid item md={6} xs={12}>
+            {/* <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="NIP"
@@ -179,24 +156,28 @@ const FormProfilDosen = () => {
                 error={formik.touched.nip && Boolean(formik.errors.nip)}
                 helperText={formik.touched.nip && formik.errors.nip}
               />
-            </Grid>
+            </Grid> */}
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Nomor HP"
-                name="noHP"
-                value={formik.values.noHP}
+                name="noHp"
+                value={formik.values.noHp}
                 onChange={formik.handleChange}
-                error={formik.touched.noHP && Boolean(formik.errors.noHP)}
-                helperText={formik.touched.noHP && formik.errors.noHP}
+                error={formik.touched.noHp && Boolean(formik.errors.noHp)}
+                helperText={formik.touched.noHp && formik.errors.noHp}
               />
             </Grid>
 
             <Grid item xs={12}>
               <Stack direction="row" display="flex" justifyContent="flex-end">
-                <AnimateButton>
-                  <Button variant="contained">{router.pathname === '/biodata' ? 'Simpan Biodata' : 'Ubah Biodata'}</Button>
-                </AnimateButton>
+                <LoadingButton
+                  loading={queryCreateDosen.isLoading || queryUpdateDosen.isLoading}
+                  onClick={formik.handleSubmit}
+                  variant="contained"
+                >
+                  Simpan
+                </LoadingButton>
               </Stack>
             </Grid>
           </Grid>

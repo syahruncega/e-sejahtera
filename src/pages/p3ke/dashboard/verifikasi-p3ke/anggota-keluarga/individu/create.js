@@ -13,11 +13,13 @@ import MainCard from 'components/ui-component/cards/MainCard';
 
 import { getIndividuById } from 'store/slices/individu';
 import FormVerifikasiIndividu from 'components/form/FormVerifikasiIndividu';
+import useGuard from 'hooks/useGuard';
 
-const IndividuPage = () => {
+const IndividuCreatePage = () => {
+  useGuard(['admin', 'mahasiswa']);
   const router = useRouter();
 
-  const fetchIndividuById = useQuery(['individuById'], () => getIndividuById(router.query.kabupatenKotaId, router.query.id));
+  const fetchIndividuById = useQuery(['individuById'], () => getIndividuById(router.query.id));
 
   const pageProps = {
     title: 'Review',
@@ -25,7 +27,7 @@ const IndividuPage = () => {
       { title: 'Verifikasi P3KE', url: '/p3ke/dashboard/verifikasi-p3ke' },
       {
         title: 'Anggota Keluarga',
-        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?kabupatenKotaId=${router.query.kabupatenKotaId}&idKeluarga=${router.query.idKeluarga}`
+        url: `/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga?idKeluarga=${router.query.idKeluarga}`
       },
       { title: 'Individu', url: router.asPath }
     ]
@@ -49,7 +51,7 @@ const IndividuPage = () => {
             <FormVerifikasiKeluarga initialData={fetchIndividuById.data ?? []} readOnly />
           </Grid> */}
           <Grid item xs={12} lg={12}>
-            <FormVerifikasiIndividu initialData={fetchIndividuById.data ?? []} />
+            <FormVerifikasiIndividu initialData={fetchIndividuById.data ?? {}} />
           </Grid>
         </Grid>
       </Page>
@@ -57,8 +59,8 @@ const IndividuPage = () => {
   );
 };
 
-IndividuPage.getLayout = function getLayout(page) {
+IndividuCreatePage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default IndividuPage;
+export default IndividuCreatePage;

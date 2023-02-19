@@ -7,6 +7,7 @@ import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import AppBar from 'components/ui-component/extended/AppBar';
 import BiodataCard from 'components/BiodataCard';
+import ProfileGuard from 'utils/route-guard/ProfileGuard';
 
 // assets
 const headerBackground = '/assets/images/header-bg.jpg';
@@ -35,7 +36,11 @@ const BiodataPage = () => (
 );
 
 BiodataPage.getLayout = function getLayout(page) {
-  return <Layout variant={LAYOUT.minimal}>{page}</Layout>;
+  return (
+    <Layout variant={LAYOUT.minimal}>
+      <ProfileGuard>{page}</ProfileGuard>
+    </Layout>
+  );
 };
 
 export default BiodataPage;

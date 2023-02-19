@@ -26,8 +26,8 @@ const DonggalaPage = () => {
   const pageProps = {
     title: 'Kabupaten Donggala',
     navigation: [
-      { title: <FormattedMessage id="statistik" defaultMessage="Statistik" />, url: '/dashboard' },
-      { title: <FormattedMessage id="donggala" defaultMessage="Donggala" />, url: '/dashboard/stats/donggala' }
+      { title: <FormattedMessage id="statistik" defaultMessage="Statistik" />, url: '/p3ke/dashboard' },
+      { title: <FormattedMessage id="donggala" defaultMessage="Donggala" />, url: '/p3ke/dashboard/stats/donggala' }
     ]
   };
 

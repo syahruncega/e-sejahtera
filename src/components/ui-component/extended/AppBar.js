@@ -27,6 +27,7 @@ import Logo from '../Logo';
 // assets
 import { IconBook, IconCreditCard, IconDashboard, IconHome2 } from '@tabler/icons';
 import MenuIcon from '@mui/icons-material/Menu';
+import useAuth from 'hooks/useAuth';
 
 function ElevationScroll({ children, window }) {
   const theme = useTheme();
@@ -56,6 +57,7 @@ ElevationScroll.propTypes = {
 // ==============================|| MINIMAL LAYOUT APP BAR ||============================== //
 
 const AppBar = ({ ...others }) => {
+  const { logout } = useAuth();
   const [drawerToggle, setDrawerToggle] = React.useState(false);
 
   /** Method called on multiple components with different event types */
@@ -84,13 +86,7 @@ const AppBar = ({ ...others }) => {
               <Button color="inherit" component={Link} href="https://codedthemes.gitbook.io/berry" target="_blank">
                 Documentation
               </Button> */}
-              <Button
-                component={Link}
-                href="https://material-ui.com/store/items/berry-react-material-admin/"
-                disableElevation
-                variant="contained"
-                color="secondary"
-              >
+              <Button color="error" onClick={logout}>
                 Logout
               </Button>
             </Stack>

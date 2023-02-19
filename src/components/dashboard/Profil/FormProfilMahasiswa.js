@@ -9,6 +9,7 @@ import {
   Grid,
   Radio,
   RadioGroup,
+  Stack,
   TextField,
   Typography
 } from '@mui/material';
@@ -20,11 +21,18 @@ import { gridSpacing } from 'store/constant';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
+import useAuth from 'hooks/useAuth';
+import { updateUser } from 'store/slices/user';
+import { createMahasiswa, updateMahasiswa } from 'store/slices/mahasiswa';
+import { toast } from 'react-hot-toast';
+import { LoadingButton } from '@mui/lab';
+import dayjs from 'dayjs';
+import axiosService from 'utils/axios';
 
 // assets
 const Avatar1 = '/assets/images/users/avatar-1.png';
@@ -37,17 +45,17 @@ const validationSchema = yup.object({
   universitas: yup.string().required('Universitas wajib diisi'),
   tanggalLahir: yup.date().required('Tanggal lahir wajib diisi'),
   jenisKelamin: yup.string().required('Jenis kelamin wajib diisi'),
-  noHP: yup.string().required('No HP wajib diisi'),
-  stambuk: yup.string().required('Stambuk wajib diisi'),
+  noHp: yup.string().required('No HP wajib diisi'),
+  username: yup.string().required('Stambuk wajib diisi'),
   kabupatenKotaId: yup.string().required('Kabupaten/Kota wajib diisi'),
   kecamatanId: yup.string().required('Kecamatan wajib diisi'),
-  desaKelurahanId: yup.string().required('Desa/Kelurahan wajib diisi')
+  kelurahanId: yup.string().required('Desa/Kelurahan wajib diisi')
 });
 
 const FormProfilMahasiswa = () => {
+  const { user, profil, updateSession } = useAuth();
   const router = useRouter();
-  const queryClient = useQueryClient();
-  // const isEdit = router.pathname !== '/biodata';
+  const isEdit = router.pathname !== '/p3ke/biodata';
 
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
@@ -57,24 +65,84 @@ const FormProfilMahasiswa = () => {
   const [kabupatenKotaValue, setKabupatenKotaValue] = useState(null);
   const [kecamatanValue, setKecamatanValue] = useState(null);
   const [desaKelurahanValue, setDesaKelurahanValue] = useState(null);
-  const [universitasValue, setUniversitasValue] = useState(null);
+  // const [universitasValue, setUniversitasValue] = useState(null);
 
   const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
 
+  useEffect(() => {
+    const getLokasi = async () => {
+      if (isEdit) {
+        const kabupaten = axiosService.get(`/kabupatenkota/${profil?.kabupatenKotaId}`);
+        const kecamatan = axiosService.get(`/kecamatan/${profil?.kecamatanId}`);
+        const kelurahan = axiosService.get(`/kelurahan/${profil?.kelurahanId}`);
+        const res = await Promise.all([kabupaten, kecamatan, kelurahan]);
+        setKabupatenKotaValue(res[0].data);
+        setKecamatanValue(res[1].data);
+        setDesaKelurahanValue(res[2].data);
+      }
+    };
+    getLokasi();
+  }, [isEdit, profil]);
+
+  const queryCreateMahasiswa = useMutation({
+    mutationFn: (values) => {
+      const { email, noHp, ...rest } = values;
+      const putUser = updateUser(user.id, { email, noHp, role: user.role });
+      const postMahasiswa = createMahasiswa({
+        userId: user.id,
+        ...rest,
+        tanggalLahir: dayjs(new Date(rest.tanggalLahir)).format('MM/DD/YYYY')
+      });
+      return Promise.all([putUser, postMahasiswa]);
+    },
+
+    onSuccess: (newMahasiswa) => {
+      router.push('/p3ke/dashboard');
+    }
+  });
+
+  const queryUpdateMahasiswa = useMutation({
+    mutationFn: (values) => {
+      const { email, noHp, username, ...rest } = values;
+      const putUser = updateUser(user.id, { email, noHp, username, role: user.role });
+      const putMahasiswa = updateMahasiswa(profil.id, {
+        ...rest,
+        userId: user.id,
+        tanggalLahir: dayjs(new Date(rest.tanggalLahir)).format('MM/DD/YYYY')
+      });
+      return Promise.all([putUser, putMahasiswa]);
+    },
+
+    onSuccess: async (response) => {
+      await updateSession();
+    }
+  });
+
   const formik = useFormik({
     validationSchema,
-    // enableReinitialize: true,
+    enableReinitialize: true,
     initialValues: {
-      namaLengkap: 'Fulan',
-      email: 'example@mail.com',
-      jenisKelamin: 'Laki-laki',
-      tanggalLahir: new Date(),
-      universitas: 'Universitas Tadulako',
-      noHP: '0822-3333-4444',
-      stambuk: 'F55123000',
-      kabupatenKotaId: '',
-      kecamatanId: '',
-      desaKelurahan: ''
+      namaLengkap: profil?.namaLengkap || '',
+      email: user?.email || '',
+      jenisKelamin: profil?.jenisKelamin || 'Laki-laki',
+      tanggalLahir: profil?.tanggalLahir ? new Date(profil?.tanggalLahir) : new Date(),
+      universitas: profil?.universitas || 'Universitas Tadulako',
+      noHp: user?.noHp || '',
+      username: user?.username || '',
+      kabupatenKotaId: profil?.kabupatenKotaId || '',
+      kecamatanId: profil?.kecamatanId || '',
+      kelurahanId: profil?.kelurahanId || ''
+    },
+    onSubmit: (values) => {
+      toast.promise(
+        isEdit ? queryUpdateMahasiswa.mutateAsync(values) : queryCreateMahasiswa.mutateAsync(values),
+        {
+          loading: 'Sedang menyimpan...',
+          success: `Profil berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          error: (err) => `${err.message}`
+        },
+        { id: 'toast' }
+      );
     }
   });
 
@@ -150,6 +218,7 @@ const FormProfilMahasiswa = () => {
                   onChange={(e) => {
                     formik.setFieldValue('tanggalLahir', new Date(e));
                   }}
+                  inputFormat="DD-MM-YYYY"
                   renderInput={(params) => <TextField {...params} label="Tanggal Lahir" fullWidth name="tanggalLahir" />}
                 />
               </LocalizationProvider>
@@ -193,32 +262,24 @@ const FormProfilMahasiswa = () => {
               <TextField
                 fullWidth
                 label="NIM/Stambuk"
-                name="stambuk"
-                value={formik.values.stambuk}
+                name="username"
+                value={formik.values.username}
                 onChange={formik.handleChange}
-                error={formik.touched.stambuk && Boolean(formik.errors.stambuk)}
-                helperText={formik.touched.stambuk && formik.errors.stambuk}
+                error={formik.touched.username && Boolean(formik.errors.username)}
+                helperText={formik.touched.username && formik.errors.username}
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Nomor HP"
-                name="noHP"
-                value={formik.values.noHP}
+                name="noHp"
+                value={formik.values.noHp}
                 onChange={formik.handleChange}
-                error={formik.touched.noHP && Boolean(formik.errors.noHP)}
-                helperText={formik.touched.noHP && formik.errors.noHP}
+                error={formik.touched.noHp && Boolean(formik.errors.noHp)}
+                helperText={formik.touched.noHp && formik.errors.noHp}
               />
             </Grid>
-
-            {/* <Grid item xs={12}>
-              <Stack direction="row">
-                <AnimateButton>
-                  <Button variant="contained">{router.pathname === '/biodata' ? 'Simpan Biodata' : 'Ubah Biodata'}</Button>
-                </AnimateButton>
-              </Stack>
-            </Grid> */}
           </Grid>
         </SubCard>
       </Grid>
@@ -330,13 +391,17 @@ const FormProfilMahasiswa = () => {
               />
             </Grid>
 
-            {/* <Grid item xs={12}>
-              <Stack direction="row">
-                <AnimateButton>
-                  <Button variant="contained">{router.pathname === '/biodata' ? 'Simpan Biodata' : 'Ubah Biodata'}</Button>
-                </AnimateButton>
+            <Grid item xs={12}>
+              <Stack direction="row" display="flex" justifyContent="flex-end">
+                <LoadingButton
+                  loading={queryCreateMahasiswa.isLoading || queryUpdateMahasiswa.isLoading}
+                  onClick={formik.handleSubmit}
+                  variant="contained"
+                >
+                  Simpan
+                </LoadingButton>
               </Stack>
-            </Grid> */}
+            </Grid>
           </Grid>
         </SubCard>
       </Grid>

@@ -19,7 +19,7 @@ import LibraryBooksTwoToneIcon from '@mui/icons-material/LibraryBooksTwoTone';
 import LockTwoToneIcon from '@mui/icons-material/LockTwoTone';
 import MailTwoToneIcon from '@mui/icons-material/MailTwoTone';
 import FormProfilMahasiswa from 'components/dashboard/Profil/FormProfilMahasiswa';
-import UbahKataSandi from 'components/dashboard/Profil/UbahKataSandi';
+import UbahKataSandi from 'components/dashboard/Profil/FormUbahPassword';
 import { FormattedMessage } from 'react-intl';
 
 // tabs panel

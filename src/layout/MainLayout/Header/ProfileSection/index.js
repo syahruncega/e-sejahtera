@@ -36,12 +36,14 @@ import Transitions from 'components/ui-component/extended/Transitions';
 import { IconLogout, IconSearch, IconSettings, IconUser } from '@tabler/icons';
 import useConfig from 'hooks/useConfig';
 import Link from 'Link';
+import useAuth from 'hooks/useAuth';
 
 const User1 = '/assets/images/users/user-round.svg';
 
 // ==============================|| PROFILE MENU ||============================== //
 
 const ProfileSection = () => {
+  const { logout } = useAuth();
   const theme = useTheme();
   const { borderRadius } = useConfig();
 
@@ -50,6 +52,7 @@ const ProfileSection = () => {
   const [notification, setNotification] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
+  const { user, profil } = useAuth();
 
   /**
    * anchorRef is used on different components and specifying one type leads to other components throwing an error
@@ -57,7 +60,7 @@ const ProfileSection = () => {
   const anchorRef = useRef(null);
   const handleLogout = async () => {
     try {
-      console.log('first');
+      await logout();
     } catch (err) {
       console.error(err);
     }
@@ -160,32 +163,15 @@ const ProfileSection = () => {
                         <Stack direction="row" spacing={0.5} alignItems="center">
                           <Typography variant="h4">Good Morning,</Typography>
                           <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
-                            Jone Doe
+                            {profil.namaLengkap}
                           </Typography>
                         </Stack>
-                        <Typography variant="subtitle2">Superadmin</Typography>
+                        <Typography variant="subtitle2">{user.role}</Typography>
                       </Stack>
-                      <OutlinedInput
-                        sx={{ width: '100%', pr: 1, pl: 2, my: 2 }}
-                        id="input-search-profile"
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
-                        placeholder="Search profile options"
-                        startAdornment={
-                          <InputAdornment position="start">
-                            <IconSearch stroke={1.5} size="16px" color={theme.palette.grey[500]} />
-                          </InputAdornment>
-                        }
-                        aria-describedby="search-helper-text"
-                        inputProps={{
-                          'aria-label': 'weight'
-                        }}
-                      />
-                      <Divider />
                     </Box>
                     <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 250px)', overflowX: 'hidden' }}>
                       <Box sx={{ p: 2, pt: 0 }}>
-                        <Card
+                        {/* <Card
                           sx={{
                             bgcolor: theme.palette.mode === 'dark' ? theme.palette.dark[800] : theme.palette.primary.light,
                             my: 2
@@ -227,7 +213,7 @@ const ProfileSection = () => {
                             </Grid>
                           </CardContent>
                         </Card>
-                        <Divider />
+                        <Divider /> */}
                         <List
                           component="nav"
                           sx={{
@@ -244,7 +230,7 @@ const ProfileSection = () => {
                             }
                           }}
                         >
-                          <ListItemButton
+                          {/* <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 0}
                             onClick={(event) => handleListItemClick(event, 0)}
@@ -259,13 +245,13 @@ const ProfileSection = () => {
                                 </Typography>
                               }
                             />
-                          </ListItemButton>
+                          </ListItemButton> */}
                           <ListItemButton
                             sx={{ borderRadius: `${borderRadius}px` }}
                             selected={selectedIndex === 1}
-                            onClick={(event) => handleListItemClick(event, 1)}
+                            // onClick={(event) => handleListItemClick(event, 1)}
                             LinkComponent={Link}
-                            href="/dashboard/profil"
+                            href="/p3ke/dashboard/profil"
                           >
                             <ListItemIcon>
                               <IconUser stroke={1.5} size="20px" />

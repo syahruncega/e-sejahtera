@@ -1,6 +1,3 @@
-// third-party
-import { FormattedMessage } from 'react-intl';
-
 // assets
 import { IconKey, IconBug, IconUserCheck, IconUserCircle } from '@tabler/icons';
 
@@ -11,6 +8,7 @@ const adminP3KE = {
   title: 'Admin',
   icon: IconKey,
   type: 'group',
+  roles: ['admin'],
   children: [
     {
       id: 'pengguna',

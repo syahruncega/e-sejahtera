@@ -16,16 +16,19 @@ import toast from 'react-hot-toast';
 import { EditTwoTone } from '@mui/icons-material';
 import { createUser, updateUser } from 'store/slices/user';
 
-const validationSchema = yup.object({
-  username: yup.string().required('Username wajib diisi'),
-  password: yup.string().required('Password wajib diisi'),
-  role: yup.mixed().oneOf(['admin', 'analis', 'dosen', 'mahasiswa', 'pusbang']),
-  email: yup.string().email('Masukkan email valid').required('Email wajib diisi'),
-  noHp: yup.string().required('Nomor HP wajib diisi')
-});
-
 const FormUser = ({ isEdit, user }) => {
   const [open, setOpen] = useState(false);
+
+  const validationSchema = yup.object({
+    username: yup.string().required('Username wajib diisi'),
+    password: yup.string().when(() => {
+      if (isEdit) return yup.string().optional();
+      return yup.string().required('Password wajib diisi');
+    }),
+    role: yup.mixed().oneOf(['admin', 'analis', 'dosen', 'mahasiswa', 'pusbang']),
+    email: yup.string().email('Masukkan email valid').required('Email wajib diisi'),
+    noHp: yup.string().required('Nomor HP wajib diisi')
+  });
 
   const queryClient = useQueryClient();
 
@@ -42,7 +45,10 @@ const FormUser = ({ isEdit, user }) => {
   });
 
   const queryUpdateUser = useMutation({
-    mutationFn: async (newUser) => updateUser(user.id, newUser),
+    mutationFn: async (newUser) => {
+      const { password, ...rest } = newUser;
+      return updateUser(user.id, password ? newUser : rest);
+    },
     onSuccess: (newUser) => {
       queryClient.invalidateQueries('user');
       // queryClient.setQueriesData(['instansi'], (oldData) => {
@@ -131,7 +137,7 @@ const FormUser = ({ isEdit, user }) => {
               sx={{ marginTop: 2 }}
               onChange={formik.handleChange}
               error={formik.touched.password && Boolean(formik.errors.password)}
-              helperText={formik.touched.password && formik.errors.password}
+              helperText={isEdit ? 'Kosongkan jika tidak ingin mengubah password' : formik.touched.password && formik.errors.password}
             />
 
             <FormControl sx={{ marginTop: 2, marginX: 1 }}>

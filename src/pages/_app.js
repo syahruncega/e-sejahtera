@@ -17,6 +17,7 @@ import Locales from 'components/ui-component/Locales';
 import Snackbar from 'components/ui-component/extended/Snackbar';
 
 import { ConfigProvider } from 'contexts/ConfigContext';
+import { JWTProvider as AuthProvider } from 'contexts/JWTContext';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
@@ -41,10 +42,12 @@ function App({ Component, pageProps }) {
             <RTLLayout>
               <Locales>
                 <NavigationScroll>
-                  <>
-                    {getLayout(<Component {...pageProps} />)}
-                    <Snackbar />
-                  </>
+                  <AuthProvider>
+                    <>
+                      {getLayout(<Component {...pageProps} />)}
+                      <Snackbar />
+                    </>
+                  </AuthProvider>
                 </NavigationScroll>
               </Locales>
             </RTLLayout>

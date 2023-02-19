@@ -13,7 +13,7 @@ import { LoadingButton } from '@mui/lab';
 import DeleteTwoTone from '@mui/icons-material/DeleteTwoTone';
 import { IconBookmark } from '@tabler/icons';
 
-const ConfirmVerifikasiDialog = ({ handleFunc, title, description }) => {
+const ConfirmVerifikasiDialog = ({ handleFunc, title, description, isLoading }) => {
   const [open, setOpen] = useState(false);
   const [isCheck, setIsCheck] = useState(false);
 
@@ -21,7 +21,8 @@ const ConfirmVerifikasiDialog = ({ handleFunc, title, description }) => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = (event, reason) => {
+    if (isLoading && reason && reason === 'backdropClick') return;
     setOpen(false);
     setIsCheck(false);
   };
@@ -38,19 +39,25 @@ const ConfirmVerifikasiDialog = ({ handleFunc, title, description }) => {
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <Box>
-              <FormControlLabel
-                control={<Checkbox checked={isCheck} onChange={() => setIsCheck(!isCheck)} name="checked" color="primary" />}
-                label="Dengan ini saya menyatakan bahwa data dan informasi yang saya isi adalah benar dan sesuai, serta saya bertanggung jawab penuh atas data informasi tersebut"
-              />
-            </Box>
+            <FormControlLabel
+              control={<Checkbox checked={isCheck} onChange={() => setIsCheck(!isCheck)} name="checked" color="primary" />}
+              label="Dengan ini saya menyatakan bahwa data dan informasi yang saya isi adalah benar dan sesuai, serta saya bertanggung jawab penuh atas data informasi tersebut"
+            />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button color="secondary" onClick={handleClose} sx={{ color: 'gray' }}>
+          <Button color="secondary" onClick={handleClose} sx={{ color: 'gray' }} disabled={isLoading}>
             Batal
           </Button>
-          <LoadingButton color="primary" disabled={!isCheck} onClick={handleFunc} autoFocus>
+          <LoadingButton
+            color="primary"
+            disabled={!isCheck}
+            onClick={async () => {
+              await handleFunc();
+            }}
+            autoFocus
+            loading={isLoading}
+          >
             Proses
           </LoadingButton>
         </DialogActions>
