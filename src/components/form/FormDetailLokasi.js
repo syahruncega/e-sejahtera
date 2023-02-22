@@ -194,7 +194,7 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
               disablePortal
               key={`kelurahan${keyKelurahan}`}
               name="kelurahanId"
-              value={setDesaKelurahanValue}
+              value={desaKelurahanValue}
               disabled={!(dataKelurahan.length > 0) && setDesaKelurahanValue === null}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}

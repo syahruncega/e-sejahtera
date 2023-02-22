@@ -21,56 +21,54 @@ import AppTable from 'components/AppTable';
 
 const TabLokasiDosen = () => {
   const theme = useTheme();
-  const { user, profil } = useAuth();
+  const { profil } = useAuth();
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
   const fetchLokasiDosen = useQuery(['lokasiDosen'], () => getLokasiDosenByDosenId(profil?.id));
   const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
 
-  console.log(fetchLokasiDosen.data);
+  const columns = useMemo(
+    () => [
+      {
+        accessorFn: (row, index) => `${index + 1}`,
+        id: 'no',
+        header: 'No'
+      },
+      {
+        id: 'kabupatenKota',
+        accessorKey: 'kabupatenKota.nama',
+        header: 'Kabupaten / Kota'
+      },
+      {
+        id: 'kecamatan',
+        accessorKey: 'kecamatan.nama',
+        header: 'Kecamatan'
+      },
+      {
+        id: 'kelurahan',
+        accessorKey: 'kelurahan.nama',
+        header: 'Desa / Kelurahan'
+      },
 
-  //   const columns = useMemo(
-  //     () => [
-  //       {
-  //         accessorFn: (row, index) => `${index + 1}`,
-  //         id: 'no',
-  //         header: 'No'
-  //       },
-  //       {
-  //         id: 'kabupatenKota',
-  //         accessorKey: 'kabupatenKota.nama',
-  //         header: 'Kabupaten / Kota'
-  //       },
-  //       {
-  //         id: 'kecamatan',
-  //         accessorKey: 'kecamatan.nama',
-  //         header: 'Kecamatan'
-  //       },
-  //       {
-  //         id: 'kelurahan',
-  //         accessorKey: 'kelurahan.nama',
-  //         header: 'Desa / Kelurahan'
-  //       },
+      {
+        id: 'aksi',
+        header: 'Aksi',
+        cell: ({
+          cell: {
+            row: { original: data }
+          }
+        }) => (
+          <Box sx={{ display: 'flex' }}>
+            <FormLokasiDosen isEdit lokasiDosen={data} dataKabupatenKota={fetchKabupatenKota.data} />
+            <DeleteDialog id={data.id} deleteFunc={deleteLokasiDosen} mutationKey="lokasiDosen" />
+          </Box>
+        )
+      }
+    ],
 
-  //       {
-  //         id: 'aksi',
-  //         header: 'Aksi',
-  //         cell: ({
-  //           cell: {
-  //             row: { original: data }
-  //           }
-  //         }) => (
-  //           <Box sx={{ display: 'flex' }}>
-  //             <FormLokasiDosen isEdit lokasiDosen={data} dataKabupatenKota={fetchKabupatenKota.data} />
-  //             <DeleteDialog id={data.id} deleteFunc={deleteLokasiDosen} mutationKey="detailLokasiDosen" />
-  //           </Box>
-  //         )
-  //       }
-  //     ],
-
-  //     [fetchKabupatenKota.data]
-  //   );
+    [fetchKabupatenKota.data]
+  );
 
   return (
     <Grid container spacing={gridSpacing}>
@@ -108,11 +106,11 @@ const TabLokasiDosen = () => {
 
               {/* table */}
 
-              {/* {!fetchLokasiDosen.isLoading && (
+              {!fetchLokasiDosen.isLoading && (
                 <SubCard content={false}>
                   <AppTable stickyHeader columns={columns} initialData={fetchLokasiDosen.data ?? []} globalFilter={debouncedValue} />
                 </SubCard>
-              )} */}
+              )}
             </>
           )}
         </SubCard>

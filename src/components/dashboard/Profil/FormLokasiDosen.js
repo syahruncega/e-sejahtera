@@ -25,22 +25,26 @@ import { createLokasiDosen, updateLokasiDosen } from 'store/slices/lokasi-dosen'
 import { EditTwoTone } from '@mui/icons-material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import { getDesaKelurahan, getKecamatan } from 'store/slices/wilayah';
+import { LoadingButton } from '@mui/lab';
+import useAuth from 'hooks/useAuth';
 
 // ==============================|| PROFILE 1 - CHANGE PASSWORD ||============================== //
 
 const validationSchema = yup.object({
   dosenId: yup.number().required('Detail Sub Kegiatan wajib diisi'),
+  kabupatenKotaId: yup.number().required('Kabupaten/Kota wajib diisi'),
+  kecamatanId: yup.number().required('Kecamatan wajib diisi'),
   kelurahanId: yup.number().required('Desa/Kelurahan wajib diisi')
 });
 
 const FormLokasiDosen = ({ isEdit, lokasiDosen, dataKabupatenKota }) => {
   const theme = useTheme();
+  const { profil } = useAuth();
   const [open, setOpen] = useState(false);
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(false);
   const [keyKelurahan, setKeyKelurahan] = useState(false);
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const [kabupatenKotaValue, setKabupatenKotaValue] = useState(isEdit ? lokasiDosen.kabupatenKota : null);
@@ -54,8 +58,8 @@ const FormLokasiDosen = ({ isEdit, lokasiDosen, dataKabupatenKota }) => {
       queryClient.invalidateQueries(['lokasiDosen']);
       // queryClient.setQueriesData(['lokasiDosen'], (oldData) => [newLokasiDosen, ...(oldData ?? [])]);
       setOpen(false);
-      // setKabupatenKotaValue(null);
-      // setKecamatanValue(null);
+      setKabupatenKotaValue(null);
+      setKecamatanValue(null);
       setDesaKelurahanValue(null);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
@@ -76,15 +80,15 @@ const FormLokasiDosen = ({ isEdit, lokasiDosen, dataKabupatenKota }) => {
   });
 
   const formik = useFormik({
+    enableReinitialize: true,
     initialValues: {
-      detailSubKegiatanId: Number(router.query.detailSubKegiatanId),
+      dosenId: Number(profil.id),
       kabupatenKotaId: '',
       kecamatanId: '',
       kelurahanId: ''
     },
     validationSchema,
-    onSubmit: (val) => {
-      const values = { ...val, kecamatanId: val.kecamatanId || '-', kelurahanId: val.kelurahanId || '-' };
+    onSubmit: (values) => {
       toast.promise(
         isEdit ? queryUpdateLokasiDosen.mutateAsync(values) : queryCreateLokasiDosen.mutateAsync(values),
         {
@@ -128,8 +132,8 @@ const FormLokasiDosen = ({ isEdit, lokasiDosen, dataKabupatenKota }) => {
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
+        <DialogTitle> {isEdit ? 'Ubah Detail Lokasi' : 'Tambah Detail Lokasi'}</DialogTitle>
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle> {isEdit ? 'Ubah Detail Lokasi' : 'Tambah Detail Lokasi'}</DialogTitle>
           <DialogContent>
             <Autocomplete
               disablePortal
@@ -205,7 +209,7 @@ const FormLokasiDosen = ({ isEdit, lokasiDosen, dataKabupatenKota }) => {
               disablePortal
               key={`kelurahan${keyKelurahan}`}
               name="kelurahanId"
-              value={setDesaKelurahanValue}
+              value={desaKelurahanValue}
               disabled={!(dataKelurahan.length > 0) && setDesaKelurahanValue === null}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
@@ -232,7 +236,9 @@ const FormLokasiDosen = ({ isEdit, lokasiDosen, dataKabupatenKota }) => {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Batal</Button>
-            <Button type="submit">Simpan</Button>
+            <LoadingButton type="submit" loading={queryCreateLokasiDosen.isLoading || queryUpdateLokasiDosen.isLoading}>
+              Simpan
+            </LoadingButton>
           </DialogActions>
         </form>
       </Dialog>

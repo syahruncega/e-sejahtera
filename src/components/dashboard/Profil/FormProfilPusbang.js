@@ -25,9 +25,6 @@ const validationSchema = yup.object({
   email: yup.string().email().required('Email wajib diisi'),
   universitas: yup.string().required('Universitas wajib diisi'),
   noHp: yup.string().required('No HP wajib diisi')
-  //   tanggalLahir: yup.date().required('Tanggal lahir wajib diisi'),
-  //   jenisKelamin: yup.string().required('Jenis kelamin wajib diisi'),
-  // nip: yup.string().required('NIP wajib diisi')
 });
 
 const FormProfilPusbang = () => {

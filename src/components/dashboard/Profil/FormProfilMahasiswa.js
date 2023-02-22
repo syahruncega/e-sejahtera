@@ -65,23 +65,22 @@ const FormProfilMahasiswa = () => {
   const [kabupatenKotaValue, setKabupatenKotaValue] = useState(null);
   const [kecamatanValue, setKecamatanValue] = useState(null);
   const [desaKelurahanValue, setDesaKelurahanValue] = useState(null);
-  // const [universitasValue, setUniversitasValue] = useState(null);
 
   const fetchKabupatenKota = useQuery(['kabupatenKota'], async () => getKabupatenKota('72'));
 
   useEffect(() => {
     const getLokasi = async () => {
-      if (isEdit) {
-        const kabupaten = axiosService.get(`/kabupatenkota/${profil?.kabupatenKotaId}`);
-        const kecamatan = axiosService.get(`/kecamatan/${profil?.kecamatanId}`);
-        const kelurahan = axiosService.get(`/kelurahan/${profil?.kelurahanId}`);
-        const res = await Promise.all([kabupaten, kecamatan, kelurahan]);
-        setKabupatenKotaValue(res[0].data);
-        setKecamatanValue(res[1].data);
-        setDesaKelurahanValue(res[2].data);
-      }
+      const kabupaten = axiosService.get(`/kabupatenkota/${profil?.kabupatenKotaId}`);
+      const kecamatan = axiosService.get(`/kecamatan/${profil?.kecamatanId}`);
+      const kelurahan = axiosService.get(`/kelurahan/${profil?.kelurahanId}`);
+      const res = await Promise.all([kabupaten, kecamatan, kelurahan]);
+      setKabupatenKotaValue(res[0].data);
+      setKecamatanValue(res[1].data);
+      setDesaKelurahanValue(res[2].data);
     };
-    getLokasi();
+    if (isEdit) {
+      getLokasi();
+    }
   }, [isEdit, profil]);
 
   const queryCreateMahasiswa = useMutation({
@@ -96,8 +95,8 @@ const FormProfilMahasiswa = () => {
       return Promise.all([putUser, postMahasiswa]);
     },
 
-    onSuccess: (newMahasiswa) => {
-      router.push('/p3ke/dashboard');
+    onSuccess: async (newMahasiswa) => {
+      await updateSession();
     }
   });
 
@@ -125,7 +124,7 @@ const FormProfilMahasiswa = () => {
       namaLengkap: profil?.namaLengkap || '',
       email: user?.email || '',
       jenisKelamin: profil?.jenisKelamin || 'Laki-laki',
-      tanggalLahir: profil?.tanggalLahir ? new Date(profil?.tanggalLahir) : new Date(),
+      tanggalLahir: profil?.tanggalLahir ? new Date(profil?.tanggalLahir) : new Date(dayjs().format('MM/DD/YYYY')),
       universitas: profil?.universitas || 'Universitas Tadulako',
       noHp: user?.noHp || '',
       username: user?.username || '',
@@ -146,6 +145,7 @@ const FormProfilMahasiswa = () => {
     }
   });
 
+  // console.log(formik.errors);
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item sm={6} md={4}>
@@ -233,30 +233,6 @@ const FormProfilMahasiswa = () => {
                 error={formik.touched.universitas && Boolean(formik.errors.universitas)}
                 helperText={formik.touched.universitas && formik.errors.universitas}
               />
-              {/* <Autocomplete
-                disablePortal
-                disableClearable
-                name="universitasId"
-                value={kabupatenKotaValue}
-                isOptionEqualToValue={(option, value) => option.id === value.id}
-                getOptionLabel={(option) => option.value}
-                onChange={(e, value) => {
-                  if (value !== null) {
-                    formik.setFieldValue('universitasId', value.value);
-                  }
-                  setUniversitasValue(value);
-                }}
-                options={[{ label: 'Universitas Tadulako', value: 'Universitas Tadulako' }]}
-                renderInput={(params) => (
-                  <TextField
-                    label="Universitas"
-                    value={formik.values.universitasId}
-                    helperText={formik.touched.universitasId && formik.errors.universitasId}
-                    error={formik.touched.universitasId && Boolean(formik.errors.universitasId)}
-                    {...params}
-                  />
-                )}
-              /> */}
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField

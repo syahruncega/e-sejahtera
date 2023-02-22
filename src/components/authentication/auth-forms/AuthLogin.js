@@ -31,6 +31,7 @@ import useScriptRef from 'hooks/useScriptRef';
 // assets
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { toast } from 'react-hot-toast';
 
 // ===============================|| JWT LOGIN ||=============================== //
 
@@ -70,7 +71,7 @@ const JWTLogin = ({ loginProp, ...others }) => {
             setSubmitting(false);
           }
         } catch (err) {
-          console.error(err);
+          toast.error(err.response.data.error);
           if (scriptedRef.current) {
             setStatus({ success: false });
             setErrors({ submit: err.message });

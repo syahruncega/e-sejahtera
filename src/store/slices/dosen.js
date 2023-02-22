@@ -25,3 +25,8 @@ export async function updateDosen(id, newDosen) {
 export async function deleteDosen(id) {
   await axiosService.delete(`/${ENDPOINT}/${id}`);
 }
+
+export async function getKinerjaMahasiswa(params) {
+  const response = await axiosService.get(`/${ENDPOINT}/findmahasiswa`, { params });
+  return response.data;
+}

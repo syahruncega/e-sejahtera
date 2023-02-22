@@ -126,9 +126,12 @@ const ProfilPage = () => {
                 }
               }}
             >
-              {tabsOption.map((tab, index) => (
-                <Tab key={index} component={Link} href="#" icon={tab.icon} label={tab.label} {...a11yProps(index)} />
-              ))}
+              {tabsOption.map((tab, index) => {
+                if (tab.label === 'Lokasi KKN' && user.role !== 'dosen') {
+                  return null;
+                }
+                return <Tab key={index} component={Link} href="#" icon={tab.icon} label={tab.label} {...a11yProps(index)} />;
+              })}
             </Tabs>
             <TabPanel value={value} index={0}>
               {user.role === 'admin' && <FormProfilAdmin />}

@@ -1,81 +1,30 @@
 import Image from 'next/image';
 import React from 'react';
-import Link from 'Link';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
-import {
-  Button,
-  Box,
-  Card,
-  CardContent,
-  Container,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  OutlinedInput,
-  TextField,
-  Typography
-} from '@mui/material';
+import { Box, Card, CardContent, Container, Grid, Typography } from '@mui/material';
 
 // third-party
 // import NumberFormat from 'react-number-format';
 
 // project imports
-import AnimateButton from 'components/ui-component/extended/AnimateButton';
 import { gridSpacing } from 'store/constant';
 import FormProfilMahasiswa from './dashboard/Profil/FormProfilMahasiswa';
 import FormProfilDosen from './dashboard/Profil/FormProfilDosen';
+import useAuth from 'hooks/useAuth';
+import FormProfilAdmin from './dashboard/Profil/FormProfilAdmin';
+import FormProfilPusbang from './dashboard/Profil/FormProfilPusbang';
+import FormProfilAnalis from './dashboard/Profil/FormProfilAnalis';
 
 // assets
 const mailImg = '/assets/images/img-contact-mail.svg';
-
-// select options
-const currencies = [
-  {
-    value: '1',
-    label: 'Below $1000'
-  },
-  {
-    value: '2',
-    label: '$1000 - $5000'
-  },
-  {
-    value: '3',
-    label: 'Not specified'
-  }
-];
-
-const sizes = [
-  {
-    value: '1',
-    label: '1 - 5'
-  },
-  {
-    value: '2',
-    label: '5 - 10'
-  },
-  {
-    value: '3',
-    label: '10+'
-  }
-];
 
 // ===========================|| CONTACT CARD - FORMS ||=========================== //
 
 const BiodataCard = () => {
   const theme = useTheme();
-
-  const [budget, setBudget] = React.useState(1);
-  const handleChange = (event) => {
-    setBudget(Number(event.target.value));
-  };
-
-  const [size, setSize] = React.useState(1);
-  const handleChange1 = (event) => {
-    setSize(Number(event.target.value));
-  };
+  const { user } = useAuth();
 
   return (
     <Container>
@@ -127,8 +76,11 @@ const BiodataCard = () => {
         <Grid item xs={10} sx={{ mb: -37.5 }}>
           <Card sx={{ mb: 6.25 }} elevation={4}>
             <CardContent sx={{ p: 4 }}>
-              <FormProfilMahasiswa />
-              {/* <FormProfilDosen /> */}
+              {user.role === 'admin' && <FormProfilAdmin />}
+              {user.role === 'mahasiswa' && <FormProfilMahasiswa />}
+              {user.role === 'dosen' && <FormProfilDosen />}
+              {user.role === 'pusbang' && <FormProfilPusbang />}
+              {user.role === 'analis' && <FormProfilAnalis />}
             </CardContent>
           </Card>
         </Grid>
