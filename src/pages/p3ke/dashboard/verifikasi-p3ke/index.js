@@ -52,27 +52,31 @@ const VerifikasiP3KEPage = () => {
   const [pageSize, setPageSize] = useState(Number(router.query?.pageSize) || 25);
   const [page, setPage] = useState(Number(router.query?.page) || 1);
   const debouncedValue = useDebounce(search, 400);
-  const [kabupaten, setKabupaten] = useState({ label: 'Kabupaten Donggala', nama: 'Kabupaten Donggala', id: '7205' });
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
   const [keyKecamatan, setKeyKecamatan] = useState(false);
   const [keyKelurahan, setKeyKelurahan] = useState(false);
+  const [desaKelurahanValue, setDesaKelurahanValue] = useState(null);
 
   // const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
   const fetchKeluarga = useQuery(
     ['keluarga', pageSize, page],
-    () => getKeluarga({ kelurahanId: profil.kelurahanId, desilKesejahteraan: '1', pagerow: pageSize, halaman: page }),
+    () =>
+      getKeluarga({
+        kelurahanId: desaKelurahanValue?.id || profil?.kelurahanId,
+        desilKesejahteraan: '1',
+        pagerow: pageSize,
+        halaman: page
+      }),
     { keepPreviousData: true }
   );
-
-  console.log(fetchKeluarga.data);
 
   const fetchKabupatenKota = useQuery(['kabupatenKota'], () => getKabupatenKota('72'));
 
   const columns = useMemo(
     () => [
       {
-        accessorFn: (row, index) => `${index + 1 + pageSize * (Number(router.query?.page || 1) - 1)}`,
+        accessorFn: (row, index) => `${index + 1 + pageSize * (page - 1)}`,
         id: 'no',
         header: 'No'
       },
@@ -148,7 +152,7 @@ const VerifikasiP3KEPage = () => {
       }
     ],
 
-    [pageSize, router.query?.page]
+    [pageSize, page]
   );
 
   const pageProps = {
@@ -194,7 +198,6 @@ const VerifikasiP3KEPage = () => {
                           getOptionLabel={(option) => option.nama}
                           // value={kabupaten}
                           onChange={async (e, value) => {
-                            setKabupaten(value);
                             if (value !== null) {
                               const kecamatan = await getKecamatan(value.id);
                               setDataKecamatan(kecamatan);
@@ -240,12 +243,12 @@ const VerifikasiP3KEPage = () => {
                           disablePortal
                           key={`kelurahan${keyKelurahan}`}
                           name="kelurahanId"
-                          // value={kelurahanId}
-
                           disabled={!(dataKelurahan.length > 0)}
                           isOptionEqualToValue={(option, value) => option.id === value.id}
                           getOptionLabel={(option) => option.nama}
-                          onChange={async (e, value) => {}}
+                          onChange={async (e, value) => {
+                            setDesaKelurahanValue(value);
+                          }}
                           options={dataKelurahan || []}
                           renderInput={(params) => <TextField placeholder="Pilih Desa/Kelurahan" {...params} />}
                         />

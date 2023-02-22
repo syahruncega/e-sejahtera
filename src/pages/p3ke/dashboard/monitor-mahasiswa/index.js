@@ -18,7 +18,7 @@ import Link from 'Link';
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const MonitorMahasiswaPage = () => {
-  useGuard(['dosen']);
+  useGuard(['dosen', 'admin']);
   const router = useRouter();
   const { profil } = useAuth();
   const [search, setSearch] = useState('');
