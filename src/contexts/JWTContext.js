@@ -10,7 +10,6 @@ import accountReducer from 'store/accountReducer';
 // project imports
 import Loader from 'components/ui-component/Loader';
 import axiosService from 'utils/axios';
-import { getMahasiswaById } from 'store/slices/mahasiswa';
 
 // constant
 const initialState = {
@@ -59,19 +58,16 @@ export const JWTProvider = ({ children }) => {
   }, []);
 
   const login = async (username, password) => {
-    await axiosService.post('/auth/login', { username, password });
+    const auth = await axiosService.post('/auth/login', { username, password });
 
-    const res = await Promise.all([axiosService.get('/auth/session'), axiosService.get('/auth/profile')]);
-
-    const user = res[0].data;
-    const profil = res[1].data;
+    const user = auth.data;
+    // const profil = res[1].data;
 
     dispatch({
       type: LOGIN,
       payload: {
         isLoggedIn: true,
-        user,
-        profil
+        user
       }
     });
   };

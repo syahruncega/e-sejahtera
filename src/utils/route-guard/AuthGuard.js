@@ -13,19 +13,19 @@ import useAuth from 'hooks/useAuth';
  * @param {PropTypes.node} children children element/node
  */
 const AuthGuard = ({ children }) => {
-  const { isLoggedIn, profil } = useAuth();
+  const { isLoggedIn } = useAuth();
   const router = useRouter();
   useEffect(() => {
     if (!isLoggedIn) {
       router.push('/p3ke/login');
     }
-    if (!profil) {
-      router.push('/p3ke/biodata');
-    }
+    // if (!profil) {
+    //   router.push('/p3ke/biodata');
+    // }
     // eslint-disable-next-line
-  }, [isLoggedIn, profil]);
+  }, [isLoggedIn]);
 
-  if (!isLoggedIn || !profil) return <Loader />;
+  if (!isLoggedIn) return <Loader />;
 
   return children;
 };

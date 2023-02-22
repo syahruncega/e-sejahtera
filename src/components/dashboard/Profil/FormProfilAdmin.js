@@ -67,9 +67,9 @@ const FormProfilAdmin = () => {
     validationSchema,
     // enableReinitialize: true,
     initialValues: {
-      namaLengkap: profil.namaLengkap || '',
-      email: user.email || '',
-      noHp: user.noHp || ''
+      namaLengkap: profil?.namaLengkap || '',
+      email: user?.email || '',
+      noHp: user?.noHp || ''
     },
     onSubmit: (values) => {
       toast.promise(

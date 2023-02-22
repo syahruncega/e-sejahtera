@@ -38,7 +38,7 @@ import { toast } from 'react-hot-toast';
 const JWTLogin = ({ loginProp, ...others }) => {
   const theme = useTheme();
 
-  const { login } = useAuth();
+  const { login, updateSession } = useAuth();
   const scriptedRef = useScriptRef();
 
   const [checked, setChecked] = React.useState(true);
@@ -66,15 +66,17 @@ const JWTLogin = ({ loginProp, ...others }) => {
         try {
           await login(values.username, values.password);
 
+          await updateSession();
+
           if (scriptedRef.current) {
             setStatus({ success: true });
             setSubmitting(false);
           }
         } catch (err) {
-          toast.error(err.response.data.error);
+          toast.error(err.response?.data?.error || err.message);
           if (scriptedRef.current) {
             setStatus({ success: false });
-            setErrors({ submit: err.message });
+            setErrors({ submit: err.response?.data?.error || err.message });
             setSubmitting(false);
           }
         }

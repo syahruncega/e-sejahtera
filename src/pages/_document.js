@@ -19,7 +19,7 @@ export default function Document() {
         <meta property="og:url" content="https://berrydashboard.io/" />
         <meta property="og:site_name" content="berrydashboard.io" />
         <meta property="article:publisher" content="https://www.facebook.com/codedthemes" />
-        <meta property="og:title" content="Berry - React Material Dashboard Template" />
+        <meta property="og:title" content="e-Sejahtera - Elektronik Sinergi dan Kerjasama Untuk Kesejahteraan Rakyat" />
         <meta
           property="og:description"
           content="Berry Dashboard is made for the faster web application development built using Material-UI, Reactjs, Redux & Hook API."
