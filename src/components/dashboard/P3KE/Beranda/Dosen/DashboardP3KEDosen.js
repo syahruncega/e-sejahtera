@@ -3,6 +3,7 @@ import MainCard from 'components/ui-component/cards/MainCard';
 import ImagePlaceholder from 'components/ui-component/cards/Skeleton/ImagePlaceholder';
 import useAuth from 'hooks/useAuth';
 import useConfig from 'hooks/useConfig';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
 
@@ -41,7 +42,18 @@ const DashboardP3KEDosen = () => {
               }}
             />
           ) : (
-            <CardMedia component="img" image={Cover} sx={{ borderRadius: `${borderRadius}px`, overflow: 'hidden', mb: 3 }} />
+            <CardMedia sx={{ borderRadius: `${borderRadius}px`, overflow: 'hidden', mb: 3 }}>
+              <Image
+                alt="Welcome-back"
+                src={Cover}
+                quality={100}
+                layout="responsive"
+                width={1600}
+                height={344}
+                placeholder="blur"
+                blurDataURL={Cover}
+              />
+            </CardMedia>
           )}
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12} md={3}>
@@ -84,32 +96,6 @@ const DashboardP3KEDosen = () => {
                   <Typography variant="h5">{profil?.namaLengkap}</Typography>
                   <Typography variant="subtitle2">{user?.role}</Typography>
                 </Grid>
-                {/* <Grid item xs={12} md={5}>
-                  <Grid container spacing={0}>
-                    <Grid item xs={4} display="flex" alignItems="center">
-                      <Stack direction="row" spacing={2}>
-                        <PinDropTwoToneIcon sx={{ fontSize: '1.3rem' }} />
-                        <Typography variant="subtitle1">{fetchDesaKelurahan?.data?.nama}</Typography>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Typography align="center" variant="h3">
-                        37
-                      </Typography>
-                      <Typography align="center" variant="subtitle2">
-                        Keluarga
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <Typography align="center" variant="h3">
-                        2749
-                      </Typography>
-                      <Typography align="center" variant="subtitle2">
-                        Individu
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid> */}
               </Grid>
             </Grid>
           </Grid>

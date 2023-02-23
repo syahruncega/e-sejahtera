@@ -5,10 +5,9 @@ import useAuth from 'hooks/useAuth';
 import useConfig from 'hooks/useConfig';
 import React, { useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
-import { useRouter } from 'next/router';
 import PinDropTwoToneIcon from '@mui/icons-material/PinDropTwoTone';
 import { useQuery } from '@tanstack/react-query';
-import { getDesaKelurahan, getDesaKelurahanById } from 'store/slices/wilayah';
+import { getDesaKelurahanById } from 'store/slices/wilayah';
 import Image from 'next/image';
 
 const User1 = '/assets/images/users/img-user.png';
@@ -49,7 +48,16 @@ const DashboardP3KEMahasiswa = () => {
             />
           ) : (
             <CardMedia sx={{ borderRadius: `${borderRadius}px`, overflow: 'hidden', mb: 3 }}>
-              <Image alt="Mountains" src={Cover} quality={100} layout="responsive" width={1094} height={235} />
+              <Image
+                alt="Welcome-back"
+                src={Cover}
+                quality={100}
+                layout="responsive"
+                width={1600}
+                height={344}
+                placeholder="blur"
+                blurDataURL={Cover}
+              />
             </CardMedia>
           )}
           <Grid container spacing={gridSpacing}>
