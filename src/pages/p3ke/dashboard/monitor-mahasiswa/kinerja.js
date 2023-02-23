@@ -4,20 +4,19 @@ import Page from 'components/ui-component/Page';
 import useGuard from 'hooks/useGuard';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import { Alert, AlertTitle, Box, CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material';
+import { Alert, AlertTitle, Box, CircularProgress, Grid, InputAdornment, TextField } from '@mui/material';
 import MainCard from 'components/ui-component/cards/MainCard';
 import SearchIcon from '@mui/icons-material/Search';
 import SubCard from 'components/ui-component/cards/SubCard';
 import AppTable from 'components/AppTable';
 import { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
-import Link from 'Link';
 import { getKinerjaMahasiswa } from 'store/slices/dosen';
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
 const KinerjaMahasiswaPage = () => {
-  useGuard(['dosen']);
+  useGuard(['dosen', 'admin']);
   const router = useRouter();
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
@@ -115,7 +114,7 @@ const KinerjaMahasiswaPage = () => {
                     )
                   }}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari Mahasiswa"
+                  placeholder="Cari mahasiswa"
                   value={search}
                   size="small"
                 />

@@ -9,6 +9,7 @@ import PinDropTwoToneIcon from '@mui/icons-material/PinDropTwoTone';
 import { useQuery } from '@tanstack/react-query';
 import { getDesaKelurahanById } from 'store/slices/wilayah';
 import Image from 'next/image';
+import { countKelurahan } from 'store/slices/statistik';
 
 const User1 = '/assets/images/users/img-user.png';
 const Cover = '/assets/images/welcome-back.png';
@@ -19,6 +20,9 @@ const DashboardP3KEMahasiswa = () => {
   const { borderRadius } = useConfig();
 
   const fetchDesaKelurahan = useQuery(['desaKabupaten'], () => getDesaKelurahanById(profil?.kelurahanId));
+  const fetchCountKelurahan = useQuery(['countKelurahan'], () =>
+    countKelurahan({ kelurahanId: profil?.kelurahanId, desilKesejahteraan: 1 })
+  );
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -111,7 +115,7 @@ const DashboardP3KEMahasiswa = () => {
                     </Grid>
                     <Grid item xs={4}>
                       <Typography align="center" variant="h3">
-                        37
+                        {fetchCountKelurahan.data?.keluarga}
                       </Typography>
                       <Typography align="center" variant="subtitle2">
                         Keluarga
@@ -119,7 +123,7 @@ const DashboardP3KEMahasiswa = () => {
                     </Grid>
                     <Grid item xs={4}>
                       <Typography align="center" variant="h3">
-                        2749
+                        {fetchCountKelurahan.data?.individu}
                       </Typography>
                       <Typography align="center" variant="subtitle2">
                         Individu
