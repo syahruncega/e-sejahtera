@@ -1,19 +1,6 @@
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
-import {
-  Backdrop,
-  Button,
-  Chip,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup
-} from '@mui/material';
+import { Chip, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup } from '@mui/material';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 
@@ -21,15 +8,14 @@ import MainCard from 'components/ui-component/cards/MainCard';
 import SubCard from 'components/ui-component/cards/SubCard';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Box } from '@mui/system';
 import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
 import ConfirmVerifikasiDialog from 'components/dialog/ConfirmVerifikasiDialog';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { updateIndividu } from 'store/slices/individu';
 import { createKeluargaVerifikasi, updateKeluargaVerfikasi } from 'store/slices/keluarga-verifikasi';
 import { updateKeluarga } from 'store/slices/keluarga';
+import useAuth from 'hooks/useAuth';
 
 const UpdateChip = () => (
   <Chip
@@ -77,12 +63,17 @@ const validationSchema = yup.object({
 });
 
 const FormVerifikasiKeluarga = ({ isEdit, initialData, keluarga }) => {
-  const queryClient = useQueryClient();
   const router = useRouter();
+  const { user, profil } = useAuth();
 
   const queryCreateKeluargaVerifikasi = useMutation({
     mutationFn: (newKeluargaVerifikasi) => {
-      const putKeluarga = updateKeluarga(initialData.id, { ...initialData, statusVerifikasi: 1 });
+      const putKeluarga = updateKeluarga(initialData.id, {
+        ...initialData,
+        statusVerifikasi: 1,
+        userId: user?.id,
+        mahasiswaId: profil?.id
+      });
       const postKeluargaVerifikasi = createKeluargaVerifikasi({ ...newKeluargaVerifikasi, urlBukti: '-' });
       return Promise.all([putKeluarga, postKeluargaVerifikasi]);
     },
@@ -134,8 +125,8 @@ const FormVerifikasiKeluarga = ({ isEdit, initialData, keluarga }) => {
       penerimaSembako: (isEdit ? keluarga?.penerimaSembako : initialData?.penerimaSembako) ?? 'Tidak',
       statusResponden: 'Dapat Diverifikasi',
       penerimaLainnya: keluarga?.penerimaLainnya ?? '',
-      userId: 7,
-      mahasiswaId: 2
+      userId: user?.id,
+      mahasiswaId: profil?.id
     },
     validationSchema,
     onSubmit: async (values) => {

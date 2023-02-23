@@ -22,7 +22,7 @@ const KinerjaMahasiswaPage = () => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
-  const fetchKinerjaMahasiswa = useQuery(['kinerjaMahasiswa'], () => getKinerjaMahasiswa({ kelurahanId: router.query?.kelurahanId }));
+  const fetchKinerjaMahasiswa = useQuery(['kinerjaMahasiswa'], () => getKinerjaMahasiswa({ kelurahanid: router.query?.kelurahanId }));
 
   const columns = useMemo(
     () => [
@@ -32,33 +32,43 @@ const KinerjaMahasiswaPage = () => {
         header: 'No'
       },
       {
-        id: 'kabupatenKota',
-        accessorKey: 'kabupatenKota.nama',
-        header: 'Kabupaten / Kota'
+        id: 'namaLengkap',
+        accessorKey: 'namaLengkap',
+        header: 'Nama'
       },
       {
-        id: 'kecamatan',
-        accessorKey: 'kecamatan.nama',
-        header: 'Kecamatan'
+        id: 'stambuk',
+        accessorKey: 'user.username',
+        header: 'Stambuk'
       },
       {
-        id: 'desaKelurahan',
-        header: 'Desa / Kelurahan',
-        cell: (value) => {
-          const data = value.cell.row.original;
-          return (
-            <Typography
-              component={Link}
-              fontWeight={500}
-              color="black"
-              href={`/p3ke/dashboard/monitor-mahasiswa/mahasiswa?list${data.kelurahanId}`}
-              sx={{ textDecoration: 'none' }}
-            >
-              {data.kelurahan.nama}
-            </Typography>
-          );
-        }
+        id: 'jumlahKeluargaVerified',
+        accessorKey: 'jumlahKeluargaVerified',
+        header: 'Keluarga Diverifikasi'
+      },
+      {
+        id: 'jumlahIndividuVerified',
+        accessorKey: 'jumlahIndividuVerified',
+        header: 'Individu Diverifikasi'
       }
+      // {
+      //   id: 'desaKelurahan',
+      //   header: 'Desa / Kelurahan',
+      //   cell: (value) => {
+      //     const data = value.cell.row.original;
+      //     return (
+      //       <Typography
+      //         component={Link}
+      //         fontWeight={500}
+      //         color="black"
+      //         href={`/p3ke/dashboard/monitor-mahasiswa/mahasiswa?list${data.kelurahanId}`}
+      //         sx={{ textDecoration: 'none' }}
+      //       >
+      //         {data.kelurahan.nama}
+      //       </Typography>
+      //     );
+      //   }
+      // }
     ],
 
     []
@@ -105,7 +115,7 @@ const KinerjaMahasiswaPage = () => {
                     )
                   }}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari Lokasi"
+                  placeholder="Cari Mahasiswa"
                   value={search}
                   size="small"
                 />

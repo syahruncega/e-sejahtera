@@ -1,19 +1,6 @@
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import { useState } from 'react';
-import {
-  Backdrop,
-  Button,
-  Chip,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  FormLabel,
-  Grid,
-  Radio,
-  RadioGroup
-} from '@mui/material';
+import { Chip, Divider, FormControl, FormControlLabel, FormHelperText, FormLabel, Grid, Radio, RadioGroup } from '@mui/material';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 
@@ -21,15 +8,14 @@ import MainCard from 'components/ui-component/cards/MainCard';
 import SubCard from 'components/ui-component/cards/SubCard';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Box } from '@mui/system';
 import { toast } from 'react-hot-toast';
 import dayjs from 'dayjs';
-import ConfirmDialog from 'components/dialog/ConfirmDialog';
 import ConfirmVerifikasiDialog from 'components/dialog/ConfirmVerifikasiDialog';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { createIndividuVerifikasi, updateIndividuVerfikasi } from 'store/slices/individu-verifikasi';
 import { updateIndividu } from 'store/slices/individu';
 import { useRouter } from 'next/router';
+import useAuth from 'hooks/useAuth';
 
 const UpdateChip = () => (
   <Chip
@@ -71,12 +57,18 @@ const validationSchema = yup.object({
 });
 
 const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
-  const queryClient = useQueryClient();
   const router = useRouter();
+  const { user, profil } = useAuth();
 
   const queryCreateIndividuVerifikasi = useMutation({
     mutationFn: (newIndividuVerifikasi) => {
-      const putIndividu = updateIndividu(initialData.id, { ...initialData, statusVerifikasi: 1 });
+      console.log('BBBB', newIndividuVerifikasi);
+      const putIndividu = updateIndividu(initialData.id, {
+        ...initialData,
+        statusVerifikasi: 1,
+        userId: user?.id,
+        mahasiswaId: profil?.id
+      });
       const postIndividuVerifikasi = createIndividuVerifikasi({ ...newIndividuVerifikasi, urlBukti: '-' });
       return Promise.all([putIndividu, postIndividuVerifikasi]);
     },
@@ -122,9 +114,9 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
       penerimaSembako: (isEdit ? individu?.penerimaSembako : initialData?.penerimaSembako) ?? 'Tidak',
       statusResponden: 'Dapat Diverifikasi',
       penerimaLainnya: individu?.penerimaLainnya ?? '',
-      userId: 7,
-      mahasiswaId: 2,
-      kategoriUsia: '6 Tahun'
+      userId: user?.id,
+      mahasiswaId: profil?.id,
+      kategoriUsia: '-'
     },
     validationSchema,
     onSubmit: (values) => {
