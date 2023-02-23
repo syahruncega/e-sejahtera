@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import PinDropTwoToneIcon from '@mui/icons-material/PinDropTwoTone';
 import { useQuery } from '@tanstack/react-query';
 import { getDesaKelurahan, getDesaKelurahanById } from 'store/slices/wilayah';
+import Image from 'next/image';
 
 const User1 = '/assets/images/users/img-user.png';
 const Cover = '/assets/images/welcome-back.png';
@@ -20,6 +21,7 @@ const DashboardP3KEMahasiswa = () => {
 
   const fetchDesaKelurahan = useQuery(['desaKabupaten'], () => getDesaKelurahanById(profil?.kelurahanId));
   const [isLoading, setLoading] = useState(true);
+
   useEffect(() => {
     setLoading(false);
   }, []);
@@ -46,7 +48,9 @@ const DashboardP3KEMahasiswa = () => {
               }}
             />
           ) : (
-            <CardMedia component="img" image={Cover} sx={{ borderRadius: `${borderRadius}px`, overflow: 'hidden', mb: 3 }} />
+            <CardMedia sx={{ borderRadius: `${borderRadius}px`, overflow: 'hidden', mb: 3 }}>
+              <Image alt="Mountains" src={Cover} quality={100} layout="responsive" width={1094} height={235} />
+            </CardMedia>
           )}
           <Grid container spacing={gridSpacing}>
             <Grid item xs={12} md={3}>
