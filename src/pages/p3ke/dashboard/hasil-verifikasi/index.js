@@ -28,8 +28,6 @@ const HasilVerifikasiP3KEPage = () => {
   const debouncedValue = useDebounce(search, 400);
   const fetchKeluarga = useQuery(['keluargaVerifikasi'], () => getKeluarga({ kelurahanId: profil?.kelurahanId, statusVerifikasi: 1 }));
 
-  console.log(fetchKeluarga.data);
-
   const columns = useMemo(
     () => [
       {

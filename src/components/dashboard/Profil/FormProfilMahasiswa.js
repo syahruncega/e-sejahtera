@@ -145,7 +145,6 @@ const FormProfilMahasiswa = () => {
     }
   });
 
-  // console.log(formik.errors);
   return (
     <Grid container spacing={gridSpacing}>
       <Grid item sm={6} md={4}>

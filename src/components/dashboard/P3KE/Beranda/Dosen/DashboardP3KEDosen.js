@@ -1,14 +1,10 @@
-import { Avatar, CardMedia, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Avatar, CardMedia, Grid, Typography, useTheme } from '@mui/material';
 import MainCard from 'components/ui-component/cards/MainCard';
 import ImagePlaceholder from 'components/ui-component/cards/Skeleton/ImagePlaceholder';
 import useAuth from 'hooks/useAuth';
 import useConfig from 'hooks/useConfig';
 import React, { useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
-import { useRouter } from 'next/router';
-import PinDropTwoToneIcon from '@mui/icons-material/PinDropTwoTone';
-import { useQuery } from '@tanstack/react-query';
-import { getDesaKelurahan, getDesaKelurahanById } from 'store/slices/wilayah';
 
 const User1 = '/assets/images/users/img-user.png';
 const Cover = '/assets/images/welcome-back.png';
@@ -18,9 +14,6 @@ const DashboardP3KEDosen = () => {
   const { profil, user } = useAuth();
   const { borderRadius } = useConfig();
 
-  console.log(profil);
-
-  const fetchDesaKelurahan = useQuery(['desaKabupaten'], () => getDesaKelurahanById(profil?.kelurahanId));
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
     setLoading(false);

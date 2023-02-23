@@ -4,8 +4,6 @@ import Page from 'components/ui-component/Page';
 import useGuard from 'hooks/useGuard';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
-import { getLokasiDosenByDosenId } from 'store/slices/lokasi-dosen';
-import useAuth from 'hooks/useAuth';
 import { Alert, AlertTitle, Box, CircularProgress, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import MainCard from 'components/ui-component/cards/MainCard';
 import SearchIcon from '@mui/icons-material/Search';
@@ -21,13 +19,11 @@ import { getKinerjaMahasiswa } from 'store/slices/dosen';
 const KinerjaMahasiswaPage = () => {
   useGuard(['dosen']);
   const router = useRouter();
-  const { profil } = useAuth();
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
 
   const fetchKinerjaMahasiswa = useQuery(['kinerjaMahasiswa'], () => getKinerjaMahasiswa({ kelurahanId: router.query?.kelurahanId }));
 
-  console.log(fetchKinerjaMahasiswa.data);
   const columns = useMemo(
     () => [
       {

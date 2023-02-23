@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Autocomplete, Fab, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup, Tooltip } from '@mui/material';
+import { Fab, FormControl, FormControlLabel, FormLabel, IconButton, Radio, RadioGroup, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -69,7 +69,6 @@ const FormUser = ({ isEdit, user }) => {
     },
     validationSchema,
     onSubmit: (values) => {
-      console.log(values);
       toast.promise(
         isEdit ? queryUpdateUser.mutateAsync(values) : queryCreateUser.mutateAsync(values),
         {
