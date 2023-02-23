@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 // material-ui
 import {
   Alert,
@@ -6,16 +5,12 @@ import {
   Autocomplete,
   Chip,
   CircularProgress,
-  FormControl,
   Grid,
   IconButton,
   InputAdornment,
   InputLabel,
-  MenuItem,
-  Select,
   TextField,
-  Tooltip,
-  Typography
+  Tooltip
 } from '@mui/material';
 
 // project imports
@@ -27,11 +22,11 @@ import MainCard from 'components/ui-component/cards/MainCard';
 
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Box, fontWeight } from '@mui/system';
+import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
-import { PersonSearch, PersonSearchTwoTone, PublishedWithChangesTwoTone } from '@mui/icons-material';
+import { PersonSearchTwoTone } from '@mui/icons-material';
 import Link from 'Link';
 import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import useDebounce from 'hooks/useDebounce';

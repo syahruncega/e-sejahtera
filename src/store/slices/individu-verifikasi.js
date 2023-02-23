@@ -18,9 +18,7 @@ export async function getIndividuVerifikasiById(id) {
 }
 
 export async function createIndividuVerifikasi(newIndividuVerifikasi) {
-  console.log(newIndividuVerifikasi);
   const response = await axiosService.post(`/${ENDPOINT}`, newIndividuVerifikasi);
-  console.log(response.data);
   return response.data;
 }
 

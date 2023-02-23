@@ -18,8 +18,6 @@ const DashboardP3KEMahasiswa = () => {
   const { profil, user } = useAuth();
   const { borderRadius } = useConfig();
 
-  console.log(profil);
-
   const fetchDesaKelurahan = useQuery(['desaKabupaten'], () => getDesaKelurahanById(profil?.kelurahanId));
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {

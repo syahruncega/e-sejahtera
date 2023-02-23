@@ -18,9 +18,7 @@ export async function getKeluargaVerifikasiById(id) {
 }
 
 export async function createKeluargaVerifikasi(newKeluargaVerifikasi) {
-  console.log(newKeluargaVerifikasi);
   const response = await axiosService.post(`/${ENDPOINT}`, newKeluargaVerifikasi);
-  console.log(response.data);
   return response.data;
 }
 

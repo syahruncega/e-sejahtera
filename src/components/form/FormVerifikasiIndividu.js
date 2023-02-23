@@ -76,8 +76,9 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
 
   const queryCreateIndividuVerifikasi = useMutation({
     mutationFn: (newIndividuVerifikasi) => {
-      updateIndividu(initialData.id, { ...initialData, statusVerifikasi: 1 });
-      createIndividuVerifikasi(newIndividuVerifikasi);
+      const putIndividu = updateIndividu(initialData.id, { ...initialData, statusVerifikasi: 1 });
+      const postIndividuVerifikasi = createIndividuVerifikasi({ ...newIndividuVerifikasi, urlBukti: '-' });
+      return Promise.all([putIndividu, postIndividuVerifikasi]);
     },
     onSuccess: async (newIndividuVerifikasi) => {
       // queryClient.invalidateQueries(['individuById']);
@@ -86,7 +87,7 @@ const FormVerifikasiIndividu = ({ isEdit, individu, initialData }) => {
   });
 
   const queryUpdateIndividuVerifikasi = useMutation({
-    mutationFn: (newIndividuVerifikasi) => updateIndividuVerfikasi(initialData.id, newIndividuVerifikasi),
+    mutationFn: (newIndividuVerifikasi) => updateIndividuVerfikasi(initialData.id, { ...newIndividuVerifikasi, urlBukti: '-' }),
     onSuccess: async (newIndividuVerifikasi) => {
       // queryClient.invalidateQueries(['individuById']);
       await router.push({ pathname: '/p3ke/dashboard/verifikasi-p3ke/anggota-keluarga', query: { idKeluarga: router.query.idKeluarga } });

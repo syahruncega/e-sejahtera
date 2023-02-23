@@ -1,16 +1,5 @@
 // material-ui
-import {
-  Alert,
-  AlertTitle,
-  Autocomplete,
-  CircularProgress,
-  Grid,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  TextField,
-  Tooltip
-} from '@mui/material';
+import { Alert, AlertTitle, CircularProgress, Grid, IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
 
 // project imports
 import Layout from 'layout';
@@ -18,27 +7,28 @@ import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
 
 // assets
-
-import { FormattedMessage } from 'react-intl';
-import { LoadingButton } from '@mui/lab';
-import { IconSearch } from '@tabler/icons';
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Box } from '@mui/system';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
 import { gridSpacing } from 'store/constant';
-import { PersonSearch, PersonSearchTwoTone, PublishedWithChangesTwoTone } from '@mui/icons-material';
+import { PersonSearchTwoTone } from '@mui/icons-material';
 import Link from 'Link';
-import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import { getKeluarga } from 'store/slices/keluarga';
+import useGuard from 'hooks/useGuard';
+import useAuth from 'hooks/useAuth';
 
-const VerifikasiP3KEPage = () => {
+const HasilVerifikasiP3KEPage = () => {
+  useGuard(['mahasiswa', 'admin']);
+  const { profil } = useAuth();
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
-  const fetchKeluarga = useQuery(['keluargaVerifikasi'], () => getKeluarga({ kelurahanId: '7205080013', statusVerifikasi: 1 }));
+  const fetchKeluarga = useQuery(['keluargaVerifikasi'], () => getKeluarga({ kelurahanId: profil?.kelurahanId, statusVerifikasi: 1 }));
+
+  console.log(fetchKeluarga.data);
 
   const columns = useMemo(
     () => [
@@ -143,7 +133,7 @@ const VerifikasiP3KEPage = () => {
               <Grid item xs={12}>
                 <SubCard content={false}>
                   {!fetchKeluarga.isLoading && (
-                    <AppTable columns={columns} globalFilter={debouncedValue} stickyHeader initialData={fetchKeluarga.data || []} />
+                    <AppTable columns={columns} globalFilter={debouncedValue} stickyHeader initialData={fetchKeluarga.data?.data || []} />
                   )}
                 </SubCard>
               </Grid>
@@ -155,8 +145,8 @@ const VerifikasiP3KEPage = () => {
   );
 };
 
-VerifikasiP3KEPage.getLayout = function getLayout(page) {
+HasilVerifikasiP3KEPage.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default VerifikasiP3KEPage;
+export default HasilVerifikasiP3KEPage;

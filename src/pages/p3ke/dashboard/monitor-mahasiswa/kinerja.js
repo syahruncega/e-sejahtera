@@ -28,45 +28,45 @@ const KinerjaMahasiswaPage = () => {
   const fetchKinerjaMahasiswa = useQuery(['kinerjaMahasiswa'], () => getKinerjaMahasiswa({ kelurahanId: router.query?.kelurahanId }));
 
   console.log(fetchKinerjaMahasiswa.data);
-  // const columns = useMemo(
-  //   () => [
-  //     {
-  //       accessorFn: (row, index) => `${index + 1}`,
-  //       id: 'no',
-  //       header: 'No'
-  //     },
-  //     {
-  //       id: 'kabupatenKota',
-  //       accessorKey: 'kabupatenKota.nama',
-  //       header: 'Kabupaten / Kota'
-  //     },
-  //     {
-  //       id: 'kecamatan',
-  //       accessorKey: 'kecamatan.nama',
-  //       header: 'Kecamatan'
-  //     },
-  //     {
-  //       id: 'desaKelurahan',
-  //       header: 'Desa / Kelurahan',
-  //       cell: (value) => {
-  //         const data = value.cell.row.original;
-  //         return (
-  //           <Typography
-  //             component={Link}
-  //             fontWeight={500}
-  //             color="black"
-  //             href={`/p3ke/dashboard/monitor-mahasiswa/mahasiswa?list${data.kelurahanId}`}
-  //             sx={{ textDecoration: 'none' }}
-  //           >
-  //             {data.kelurahan.nama}
-  //           </Typography>
-  //         );
-  //       }
-  //     }
-  //   ],
+  const columns = useMemo(
+    () => [
+      {
+        accessorFn: (row, index) => `${index + 1}`,
+        id: 'no',
+        header: 'No'
+      },
+      {
+        id: 'kabupatenKota',
+        accessorKey: 'kabupatenKota.nama',
+        header: 'Kabupaten / Kota'
+      },
+      {
+        id: 'kecamatan',
+        accessorKey: 'kecamatan.nama',
+        header: 'Kecamatan'
+      },
+      {
+        id: 'desaKelurahan',
+        header: 'Desa / Kelurahan',
+        cell: (value) => {
+          const data = value.cell.row.original;
+          return (
+            <Typography
+              component={Link}
+              fontWeight={500}
+              color="black"
+              href={`/p3ke/dashboard/monitor-mahasiswa/mahasiswa?list${data.kelurahanId}`}
+              sx={{ textDecoration: 'none' }}
+            >
+              {data.kelurahan.nama}
+            </Typography>
+          );
+        }
+      }
+    ],
 
-  //   []
-  // );
+    []
+  );
 
   const pageProps = {
     title: 'Monitor Mahasiswa',
@@ -117,14 +117,14 @@ const KinerjaMahasiswaPage = () => {
             </Grid>
 
             <SubCard content={false}>
-              {/* {!fetchKinerjaMahasiswa.isLoading && (
+              {!fetchKinerjaMahasiswa.isLoading && (
                 <AppTable
                   columns={columns}
                   globalFilter={debouncedValue}
                   initialData={fetchKinerjaMahasiswa.data || []}
                   disablePagination
                 />
-              )} */}
+              )}
             </SubCard>
           </>
         )}
