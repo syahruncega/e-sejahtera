@@ -54,11 +54,7 @@ const TabLokasiDosen = () => {
       {
         id: 'aksi',
         header: 'Aksi',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
+        cell: ({ row: { original: data } }) => (
           <Box sx={{ display: 'flex' }}>
             <FormLokasiDosen isEdit lokasiDosen={data} dataKabupatenKota={fetchKabupatenKota.data} />
             <DeleteDialog id={data.id} deleteFunc={deleteLokasiDosen} mutationKey="lokasiDosen" />

@@ -17,10 +17,14 @@ const AuthGuard = ({ children }) => {
   const router = useRouter();
   useEffect(() => {
     if (!isLoggedIn) {
-      router.push('/p3ke/login');
+      if (router.query?.portal === 'p3ke') router.push('/p3ke/login');
+      else if (router.query?.portal === 'kemiskinan') router.push('/kemiskinan/login');
+      else router.push('/');
     }
     if (!profil) {
-      router.push('/p3ke/biodata');
+      if (router.query?.portal === 'p3ke') router.push('/p3ke/biodata');
+      else if (router.query?.portal === 'kemiskinan') router.push('/kemiskinan/biodata');
+      else router.push('/');
     }
     // eslint-disable-next-line
   }, [isLoggedIn, profil]);

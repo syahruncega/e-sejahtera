@@ -98,11 +98,7 @@ const VerifikasiP3KEPage = () => {
       {
         id: 'status',
         header: 'Status',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
+        cell: ({ row: { original: data } }) => (
           <div className="flex">
             {data.statusVerifikasi ? (
               <Chip
@@ -125,11 +121,7 @@ const VerifikasiP3KEPage = () => {
       {
         id: 'aksi',
         header: 'Aksi',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
+        cell: ({ row: { original: data } }) => (
           <div className="flex">
             <Tooltip title="Lihat Anggota Keluarga">
               <IconButton

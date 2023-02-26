@@ -46,20 +46,17 @@ const MonitorMahasiswaPage = () => {
       {
         id: 'desaKelurahan',
         header: 'Desa / Kelurahan',
-        cell: (value) => {
-          const data = value.cell.row.original;
-          return (
-            <Typography
-              component={Link}
-              fontWeight={500}
-              color="black"
-              href={`/p3ke/dashboard/monitor-mahasiswa/kinerja?kelurahanId=${data.kelurahanId}`}
-              sx={{ textDecoration: 'none' }}
-            >
-              {data.kelurahan.nama}
-            </Typography>
-          );
-        }
+        cell: ({ row: { original: data } }) => (
+          <Typography
+            component={Link}
+            fontWeight={500}
+            color="black"
+            href={`/p3ke/dashboard/monitor-mahasiswa/kinerja?kelurahanId=${data.kelurahanId}`}
+            sx={{ textDecoration: 'none' }}
+          >
+            {data.kelurahan.nama}
+          </Typography>
+        )
       }
     ],
 

@@ -19,7 +19,9 @@ const GuestGuard = ({ children }) => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.push('/p3ke/dashboard');
+      if (router.query?.portal === 'p3ke') router.push('/p3ke/dashboard');
+      else if (router.query?.portal === 'kemiskinan') router.push('/kemiskinan/dashboard');
+      else router.push('/');
     }
     // eslint-disable-next-line
   }, [isLoggedIn]);

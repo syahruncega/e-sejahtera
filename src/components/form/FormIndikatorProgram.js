@@ -18,17 +18,18 @@ import { EditTwoTone } from '@mui/icons-material';
 
 const validationSchema = yup.object({
   instansiId: yup.string().required('Instansi wajib diisi'),
-  namaProgram: yup.string().required('Nama Program wajib diisi'),
+  programId: yup.string().required('Nama Program wajib diisi'),
   indikatorKinerjaProgram: yup.string().required('Indikator Kinerja Program wajib diisi'),
   sasaran: yup.string().required('Sasaran wajib diisi'),
   indikatorSasaran: yup.string().required('Indikator Sasaran wajib diisi'),
   kebijakan: yup.string().required('Kebijakan wajib diisi')
 });
 
-const FormIndikatorProgram = ({ isEdit, program, dataInstansi }) => {
+const FormIndikatorProgram = ({ isEdit, indikatorProgram, dataInstansi, dataMasterProgram }) => {
   const [open, setOpen] = useState(false);
 
-  const [instansiId, setInstansiId] = useState(isEdit ? program.instansi : null);
+  const [instansiId, setInstansiId] = useState(isEdit ? indikatorProgram.instansi : null);
+  const [programId, setProgramId] = useState(isEdit ? indikatorProgram.programId : null);
 
   const queryClient = useQueryClient();
 
@@ -46,7 +47,7 @@ const FormIndikatorProgram = ({ isEdit, program, dataInstansi }) => {
   });
 
   const queryUpdateProgram = useMutation({
-    mutationFn: (newProgram) => updateProgram(program.id, newProgram),
+    mutationFn: (newProgram) => updateProgram(indikatorProgram.id, newProgram),
     onSuccess: (newProgram) => {
       queryClient.invalidateQueries(['program']);
       // queryClient.setQueriesData(['program'], (oldData) => {
@@ -60,18 +61,18 @@ const FormIndikatorProgram = ({ isEdit, program, dataInstansi }) => {
 
   const formik = useFormik({
     initialValues: {
-      instansiId: isEdit ? program.instansiId : '',
-      namaProgram: isEdit ? program.namaProgram : '',
-      sasaran: isEdit ? program.sasaran : '',
-      indikatorSasaran: isEdit ? program.indikatorSasaran : '',
-      kebijakan: isEdit ? program.kebijakan : '',
-      indikatorKinerjaProgram: isEdit ? program.indikatorKinerjaProgram : ''
+      instansiId: isEdit ? indikatorProgram.instansiId : '',
+      programId: isEdit ? indikatorProgram.programId : '',
+      sasaran: isEdit ? indikatorProgram.sasaran : '',
+      indikatorSasaran: isEdit ? indikatorProgram.indikatorSasaran : '',
+      kebijakan: isEdit ? indikatorProgram.kebijakan : '',
+      indikatorKinerjaProgram: isEdit ? indikatorProgram.indikatorKinerjaProgram : ''
     },
     validationSchema,
     onSubmit: (values) => {
       toast.promise(
         isEdit
-          ? queryUpdateProgram.mutateAsync({ ...values, paguProgram: program.paguProgram })
+          ? queryUpdateProgram.mutateAsync({ ...values, paguProgram: indikatorProgram.paguProgram })
           : queryCreateProgram.mutateAsync({ ...values, paguProgram: 1 }),
         {
           loading: 'Sedang menyimpan...',
@@ -140,6 +141,29 @@ const FormIndikatorProgram = ({ isEdit, program, dataInstansi }) => {
               )}
             />
 
+            <Autocomplete
+              disablePortal
+              name="programId"
+              value={programId}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
+              getOptionLabel={(option) => option.namaProgram}
+              onChange={(e, value) => {
+                formik.setFieldValue('programId', value !== null ? value.id : '');
+                setProgramId(value);
+              }}
+              options={dataMasterProgram || []}
+              sx={{ width: 'auto', marginTop: 2 }}
+              renderInput={(params) => (
+                <TextField
+                  label="Program"
+                  value={formik.values.programId}
+                  helperText={formik.touched.programId && formik.errors.programId}
+                  error={formik.touched.programId && Boolean(formik.errors.programId)}
+                  {...params}
+                />
+              )}
+            />
+
             <TextField
               name="sasaran"
               label="Sasaran"
@@ -174,15 +198,15 @@ const FormIndikatorProgram = ({ isEdit, program, dataInstansi }) => {
               helperText={formik.touched.kebijakan && formik.errors.kebijakan}
             />
             <TextField
-              name="namaProgram"
+              name="programId"
               label="Nama Program"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.namaProgram}
+              value={formik.values.programId}
               onChange={formik.handleChange}
-              error={formik.touched.namaProgram && Boolean(formik.errors.namaProgram)}
-              helperText={formik.touched.namaProgram && formik.errors.namaProgram}
+              error={formik.touched.programId && Boolean(formik.errors.programId)}
+              helperText={formik.touched.programId && formik.errors.programId}
             />
             <TextField
               name="indikatorKinerjaProgram"
@@ -210,8 +234,9 @@ const FormIndikatorProgram = ({ isEdit, program, dataInstansi }) => {
 
 FormIndikatorProgram.propTypes = {
   isEdit: PropTypes.bool,
-  program: PropTypes.any,
-  dataInstansi: PropTypes.array
+  indikatorProgram: PropTypes.any,
+  dataInstansi: PropTypes.array,
+  dataMasterProgram: PropTypes.array
 };
 
 export default FormIndikatorProgram;

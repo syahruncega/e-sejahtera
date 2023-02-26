@@ -8,12 +8,13 @@ import {
   ColumnDef,
   flexRender,
   getFilteredRowModel,
-  getPaginationRowModel
+  getPaginationRowModel,
+  getExpandedRowModel
 } from '@tanstack/react-table';
 
 import { RankingInfo, rankItem } from '@tanstack/match-sorter-utils';
 
-import { FC, useEffect, useState } from 'react';
+import { FC, Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   Box,
@@ -40,7 +41,16 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-const AppTable = ({ columns, initialData, columnVisibility, globalFilter, disablePagination = false, stickyHeader = false }) => {
+const AppTable = ({
+  columns,
+  initialData,
+  columnVisibility,
+  globalFilter,
+  disablePagination = false,
+  stickyHeader = false,
+  getRowCanExpand = () => false,
+  renderSubComponent
+}) => {
   const [data, setData] = useState([]);
 
   const table = useReactTable({
@@ -54,9 +64,11 @@ const AppTable = ({ columns, initialData, columnVisibility, globalFilter, disabl
       columnVisibility
     },
     // globalFilterFn: fuzzyFilter,
+    getRowCanExpand,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     getPaginationRowModel: !disablePagination ? getPaginationRowModel() : undefined,
     initialState: {
       pagination: {
@@ -102,11 +114,19 @@ const AppTable = ({ columns, initialData, columnVisibility, globalFilter, disabl
           </TableHead>
           <TableBody>
             {table.getRowModel().rows.map((row) => (
-              <TableRow hover key={row.id}>
-                {row.getVisibleCells().map((cell, index) => (
-                  <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
-                ))}
-              </TableRow>
+              <Fragment key={row.id}>
+                <TableRow hover>
+                  {row.getVisibleCells().map((cell, index) => (
+                    <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                  ))}
+                </TableRow>
+                {row.getIsExpanded() && (
+                  <TableRow>
+                    {/* 2nd row is a custom 1 cell row */}
+                    <TableCell colSpan={row.getVisibleCells().length}>{renderSubComponent({ row })}</TableCell>
+                  </TableRow>
+                )}
+              </Fragment>
             ))}
             {table.getRowModel().rows.length === 0 && (
               <TableRow>
@@ -160,7 +180,9 @@ AppTable.propTypes = {
   globalFilter: PropTypes.string,
   onGlobalFilterChange: PropTypes.func,
   disablePagination: PropTypes.bool,
-  stickyHeader: PropTypes.bool
+  stickyHeader: PropTypes.bool,
+  getRowCanExpand: PropTypes.func,
+  renderSubComponent: PropTypes.any
 };
 
 export default AppTable;

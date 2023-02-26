@@ -64,11 +64,7 @@ const PenggunaPage = () => {
       {
         id: 'aksi',
         header: 'Aksi',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
+        cell: ({ row: { original: data } }) => (
           <Box sx={{ display: 'flex' }}>
             <FormUser isEdit user={data} />
             <DeleteDialog id={data.id} deleteFunc={deleteUser} mutationKey="user" />

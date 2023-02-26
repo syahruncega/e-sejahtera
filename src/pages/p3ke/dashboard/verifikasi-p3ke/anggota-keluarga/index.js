@@ -77,11 +77,7 @@ const AnggotaKeluargaPage = () => {
       {
         id: 'aksi',
         header: 'Aksi',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
+        cell: ({ row: { original: data } }) => (
           <div className="flex">
             {data.statusVerifikasi ? (
               <Tooltip title="Telah Diverifikasi">

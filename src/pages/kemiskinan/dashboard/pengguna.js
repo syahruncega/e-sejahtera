@@ -1,17 +1,5 @@
 // material-ui
-import {
-  Alert,
-  AlertTitle,
-  Box,
-  CardContent,
-  CircularProgress,
-  Grid,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Alert, AlertTitle, Box, CircularProgress, Grid, IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
 
 // project imports
 import Layout from 'layout';
@@ -64,11 +52,7 @@ const PenggunaPage = () => {
       {
         id: 'aksi',
         header: 'Aksi',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
+        cell: ({ row: { original: data } }) => (
           <Box sx={{ display: 'flex' }}>
             <FormUser isEdit user={data} />
             <DeleteDialog id={data.id} deleteFunc={deleteUser} mutationKey="user" />

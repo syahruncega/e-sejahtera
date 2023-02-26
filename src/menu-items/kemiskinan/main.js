@@ -8,7 +8,7 @@ import { IconDashboard, IconApps, IconBox, IconHelp, IconSitemap, IconBuildingSk
 
 const mainKemiskinan = {
   id: 'main',
-  title: 'Indikator',
+  title: 'Menu',
   type: 'group',
   children: [
     {
@@ -18,47 +18,41 @@ const mainKemiskinan = {
       url: '/kemiskinan/dashboard',
       icon: IconDashboard
     },
-    // {
-    //   id: 'bidang-urusan',
-    //   title: 'Bidang Urusan',
-    //   type: 'item',
-    //   url: '/kemiskinan/dashboard/bidang-urusan',
-    //   icon: IconFocus2
-    // },
-    // {
-    //   id: 'instansi',
-    //   title: 'Instansi',
-    //   type: 'item',
-    //   url: '/kemiskinan/dashboard/instansi',
-    //   icon: IconBuildingSkyscraper
-    // },
     {
-      id: 'indikator-program',
-      title: 'Program',
+      id: 'rencana',
+      title: 'Rencana',
       type: 'item',
-      url: '/kemiskinan/dashboard/master/program',
+      url: '/kemiskinan/dashboard/rencana',
       icon: IconApps
     },
     {
-      id: 'indikator-kegiatan',
-      title: 'Kegiatan',
+      id: 'indikator',
+      title: 'Indikator',
       type: 'item',
-      url: '/kemiskinan/dashboard/master/kegiatan',
+      url: '/kemiskinan/dashboard/indikator',
       icon: IconBox
     },
     {
-      id: 'indikator-sub-kegiatan',
-      title: 'Sub Kegiatan',
+      id: 'fokus-belanja',
+      title: 'Fokus Belanja',
       type: 'item',
-      url: '/kemiskinan/dashboard/master/sub-kegiatan',
+      url: '/kemiskinan/dashboard/fokus-belanja',
       icon: IconSitemap,
       breadcrumbs: false
     },
     {
-      id: 'penerima-manfaat',
-      title: 'Penerima Manfaat',
+      id: 'realisasi',
+      title: 'Realisasi',
       type: 'item',
-      url: '/kemiskinan/dashboard/master/penerima-manfaat',
+      url: '/kemiskinan/dashboard/realisasi',
+      icon: IconBookmarks,
+      breadcrumbs: false
+    },
+    {
+      id: 'evaluasi',
+      title: 'Evaluasi',
+      type: 'item',
+      url: '/kemiskinan/dashboard/evaluasi',
       icon: IconBookmarks,
       breadcrumbs: false
     }

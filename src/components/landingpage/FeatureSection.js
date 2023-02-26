@@ -86,7 +86,7 @@ const FeatureSection = () => (
               title="Kemiskinan"
               caption="Berry can improve the user experience of your web application by providing a clear and intuitive layout, and consistent look and feel."
               image={Icon1}
-              href="/kemiskinan/login"
+              href="/kemiskinan/login?portal=kemiskinan"
             />
           </Grid>
           <Grid item md={4} sm={6}>
@@ -94,7 +94,7 @@ const FeatureSection = () => (
               title="P3KE"
               caption="Berry can save developers time and effort by providing a pre-built user interface, allowing them to focus on other aspects of the project."
               image={Icon2}
-              href="/p3ke/login"
+              href="/p3ke/login?portal=p3ke"
             />
           </Grid>
           <Grid item md={4} sm={6}>

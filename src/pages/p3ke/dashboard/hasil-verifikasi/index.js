@@ -58,11 +58,7 @@ const HasilVerifikasiP3KEPage = () => {
       {
         id: 'aksi',
         header: 'Aksi',
-        cell: ({
-          cell: {
-            row: { original: data }
-          }
-        }) => (
+        cell: ({ row: { original: data } }) => (
           <div className="flex">
             <Tooltip title="Lihat Anggota Keluarga">
               <IconButton
