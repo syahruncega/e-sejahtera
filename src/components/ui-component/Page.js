@@ -14,7 +14,7 @@ import { IconChevronRight } from '@tabler/icons';
 const Page = forwardRef(({ children, title = '', navigation, meta, ...other }, ref) => (
   <>
     <Head>
-      <title>{`${title} | Berry - React Material Admin Dashboard Template`}</title>
+      <title>{`${title} | e-Sejahtera`}</title>
       {meta}
     </Head>
     <Box ref={ref} {...other}>

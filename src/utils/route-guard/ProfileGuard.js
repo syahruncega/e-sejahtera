@@ -17,13 +17,18 @@ const ProfileGuard = ({ children }) => {
   const router = useRouter();
   useEffect(() => {
     if (!isLoggedIn) {
-      router.push('/p3ke/login');
+      if (router.query?.portal === 'p3ke') router.push({ pathname: '/login', query: { portal: 'p3ke' } });
+      else if (router.query?.portal === 'kemiskinan') router.push({ pathname: '/login', query: { portal: 'kemiskinan' } });
+      else router.push('/');
     }
-    if (isLoggedIn && !profil) {
-      router.push('/p3ke/biodata');
-    }
+    // if (isLoggedIn && !profil) {
+    //   if (router.query?.portal === 'p3ke') router.push({ pathname: '/p3ke/biodata', query: { portal: 'p3ke' } });
+    //   else if (router.query?.portal === 'kemiskinan') router.push({ pathname: '/kemiskinan/biodata', query: { portal: 'kemiskinan' } });
+    //   // else router.push('/');
+    // }
     if (isLoggedIn && profil) {
-      router.push('/p3ke/dashboard');
+      if (router.pathname === '/p3ke/biodata') router.push({ pathname: '/login', query: { portal: 'p3ke' } });
+      else if (router.pathname === '/kemiskinan/biodata') router.push({ pathname: '/login', query: { portal: 'kemiskinan' } });
     }
     // eslint-disable-next-line
   }, [isLoggedIn, profil]);

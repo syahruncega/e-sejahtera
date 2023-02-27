@@ -5,14 +5,14 @@ import DashboardKemiskinanAdmin from 'components/dashboard/Kemiskinan/Beranda/Ad
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
-const Dashboard = () => (
+const DashboardKemiskinan = () => (
   <Page title="Dashboard Kemiskinan">
     <DashboardKemiskinanAdmin />
   </Page>
 );
 
-Dashboard.getLayout = function getLayout(page) {
+DashboardKemiskinan.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default Dashboard;
+export default DashboardKemiskinan;

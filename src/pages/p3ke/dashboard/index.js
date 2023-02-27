@@ -10,7 +10,7 @@ import DashboardP3KEAnalis from 'components/dashboard/P3KE/Beranda/Analis/Dashbo
 
 // ==============================|| DEFAULT DASHBOARD ||============================== //
 
-const Dashboard = () => {
+const DashboardP3KE = () => {
   const { user } = useAuth();
   return (
     <Page title="Dashboard P3KE">
@@ -23,8 +23,8 @@ const Dashboard = () => {
   );
 };
 
-Dashboard.getLayout = function getLayout(page) {
+DashboardP3KE.getLayout = function getLayout(page) {
   return <Layout>{page}</Layout>;
 };
 
-export default Dashboard;
+export default DashboardP3KE;
