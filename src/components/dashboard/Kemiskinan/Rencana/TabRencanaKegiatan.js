@@ -1,15 +1,30 @@
 import PropTypes from 'prop-types';
 import { FastForwardTwoTone, PostAddTwoTone } from '@mui/icons-material';
-import { Box, Button, Grid, IconButton, InputAdornment, TextField, Tooltip, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  InputAdornment,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
 import { kegiatan, program } from 'data';
 import React, { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
-import FormProgram from 'components/form/Kemiskinan/FormProgram';
-
-const renderSubComponent = ({ row }) => <Button>Hmm</Button>;
+import renderSubRowRencanaKegiatan from './SubRowRencanaKegiatan';
+import Chip from 'components/ui-component/extended/Chip';
+import FormKegiatan from 'components/form/Kemiskinan/FormKegiatan';
 
 const TabRencanaKegiatan = ({ setValue }) => {
   const [search, setSearch] = useState('');
@@ -67,6 +82,31 @@ const TabRencanaKegiatan = ({ setValue }) => {
   );
   return (
     <>
+      <Grid container sx={{ marginBottom: 3 }}>
+        <Grid item sm={12}>
+          <TableContainer>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell sx={{ pl: 3 }}>
+                    <Chip chipcolor="warning" label="< Kembali" size="small" sx={{ cursor: 'pointer' }} onClick={() => setValue(0)} />
+                  </TableCell>
+                  <TableCell>Instansi</TableCell>
+                  <TableCell>Dinas Pendidikan dan Kebudayaan Daerah Provinsi Sulawesi Tengah</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ pl: 3 }}>
+                    <Chip chipcolor="warning" label="< Kembali" size="small" sx={{ cursor: 'pointer' }} onClick={() => setValue(1)} />
+                  </TableCell>
+                  <TableCell>Program</TableCell>
+                  <TableCell>PROGRAM PENUNJANG URUSAN PEMERINTAHAN DAERAH PROVINSI</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Grid>
+      </Grid>
+
       <Grid container justifyContent="space-between" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
         <Grid item xs={12} sm={6}>
           <TextField
@@ -78,13 +118,13 @@ const TabRencanaKegiatan = ({ setValue }) => {
               )
             }}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari program"
+            placeholder="Cari kegiatan"
             value={search}
             size="small"
           />
         </Grid>
         <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-          <FormProgram />
+          <FormKegiatan />
         </Grid>
       </Grid>
       <SubCard content={false}>
@@ -93,7 +133,7 @@ const TabRencanaKegiatan = ({ setValue }) => {
           columns={columns}
           initialData={kegiatan}
           getRowCanExpand={() => true}
-          renderSubComponent={renderSubComponent}
+          renderSubComponent={renderSubRowRencanaKegiatan}
         />
       </SubCard>
     </>

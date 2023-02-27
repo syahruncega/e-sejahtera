@@ -23,7 +23,7 @@ const validationSchema = yup.object({
   kelurahanId: yup.number().nullable().optional()
 });
 
-const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
+const FormLokasiFokusBelanja = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
   const [open, setOpen] = useState(false);
   const [dataKecamatan, setDataKecamatan] = useState([]);
   const [dataKelurahan, setDataKelurahan] = useState([]);
@@ -78,7 +78,7 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
         isEdit ? queryUpdateDetailLokasi.mutateAsync(values) : queryCreateDetailLokasi.mutateAsync(values),
         {
           loading: 'Sedang menyimpan...',
-          success: `Data detail lokasi berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
+          success: `Data lokasi fokus belanja berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
           error: (err) => `${err.message}`
         },
         { id: 'toast' }
@@ -104,21 +104,14 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Tambah Detail Lokasi">
-          <Fab
-            color="primary"
-            size="small"
-            sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}
-            onClick={handleClickOpen}
-          >
-            <AddIcon fontSize="small" />
-          </Fab>
-        </Tooltip>
+        <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={handleClickOpen}>
+          Tambah Lokasi
+        </Button>
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle> {isEdit ? 'Ubah Detail Lokasi' : 'Tambah Detail Lokasi'}</DialogTitle>
+          <DialogTitle> {isEdit ? 'Ubah Lokasi Fokus Belanja' : 'Tambah Lokasi Fokus Belanja'}</DialogTitle>
           <DialogContent>
             <Autocomplete
               disablePortal
@@ -195,7 +188,7 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
               key={`kelurahan${keyKelurahan}`}
               name="kelurahanId"
               value={desaKelurahanValue}
-              disabled={!(dataKelurahan.length > 0) && setDesaKelurahanValue === null}
+              disabled={!(dataKelurahan.length > 0) && desaKelurahanValue === null}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.nama}
               onChange={async (e, value) => {
@@ -229,10 +222,10 @@ const FormDetailLokasi = ({ isEdit, detailLokasi, dataKabupatenKota }) => {
   );
 };
 
-FormDetailLokasi.propTypes = {
+FormLokasiFokusBelanja.propTypes = {
   isEdit: PropTypes.bool,
   detailLokasi: PropTypes.any,
   dataKabupatenKota: PropTypes.array
 };
 
-export default FormDetailLokasi;
+export default FormLokasiFokusBelanja;

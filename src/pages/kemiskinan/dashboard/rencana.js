@@ -14,6 +14,7 @@ import TabRencanaInstansi from 'components/dashboard/Kemiskinan/Rencana/TabRenca
 import TabRencanaProgram from 'components/dashboard/Kemiskinan/Rencana/TabRencanaProgram';
 import TabRencanaKegiatan from 'components/dashboard/Kemiskinan/Rencana/TabRencanaKegiatan';
 import TabRencanaSubKegiatan from 'components/dashboard/Kemiskinan/Rencana/TabRencanaSubKegiatan';
+import TabRencanaFokusBelanja from 'components/dashboard/Kemiskinan/Rencana/TabRencanaFokusBelanja';
 
 // tabs panel
 function TabPanel({ children, value, index, ...other }) {
@@ -94,7 +95,7 @@ const RencanaPage = () => {
               value={value}
               indicatorColor="primary"
               textColor="primary"
-              onChange={handleChange}
+              // onChange={handleChange}
               aria-label="simple tabs example"
               variant="scrollable"
               sx={{
@@ -138,6 +139,9 @@ const RencanaPage = () => {
             </TabPanel>
             <TabPanel value={value} index={3}>
               <TabRencanaSubKegiatan setValue={setValue} />
+            </TabPanel>
+            <TabPanel value={value} index={4}>
+              <TabRencanaFokusBelanja setValue={setValue} />
             </TabPanel>
           </Grid>
         </Grid>

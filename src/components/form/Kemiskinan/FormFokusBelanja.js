@@ -26,7 +26,7 @@ const validationSchema = yup.object({
   keterangan: yup.string().required('Keterangan wajib diisi')
 });
 
-const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
+const FormFokusBelanja = ({ isEdit, detailSubKegiatan }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -205,9 +205,9 @@ const FormDetailSubKegiatan = ({ isEdit, detailSubKegiatan }) => {
   );
 };
 
-FormDetailSubKegiatan.propTypes = {
+FormFokusBelanja.propTypes = {
   isEdit: PropTypes.bool,
   detailSubKegiatan: PropTypes.any
 };
 
-export default FormDetailSubKegiatan;
+export default FormFokusBelanja;

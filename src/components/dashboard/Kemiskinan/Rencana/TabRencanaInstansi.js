@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { FastForwardTwoTone } from '@mui/icons-material';
+import { FastForwardTwoTone, PostAddTwoTone } from '@mui/icons-material';
 import { Box, Grid, IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
@@ -7,7 +7,10 @@ import { instansi } from 'data';
 import React, { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
-import FormInstansi from 'components/form/FormInstansi';
+import renderSubRowRencanaInstansi from './SubRowRencanaInstansi';
+import FormInstansi from 'components/form/Kemiskinan/FormInstansi';
+
+const renderSubComponent = ({ row }) => <>Hmm</>;
 
 const TabRencanaInstansi = ({ setValue }) => {
   const [search, setSearch] = useState('');
@@ -19,6 +22,13 @@ const TabRencanaInstansi = ({ setValue }) => {
         header: 'Aksi',
         cell: ({ row }) => (
           <Box sx={{ display: 'flex' }}>
+            {row.getCanExpand() && (
+              <Tooltip title="Bidang Urusan">
+                <IconButton color="primary" size="medium" aria-label="Bidang Urusan" onClick={row.getToggleExpandedHandler()}>
+                  <PostAddTwoTone fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            )}
             <Tooltip title="Program">
               <IconButton color="primary" size="medium" aria-label="Program" onClick={() => setValue(1)}>
                 <FastForwardTwoTone fontSize="small" />
@@ -31,11 +41,6 @@ const TabRencanaInstansi = ({ setValue }) => {
         accessorFn: (row, index) => `${index + 1}`,
         id: 'no',
         header: 'No'
-      },
-      {
-        id: 'kodeBidangUrusan',
-        accessorKey: 'kodeBidangUrusan',
-        header: 'Kode Bidang Urusan'
       },
       {
         id: 'kodeInstansi',
@@ -70,11 +75,17 @@ const TabRencanaInstansi = ({ setValue }) => {
           />
         </Grid>
         <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-          <FormInstansi />
+          <FormInstansi dataBidangUrusan={[]} />
         </Grid>
       </Grid>
       <SubCard content={false}>
-        <AppTable stickyHeader columns={columns} initialData={instansi} />
+        <AppTable
+          stickyHeader
+          columns={columns}
+          initialData={instansi}
+          getRowCanExpand={() => true}
+          renderSubComponent={renderSubRowRencanaInstansi}
+        />
       </SubCard>
     </>
   );

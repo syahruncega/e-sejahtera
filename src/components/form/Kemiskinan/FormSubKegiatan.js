@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, InputAdornment, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -16,8 +16,9 @@ import { createSubKegiatan, updateSubKegiatan } from 'store/slices/sub-kegiatan'
 import { toast } from 'react-hot-toast';
 
 const validationSchema = yup.object({
-  id: yup.string().required('ID Sub Kegiatan wajib diisi'),
-  namaSubKegiatan: yup.string().required('Nama Sub Kegiatan wajib diisi')
+  kodeSubKegiatan: yup.string().required('Kode Sub Kegiatan wajib diisi'),
+  namaSubKegiatan: yup.string().required('Nama Sub Kegiatan wajib diisi'),
+  paguSubKegiatan: yup.number().required('Pagu Sub Kegiatan wajib diisi').typeError('Pagu Sub Kegiatan harus berupa angka')
 });
 
 const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
@@ -104,15 +105,15 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
           <DialogTitle> {isEdit ? 'Ubah Sub Kegiatan' : 'Tambah Sub Kegiatan'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="id"
-              label="ID Sub Kegiatan"
+              name="kodeSubKegiatan"
+              label="Kode Sub Kegiatan"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.id}
+              value={formik.values.kodeSubKegiatan}
               onChange={formik.handleChange}
-              error={formik.touched.id && Boolean(formik.errors.id)}
-              helperText={formik.touched.id && formik.errors.id}
+              error={formik.touched.kodeSubKegiatan && Boolean(formik.errors.kodeSubKegiatan)}
+              helperText={formik.touched.kodeSubKegiatan && formik.errors.kodeSubKegiatan}
             />
             <TextField
               name="namaSubKegiatan"
@@ -124,6 +125,18 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
               onChange={formik.handleChange}
               error={formik.touched.namaSubKegiatan && Boolean(formik.errors.namaSubKegiatan)}
               helperText={formik.touched.namaSubKegiatan && formik.errors.namaSubKegiatan}
+            />
+            <TextField
+              name="paguSubKegiatan"
+              label="Pagu Sub Kegiatan"
+              variant="outlined"
+              fullWidth
+              InputProps={{ inputMode: 'numeric', startAdornment: <InputAdornment position="start">Rp</InputAdornment> }}
+              sx={{ marginTop: 2 }}
+              value={formik.values.paguSubKegiatan}
+              onChange={formik.handleChange}
+              error={formik.touched.paguSubKegiatan && Boolean(formik.errors.paguSubKegiatan)}
+              helperText={formik.touched.paguSubKegiatan && formik.errors.paguSubKegiatan}
             />
           </DialogContent>
           <DialogActions>

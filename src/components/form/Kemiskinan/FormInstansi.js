@@ -18,12 +18,14 @@ import { createInstansi, updateInstansi } from 'store/slices/instansi';
 
 const validationSchema = yup.object({
   id: yup.string().required('ID Instansi wajib diisi'),
-  namaInstansi: yup.string().required('Instansi wajib diisi')
+  kodeBidangUrusan: yup.string().required('Bidan urusan wajib diisi'),
+  namaInstansi: yup.string().required('Instansi wajib diisi'),
+  kodeInstansi: yup.string().required('Kode instansi wajib diisi')
 });
 
-const FormInstansi = ({ isEdit, instansi }) => {
+const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
   const [open, setOpen] = useState(false);
-  // const [bidangUrusan, setBidangUrusan] = useState(isEdit ? instansi.bidangUrusan : null);
+  const [bidangUrusan, setBidangUrusan] = useState(isEdit ? instansi.bidangUrusan : null);
 
   const queryClient = useQueryClient();
 
@@ -128,15 +130,15 @@ const FormInstansi = ({ isEdit, instansi }) => {
               )}
             /> */}
             <TextField
-              name="id"
-              label="ID Instansi"
+              name="kodeInstansi"
+              label="Kode Instansi"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.id}
+              value={formik.values.kodeInstansi}
               onChange={formik.handleChange}
-              error={formik.touched.id && Boolean(formik.errors.id)}
-              helperText={formik.touched.id && formik.errors.id}
+              error={formik.touched.kodeInstansi && Boolean(formik.errors.kodeInstansi)}
+              helperText={formik.touched.kodeInstansi && formik.errors.id}
             />
             <TextField
               name="namaInstansi"
@@ -166,7 +168,8 @@ const FormInstansi = ({ isEdit, instansi }) => {
 
 FormInstansi.propTypes = {
   isEdit: PropTypes.bool,
-  instansi: PropTypes.any
+  instansi: PropTypes.any,
+  dataBidangUrusan: PropTypes.array
 };
 
 export default FormInstansi;

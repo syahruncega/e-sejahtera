@@ -102,23 +102,16 @@ const FormIndikatorProgram = ({ isEdit, indikatorProgram, dataInstansi, dataMast
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Tambah Program">
-          <Fab
-            color="primary"
-            size="small"
-            sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}
-            onClick={handleClickOpen}
-          >
-            <AddIcon fontSize="small" />
-          </Fab>
-        </Tooltip>
+        <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={handleClickOpen}>
+          Tambah Indikator Program
+        </Button>
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
+          <DialogTitle> {isEdit ? 'Ubah Indikator Program' : 'Tambah Indikator Program'}</DialogTitle>
           <DialogContent>
-            <Autocomplete
+            {/* <Autocomplete
               disablePortal
               name="instansiId"
               value={instansiId}
@@ -207,12 +200,14 @@ const FormIndikatorProgram = ({ isEdit, indikatorProgram, dataInstansi, dataMast
               onChange={formik.handleChange}
               error={formik.touched.programId && Boolean(formik.errors.programId)}
               helperText={formik.touched.programId && formik.errors.programId}
-            />
+            /> */}
             <TextField
               name="indikatorKinerjaProgram"
-              label="Indikator Kinerja Program"
+              label="Indikator Program"
               variant="outlined"
               fullWidth
+              multiline
+              rows={4}
               sx={{ marginTop: 2 }}
               value={formik.values.indikatorKinerjaProgram}
               onChange={formik.handleChange}

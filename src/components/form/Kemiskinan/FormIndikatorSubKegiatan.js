@@ -96,21 +96,14 @@ const FormIndikatorSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Tambah Sub Kegiatan">
-          <Fab
-            color="primary"
-            size="small"
-            sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}
-            onClick={handleClickOpen}
-          >
-            <AddIcon fontSize="small" />
-          </Fab>
-        </Tooltip>
+        <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={handleClickOpen}>
+          Tambah Indikator Sub Kegiatan
+        </Button>
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle> {isEdit ? 'Ubah Sub Kegiatan' : 'Tambah Sub Kegiatan'}</DialogTitle>
+          <DialogTitle> {isEdit ? 'Ubah Indikator Sub Kegiatan' : 'Tambah Indikator Sub Kegiatan'}</DialogTitle>
           <DialogContent>
             {/* <Autocomplete
               disablePortal
@@ -142,7 +135,7 @@ const FormIndikatorSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
                   {...params}
                 />
               )}
-            /> */}
+            />
             <Autocomplete
               key={keyBool}
               disablePortal
@@ -182,12 +175,14 @@ const FormIndikatorSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
               onChange={formik.handleChange}
               error={formik.touched.namaSubKegiatan && Boolean(formik.errors.namaSubKegiatan)}
               helperText={formik.touched.namaSubKegiatan && formik.errors.namaSubKegiatan}
-            />
+            /> */}
             <TextField
               name="indikatorKinerjaSubKegiatan"
-              label="Indikator Kinerja Kegiatan"
+              label="Indikator Kinerja Sub Kegiatan"
               variant="outlined"
               fullWidth
+              multiline
+              rows={4}
               sx={{ marginTop: 2 }}
               value={formik.values.indikatorKinerjaSubKegiatan}
               onChange={formik.handleChange}

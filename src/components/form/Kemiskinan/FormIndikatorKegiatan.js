@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Fab, IconButton, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -16,12 +16,14 @@ import { createKegiatan, updateKegiatan } from 'store/slices/kegiatan';
 import { toast } from 'react-hot-toast';
 
 const validationSchema = yup.object({
-  id: yup.string().required('ID Kegiatan wajib diisi'),
-  namaKegiatan: yup.string().required('Nama Kegiatan wajib diisi')
+  programId: yup.string().required('Program wajib diisi'),
+  namaKegiatan: yup.string().required('Nama Kegiatan wajib diisi'),
+  indikatorKinerjaKegiatan: yup.string().required('Indikator Kinerja Kegiatan wajib diisi')
 });
 
-const FormKegiatan = ({ isEdit, kegiatan }) => {
+const FormIndikatorKegiatan = ({ isEdit, kegiatan, dataProgram }) => {
   const [open, setOpen] = useState(false);
+  const [programId, setProgramId] = useState(isEdit ? kegiatan.program : null);
 
   const queryClient = useQueryClient();
 
@@ -32,6 +34,7 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
       queryClient.invalidateQueries(['kegiatan']);
       // queryClient.setQueriesData(['kegiatan'], (oldData) => [newKegiatan, ...(oldData ?? [])]);
       setOpen(false);
+      setProgramId(null);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
     }
@@ -52,13 +55,16 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
 
   const formik = useFormik({
     initialValues: {
-      id: isEdit ? kegiatan.id : '',
-      namaKegiatan: isEdit ? kegiatan.namaKegiatan : ''
+      programId: isEdit ? kegiatan.programId : '',
+      namaKegiatan: isEdit ? kegiatan.namaKegiatan : '',
+      indikatorKinerjaKegiatan: isEdit ? kegiatan.indikatorKinerjaKegiatan : ''
     },
     validationSchema,
     onSubmit: (values) => {
       toast.promise(
-        isEdit ? queryUpdateKegiatan.mutateAsync(values) : queryCreateKegiatan.mutateAsync(values),
+        isEdit
+          ? queryUpdateKegiatan.mutateAsync({ ...values, paguKegiatan: kegiatan.paguKegiatan })
+          : queryCreateKegiatan.mutateAsync({ ...values, paguKegiatan: 1 }),
         {
           loading: 'Sedang menyimpan...',
           success: `Data kegiatan berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
@@ -87,43 +93,28 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Tambah Kegiatan">
-          <Fab
-            color="primary"
-            size="small"
-            sx={{ boxShadow: 'none', ml: 1, width: 32, height: 32, minHeight: 32 }}
-            onClick={handleClickOpen}
-          >
-            <AddIcon fontSize="small" />
-          </Fab>
-        </Tooltip>
+        <Button variant="outlined" size="small" startIcon={<AddIcon />} onClick={handleClickOpen}>
+          Tambah Indikator Kegiatan
+        </Button>
       )}
 
       <Dialog open={open} onClose={handleClose} maxWidth="xs" fullWidth>
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle> {isEdit ? 'Ubah Kegiatan' : 'Tambah Kegiatan'}</DialogTitle>
+          <DialogTitle> {isEdit ? 'Ubah Indikator Kegiatan' : 'Tambah Indikator Kegiatan'}</DialogTitle>
+
           <DialogContent>
             <TextField
-              name="id"
-              label="ID Kegiatan"
+              name="indikatorKinerjaKegiatan"
+              label="Indikator Kegiatan"
               variant="outlined"
               fullWidth
+              multiline
+              rows={4}
               sx={{ marginTop: 2 }}
-              value={formik.values.id}
+              value={formik.values.indikatorKinerjaKegiatan}
               onChange={formik.handleChange}
-              error={formik.touched.id && Boolean(formik.errors.id)}
-              helperText={formik.touched.id && formik.errors.id}
-            />
-            <TextField
-              name="namaKegiatan"
-              label="Nama Kegiatan"
-              variant="outlined"
-              fullWidth
-              sx={{ marginTop: 2 }}
-              value={formik.values.namaKegiatan}
-              onChange={formik.handleChange}
-              error={formik.touched.namaKegiatan && Boolean(formik.errors.namaKegiatan)}
-              helperText={formik.touched.namaKegiatan && formik.errors.namaKegiatan}
+              error={formik.touched.indikatorKinerjaKegiatan && Boolean(formik.errors.indikatorKinerjaKegiatan)}
+              helperText={formik.touched.indikatorKinerjaKegiatan && formik.errors.indikatorKinerjaKegiatan}
             />
           </DialogContent>
           <DialogActions>
@@ -136,9 +127,10 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
   );
 };
 
-FormKegiatan.propTypes = {
+FormIndikatorKegiatan.propTypes = {
   isEdit: PropTypes.bool,
-  kegiatan: PropTypes.any
+  kegiatan: PropTypes.any,
+  dataProgram: PropTypes.array
 };
 
-export default FormKegiatan;
+export default FormIndikatorKegiatan;

@@ -15,15 +15,15 @@ import {
 } from '@mui/material';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
-import { instansi, program } from 'data';
+import { subKegiatan } from 'data';
 import React, { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
-import FormProgram from 'components/form/Kemiskinan/FormProgram';
-import renderSubRowRencanaProgram from './SubRowRencanaProgram';
 import Chip from 'components/ui-component/extended/Chip';
+import FormFokusBelanja from 'components/form/Kemiskinan/FormFokusBelanja';
+import renderSubRowRencanaFokusBelanja from './SubRowRencanaFokusBelanja';
 
-const TabRencanaProgram = ({ setValue }) => {
+const TabRencanaFokusBelanja = ({ setValue }) => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
   const columns = useMemo(
@@ -34,14 +34,14 @@ const TabRencanaProgram = ({ setValue }) => {
         cell: ({ row }) => (
           <Box sx={{ display: 'flex' }}>
             {row.getCanExpand() && (
-              <Tooltip title="Indikator Program">
-                <IconButton color="primary" size="medium" aria-label="Indikator Program" onClick={row.getToggleExpandedHandler()}>
+              <Tooltip title="Lokasi">
+                <IconButton color="primary" size="medium" aria-label="Lokasi" onClick={row.getToggleExpandedHandler()}>
                   <PostAddTwoTone fontSize="small" />
                 </IconButton>
               </Tooltip>
             )}
-            <Tooltip title="Kegiatan">
-              <IconButton color="primary" size="medium" aria-label="Kegiatan" onClick={() => setValue(2)}>
+            <Tooltip title="Fokus Belanja">
+              <IconButton color="primary" size="medium" aria-label="Fokus Belanja" onClick={() => setValue(4)}>
                 <FastForwardTwoTone fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -54,24 +54,34 @@ const TabRencanaProgram = ({ setValue }) => {
         header: 'No'
       },
       {
-        id: 'kodeProgram',
-        accessorKey: 'kodeProgram',
-        header: 'Kode Program'
-      },
-      //   {
-      //     id: 'kodeInstansi',
-      //     accessorKey: 'kodeInstansi',
-      //     header: 'Kode Instansi'
-      //   },
-      {
-        id: 'namaProgram',
-        accessorKey: 'namaProgram',
-        header: 'Nama Program'
+        id: 'fokusBelanja',
+        accessorKey: 'fokusBelanja',
+        header: 'Fokus Belanja'
       },
       {
-        id: 'paguProgram',
-        accessorKey: 'paguProgram',
-        header: 'Pagu Program'
+        id: 'indikator',
+        accessorKey: 'indikator',
+        header: 'Indikator'
+      },
+      {
+        id: 'target',
+        accessorKey: 'target',
+        header: 'Target'
+      },
+      {
+        id: 'satuan',
+        accessorKey: 'satuan',
+        header: 'Satuan'
+      },
+      {
+        id: 'pagu',
+        accessorKey: 'pagu',
+        header: 'Pagu'
+      },
+      {
+        id: 'keterangan',
+        accessorKey: 'keterangan',
+        header: 'Keterangan'
       }
     ],
 
@@ -91,6 +101,27 @@ const TabRencanaProgram = ({ setValue }) => {
                   <TableCell>Instansi</TableCell>
                   <TableCell>Dinas Pendidikan dan Kebudayaan Daerah Provinsi Sulawesi Tengah</TableCell>
                 </TableRow>
+                <TableRow>
+                  <TableCell sx={{ pl: 3 }}>
+                    <Chip chipcolor="warning" label="< Kembali" size="small" sx={{ cursor: 'pointer' }} onClick={() => setValue(1)} />
+                  </TableCell>
+                  <TableCell>Program</TableCell>
+                  <TableCell>PROGRAM PENUNJANG URUSAN PEMERINTAHAN DAERAH PROVINSI</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ pl: 3 }}>
+                    <Chip chipcolor="warning" label="< Kembali" size="small" sx={{ cursor: 'pointer' }} onClick={() => setValue(2)} />
+                  </TableCell>
+                  <TableCell>Kegiatan</TableCell>
+                  <TableCell>Perencanaan, Penganggaran, dan Evaluasi Kinerja Perangkat Daerah</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell sx={{ pl: 3 }}>
+                    <Chip chipcolor="warning" label="< Kembali" size="small" sx={{ cursor: 'pointer' }} onClick={() => setValue(3)} />
+                  </TableCell>
+                  <TableCell>Sub Kegiatan</TableCell>
+                  <TableCell>Penyusunan Dokumen Perencanaan Perangkat Daerah</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>
@@ -107,30 +138,30 @@ const TabRencanaProgram = ({ setValue }) => {
               )
             }}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari program"
+            placeholder="Cari fokus belanja"
             value={search}
             size="small"
           />
         </Grid>
         <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
-          <FormProgram />
+          <FormFokusBelanja />
         </Grid>
       </Grid>
       <SubCard content={false}>
         <AppTable
           stickyHeader
           columns={columns}
-          initialData={program}
+          initialData={subKegiatan}
           getRowCanExpand={() => true}
-          renderSubComponent={renderSubRowRencanaProgram}
+          renderSubComponent={renderSubRowRencanaFokusBelanja}
         />
       </SubCard>
     </>
   );
 };
 
-TabRencanaProgram.propTypes = {
+TabRencanaFokusBelanja.propTypes = {
   setValue: PropTypes.func
 };
 
-export default TabRencanaProgram;
+export default TabRencanaFokusBelanja;

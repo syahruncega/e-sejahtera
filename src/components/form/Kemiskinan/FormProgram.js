@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
+import { Autocomplete, Fab, IconButton, InputAdornment, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
@@ -17,8 +17,9 @@ import { LoadingButton } from '@mui/lab';
 import { EditTwoTone } from '@mui/icons-material';
 
 const validationSchema = yup.object({
-  id: yup.string().required('ID Program wajib diisi'),
-  namaProgram: yup.string().required('Nama Program wajib diisi')
+  kodeProgram: yup.string().required('ID Program wajib diisi'),
+  namaProgram: yup.string().required('Nama Program wajib diisi'),
+  paguProgram: yup.number().required('Pagu Program wajib diisi').typeError('Pagu Program harus berupa angka')
 });
 
 const FormProgram = ({ isEdit, program }) => {
@@ -105,15 +106,15 @@ const FormProgram = ({ isEdit, program }) => {
           <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="id"
-              label="ID Program"
+              name="kodeProgram"
+              label="Kode Program"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.id}
+              value={formik.values.kodeProgram}
               onChange={formik.handleChange}
-              error={formik.touched.id && Boolean(formik.errors.id)}
-              helperText={formik.touched.id && formik.errors.id}
+              error={formik.touched.kodeProgram && Boolean(formik.errors.kodeProgram)}
+              helperText={formik.touched.kodeProgram && formik.errors.kodeProgram}
             />
             <TextField
               name="namaProgram"
@@ -125,6 +126,18 @@ const FormProgram = ({ isEdit, program }) => {
               onChange={formik.handleChange}
               error={formik.touched.namaProgram && Boolean(formik.errors.namaProgram)}
               helperText={formik.touched.namaProgram && formik.errors.namaProgram}
+            />
+            <TextField
+              name="paguProgram"
+              label="Pagu Program"
+              variant="outlined"
+              fullWidth
+              InputProps={{ inputMode: 'numeric', startAdornment: <InputAdornment position="start">Rp</InputAdornment> }}
+              sx={{ marginTop: 2 }}
+              value={formik.values.paguProgram}
+              onChange={formik.handleChange}
+              error={formik.touched.paguProgram && Boolean(formik.errors.paguProgram)}
+              helperText={formik.touched.paguProgram && formik.errors.paguProgram}
             />
           </DialogContent>
           <DialogActions>
