@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Fab, IconButton, InputAdornment, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
@@ -14,9 +14,26 @@ import { EditTwoTone } from '@mui/icons-material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createKegiatan, updateKegiatan } from 'store/slices/kegiatan';
 import { toast } from 'react-hot-toast';
+import { IMaskInput } from 'react-imask';
+
+const KodeKegiatanMask = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#.00.00.0.00"
+      definitions={{
+        '#': /[1-9]/
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
 
 const validationSchema = yup.object({
-  kodeKegiatan: yup.string().required('Kode Kegiatan wajib diisi'),
+  kegiatanId: yup.string().required('Kode Kegiatan wajib diisi'),
   namaKegiatan: yup.string().required('Nama Kegiatan wajib diisi'),
   paguKegiatan: yup.number().required('Pagu Kegiatan wajib diisi').typeError('Pagu Kegiatan harus berupa angka')
 });
@@ -53,10 +70,16 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
 
   const formik = useFormik({
     initialValues: {
-      id: isEdit ? kegiatan.id : '',
-      namaKegiatan: isEdit ? kegiatan.namaKegiatan : ''
+      kegiatanId: isEdit ? kegiatan.kegiatanId : '',
+      namaKegiatan: isEdit ? kegiatan.namaKegiatan : '',
+      paguKegiatan: isEdit ? kegiatan.paguKegiatan : ''
     },
     validationSchema,
+    validate: (values) => {
+      const errors = {};
+      if (values.kegiatanId.length < 12) errors.kegiatanId = 'Format kode kegiatan tidak valid';
+      return errors;
+    },
     onSubmit: (values) => {
       toast.promise(
         isEdit ? queryUpdateKegiatan.mutateAsync(values) : queryCreateKegiatan.mutateAsync(values),
@@ -105,15 +128,17 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
           <DialogTitle> {isEdit ? 'Ubah Kegiatan' : 'Tambah Kegiatan'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="kodeKegiatan"
+              name="kegiatanId"
               label="Kode Kegiatan"
               variant="outlined"
               fullWidth
+              placeholder="#.##.##.#.##"
               sx={{ marginTop: 2 }}
-              value={formik.values.kodeKegiatan}
+              value={formik.values.kegiatanId}
               onChange={formik.handleChange}
-              error={formik.touched.kodeKegiatan && Boolean(formik.errors.kodeKegiatan)}
-              helperText={formik.touched.kodeKegiatan && formik.errors.kodeKegiatan}
+              error={formik.touched.kegiatanId && Boolean(formik.errors.kegiatanId)}
+              helperText={formik.touched.kegiatanId && formik.errors.kegiatanId}
+              InputProps={{ inputComponent: KodeKegiatanMask }}
             />
             <TextField
               name="namaKegiatan"

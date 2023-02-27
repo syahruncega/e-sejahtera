@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Autocomplete, Fab, IconButton, InputAdornment, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
@@ -15,9 +15,26 @@ import { createProgram, updateProgram } from 'store/slices/program';
 import { toast } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import { EditTwoTone } from '@mui/icons-material';
+import { IMaskInput } from 'react-imask';
+
+const KodeProgramMask = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#.00.00"
+      definitions={{
+        '#': /[1-9]/
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
 
 const validationSchema = yup.object({
-  kodeProgram: yup.string().required('ID Program wajib diisi'),
+  programId: yup.string().required('ID Program wajib diisi'),
   namaProgram: yup.string().required('Nama Program wajib diisi'),
   paguProgram: yup.number().required('Pagu Program wajib diisi').typeError('Pagu Program harus berupa angka')
 });
@@ -54,10 +71,16 @@ const FormProgram = ({ isEdit, program }) => {
 
   const formik = useFormik({
     initialValues: {
-      id: isEdit ? program.id : '',
-      namaProgram: isEdit ? program.namaProgram : ''
+      programId: isEdit ? program.programId : '',
+      namaProgram: isEdit ? program.namaProgram : '',
+      paguProgram: isEdit ? program.paguProgram : ''
     },
     validationSchema,
+    validate: (values) => {
+      const errors = {};
+      if (values.programId.length < 7) errors.programId = 'Format kode program tidak valid';
+      return errors;
+    },
     onSubmit: (values) => {
       toast.promise(
         isEdit ? queryUpdateProgram.mutateAsync(values) : queryCreateProgram.mutateAsync(values),
@@ -106,15 +129,17 @@ const FormProgram = ({ isEdit, program }) => {
           <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="kodeProgram"
+              name="programId"
               label="Kode Program"
               variant="outlined"
               fullWidth
+              placeholder="#.##.##"
               sx={{ marginTop: 2 }}
-              value={formik.values.kodeProgram}
+              value={formik.values.programId}
               onChange={formik.handleChange}
-              error={formik.touched.kodeProgram && Boolean(formik.errors.kodeProgram)}
-              helperText={formik.touched.kodeProgram && formik.errors.kodeProgram}
+              error={formik.touched.programId && Boolean(formik.errors.programId)}
+              helperText={formik.touched.programId && formik.errors.programId}
+              InputProps={{ inputComponent: KodeProgramMask }}
             />
             <TextField
               name="namaProgram"

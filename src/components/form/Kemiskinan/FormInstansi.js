@@ -131,7 +131,7 @@ const FormInstansi = ({ isEdit, instansi }) => {
               label="Kode Instansi"
               variant="outlined"
               fullWidth
-              placeholder="-.--.-.--.-.--.--.----"
+              placeholder="#.##.#.##.#.##.##.####"
               sx={{ marginTop: 2 }}
               value={formik.values.instansiId}
               onChange={formik.handleChange}

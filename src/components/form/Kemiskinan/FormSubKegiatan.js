@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Autocomplete, Fab, IconButton, InputAdornment, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
@@ -14,9 +14,26 @@ import { EditTwoTone } from '@mui/icons-material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSubKegiatan, updateSubKegiatan } from 'store/slices/sub-kegiatan';
 import { toast } from 'react-hot-toast';
+import { IMaskInput } from 'react-imask';
+
+const KodeSubKegiatanMask = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#.00.00.0.00.00"
+      definitions={{
+        '#': /[1-9]/
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
 
 const validationSchema = yup.object({
-  kodeSubKegiatan: yup.string().required('Kode Sub Kegiatan wajib diisi'),
+  subKegiatanId: yup.string().required('Kode Sub Kegiatan wajib diisi'),
   namaSubKegiatan: yup.string().required('Nama Sub Kegiatan wajib diisi'),
   paguSubKegiatan: yup.number().required('Pagu Sub Kegiatan wajib diisi').typeError('Pagu Sub Kegiatan harus berupa angka')
 });
@@ -53,8 +70,14 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
 
   const formik = useFormik({
     initialValues: {
-      id: isEdit ? subKegiatan.id : '',
-      namaSubKegiatan: isEdit ? subKegiatan.namaSubKegiatan : ''
+      subKegiatanId: isEdit ? subKegiatan.subKegiatanId : '',
+      namaSubKegiatan: isEdit ? subKegiatan.namaSubKegiatan : '',
+      paguSubKegiatan: isEdit ? subKegiatan.paguSubKegiatan : ''
+    },
+    validate: (values) => {
+      const errors = {};
+      if (values.subKegiatanId.length < 15) errors.subKegiatanId = 'Format kode sub kegiatan tidak valid';
+      return errors;
     },
     validationSchema,
     onSubmit: (values) => {
@@ -105,15 +128,17 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
           <DialogTitle> {isEdit ? 'Ubah Sub Kegiatan' : 'Tambah Sub Kegiatan'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="kodeSubKegiatan"
+              name="subKegiatanId"
               label="Kode Sub Kegiatan"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.kodeSubKegiatan}
+              value={formik.values.subKegiatanId}
               onChange={formik.handleChange}
-              error={formik.touched.kodeSubKegiatan && Boolean(formik.errors.kodeSubKegiatan)}
-              helperText={formik.touched.kodeSubKegiatan && formik.errors.kodeSubKegiatan}
+              placeholder="#.##.##.#.##.##"
+              error={formik.touched.subKegiatanId && Boolean(formik.errors.subKegiatanId)}
+              helperText={formik.touched.subKegiatanId && formik.errors.subKegiatanId}
+              InputProps={{ inputComponent: KodeSubKegiatanMask }}
             />
             <TextField
               name="namaSubKegiatan"

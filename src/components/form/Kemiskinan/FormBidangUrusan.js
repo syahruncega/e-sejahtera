@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
@@ -15,6 +15,23 @@ import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
 import { EditTwoTone } from '@mui/icons-material';
 import { createBidangUrusan, updateBidangUrusan } from 'store/slices/bidang-urusan';
+import { IMaskInput } from 'react-imask';
+
+const KodeBidangUrusanMask = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#.00"
+      definitions={{
+        '#': /[1-9]/
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
+});
 
 const validationSchema = yup.object({
   bidangUrusanId: yup.string().required('Kode Bidang Urusan wajib diisi'),
@@ -56,6 +73,11 @@ const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
       namaBidangUrusan: isEdit ? bidangUrusan.namaBidangUrusan : ''
     },
     validationSchema,
+    validate: (values) => {
+      const errors = {};
+      if (values.bidangUrusanId.length < 4) errors.bidangUrusanId = 'Format kode bidang urusan tidak valid';
+      return errors;
+    },
     onSubmit: (values) => {
       toast.promise(
         isEdit ? queryUpdateBidangUrusan.mutateAsync(values) : queryCreateBidangUrusan.mutateAsync(values),
@@ -108,11 +130,13 @@ const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
               label="Kode Bidang Urusan"
               variant="outlined"
               fullWidth
+              placeholder="#.##"
               sx={{ marginTop: 2 }}
               value={formik.values.bidangUrusanId}
               onChange={formik.handleChange}
               error={formik.touched.bidangUrusanId && Boolean(formik.errors.bidangUrusanId)}
               helperText={formik.touched.bidangUrusanId && formik.errors.bidangUrusanId}
+              InputProps={{ inputComponent: KodeBidangUrusanMask }}
             />
             <TextField
               name="namaBidangUrusan"
