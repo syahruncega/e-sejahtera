@@ -119,7 +119,7 @@ const PenggunaPage = () => {
                     )
                   }}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari Pengguna"
+                  placeholder="Cari pengguna"
                   value={search}
                   size="small"
                 />

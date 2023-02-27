@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import { Autocomplete, Fab, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
@@ -15,17 +15,31 @@ import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
 import { EditTwoTone } from '@mui/icons-material';
 import { createInstansi, updateInstansi } from 'store/slices/instansi';
+import { IMaskInput } from 'react-imask';
 
-const validationSchema = yup.object({
-  id: yup.string().required('ID Instansi wajib diisi'),
-  kodeBidangUrusan: yup.string().required('Bidan urusan wajib diisi'),
-  namaInstansi: yup.string().required('Instansi wajib diisi'),
-  kodeInstansi: yup.string().required('Kode instansi wajib diisi')
+const KodeInstansiMask = forwardRef((props, ref) => {
+  const { onChange, ...other } = props;
+  return (
+    <IMaskInput
+      {...other}
+      mask="#.00.0.00.0.00.00.0000"
+      definitions={{
+        '#': /[1-9]/
+      }}
+      inputRef={ref}
+      onAccept={(value) => onChange({ target: { name: props.name, value } })}
+      overwrite
+    />
+  );
 });
 
-const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
+const validationSchema = yup.object({
+  instansiId: yup.string().required('Kode Instansi wajib diisi'),
+  namaInstansi: yup.string().required('Nama Instansi wajib diisi')
+});
+
+const FormInstansi = ({ isEdit, instansi }) => {
   const [open, setOpen] = useState(false);
-  const [bidangUrusan, setBidangUrusan] = useState(isEdit ? instansi.bidangUrusan : null);
 
   const queryClient = useQueryClient();
 
@@ -56,10 +70,15 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
 
   const formik = useFormik({
     initialValues: {
-      id: isEdit ? instansi.id : '',
+      instansiId: isEdit ? instansi.id : '',
       namaInstansi: isEdit ? instansi.namaInstansi : ''
     },
     validationSchema,
+    validate: (values) => {
+      const errors = {};
+      if (values.instansiId.length < 22) errors.instansiId = 'Format kode instansi tidak valid';
+      return errors;
+    },
     onSubmit: (values) => {
       toast.promise(
         isEdit ? queryUpdateInstansi.mutateAsync(values) : queryCreateInstansi.mutateAsync(values),
@@ -107,38 +126,18 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Instansi' : 'Tambah Instansi'}</DialogTitle>
           <DialogContent>
-            {/* <Autocomplete
-              disablePortal
-              name="bidangUrusanId"
-              value={bidangUrusan}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              getOptionLabel={(option) => option.namaBidangUrusan}
-              onChange={(e, value) => {
-                formik.setFieldValue('bidangUrusanId', value !== null ? value.id : '');
-                setBidangUrusan(value);
-              }}
-              options={dataBidangUrusan || []}
-              sx={{ width: 'auto', marginTop: 2 }}
-              renderInput={(params) => (
-                <TextField
-                  label="Bidang Urusan"
-                  value={formik.values.bidangUrusanId}
-                  helperText={formik.touched.bidangUrusanId && formik.errors.bidangUrusanId}
-                  error={formik.touched.bidangUrusanId && Boolean(formik.errors.bidangUrusanId)}
-                  {...params}
-                />
-              )}
-            /> */}
             <TextField
-              name="kodeInstansi"
+              name="instansiId"
               label="Kode Instansi"
               variant="outlined"
               fullWidth
+              placeholder="-.--.-.--.-.--.--.----"
               sx={{ marginTop: 2 }}
-              value={formik.values.kodeInstansi}
+              value={formik.values.instansiId}
               onChange={formik.handleChange}
-              error={formik.touched.kodeInstansi && Boolean(formik.errors.kodeInstansi)}
-              helperText={formik.touched.kodeInstansi && formik.errors.id}
+              error={formik.touched.instansiId && Boolean(formik.errors.instansiId)}
+              helperText={formik.touched.instansiId && formik.errors.instansiId}
+              InputProps={{ inputComponent: KodeInstansiMask }}
             />
             <TextField
               name="namaInstansi"
@@ -168,8 +167,7 @@ const FormInstansi = ({ isEdit, instansi, dataBidangUrusan }) => {
 
 FormInstansi.propTypes = {
   isEdit: PropTypes.bool,
-  instansi: PropTypes.any,
-  dataBidangUrusan: PropTypes.array
+  instansi: PropTypes.any
 };
 
 export default FormInstansi;

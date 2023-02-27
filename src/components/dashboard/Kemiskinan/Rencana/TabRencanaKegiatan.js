@@ -38,13 +38,13 @@ const TabRencanaKegiatan = ({ setValue }) => {
           <Box sx={{ display: 'flex' }}>
             {row.getCanExpand() && (
               <Tooltip title="Indikator Kegiatan">
-                <IconButton color="primary" size="medium" aria-label="Indikator Kegiatan" onClick={row.getToggleExpandedHandler()}>
+                <IconButton color="secondary" size="medium" aria-label="Indikator Kegiatan" onClick={row.getToggleExpandedHandler()}>
                   <PostAddTwoTone fontSize="small" />
                 </IconButton>
               </Tooltip>
             )}
             <Tooltip title="Sub Kegiatan">
-              <IconButton color="primary" size="medium" aria-label="Sub Kegiatan" onClick={() => setValue(3)}>
+              <IconButton color="secondary" size="medium" aria-label="Sub Kegiatan" onClick={() => setValue(3)}>
                 <FastForwardTwoTone fontSize="small" />
               </IconButton>
             </Tooltip>

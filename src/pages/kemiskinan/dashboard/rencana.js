@@ -61,6 +61,8 @@ const RencanaPage = () => {
   const theme = useTheme();
 
   const [value, setValue] = useState(0);
+  const [params, setParams] = useState({});
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -129,10 +131,10 @@ const RencanaPage = () => {
               ))}
             </Tabs>
             <TabPanel value={value} index={0}>
-              <TabRencanaInstansi setValue={setValue} />
+              <TabRencanaInstansi setValue={setValue} setParams={setParams} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <TabRencanaProgram setValue={setValue} />
+              <TabRencanaProgram setValue={setValue} params={params} setParams={setParams} />
             </TabPanel>
             <TabPanel value={value} index={2}>
               <TabRencanaKegiatan setValue={setValue} />

@@ -23,7 +23,7 @@ import renderSubRowRencanaSubKegiatan from './SubRowRencanaSubKegiatan';
 import Chip from 'components/ui-component/extended/Chip';
 import FormSubKegiatan from 'components/form/Kemiskinan/FormSubKegiatan';
 
-const TabRencanaSubKegiatan = ({ setValue }) => {
+const TabRencanaSubKegiatan = ({ setValue, setParams }) => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
   const columns = useMemo(
@@ -35,13 +35,20 @@ const TabRencanaSubKegiatan = ({ setValue }) => {
           <Box sx={{ display: 'flex' }}>
             {row.getCanExpand() && (
               <Tooltip title="Indikator Sub Kegiatan">
-                <IconButton color="primary" size="medium" aria-label="Indikator Sub Kegiatan" onClick={row.getToggleExpandedHandler()}>
+                <IconButton color="secondary" size="medium" aria-label="Indikator Sub Kegiatan" onClick={row.getToggleExpandedHandler()}>
                   <PostAddTwoTone fontSize="small" />
                 </IconButton>
               </Tooltip>
             )}
             <Tooltip title="Fokus Belanja">
-              <IconButton color="primary" size="medium" aria-label="Fokus Belanja" onClick={() => setValue(4)}>
+              <IconButton
+                color="secondary"
+                size="medium"
+                aria-label="Fokus Belanja"
+                onClick={() => {
+                  setValue(4);
+                }}
+              >
                 <FastForwardTwoTone fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -144,7 +151,8 @@ const TabRencanaSubKegiatan = ({ setValue }) => {
 };
 
 TabRencanaSubKegiatan.propTypes = {
-  setValue: PropTypes.func
+  setValue: PropTypes.func,
+  setParams: PropTypes.func
 };
 
 export default TabRencanaSubKegiatan;

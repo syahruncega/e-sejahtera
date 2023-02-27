@@ -22,10 +22,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import FormProgram from 'components/form/Kemiskinan/FormProgram';
 import renderSubRowRencanaProgram from './SubRowRencanaProgram';
 import Chip from 'components/ui-component/extended/Chip';
+import { useQuery } from '@tanstack/react-query';
+import { getProgram } from 'store/slices/program';
 
-const TabRencanaProgram = ({ setValue }) => {
+const TabRencanaProgram = ({ setValue, params, setParams }) => {
   const [search, setSearch] = useState('');
   const debouncedValue = useDebounce(search, 400);
+
+  const fetchProgram = useQuery(['program'], getProgram);
+
   const columns = useMemo(
     () => [
       {
@@ -35,13 +40,13 @@ const TabRencanaProgram = ({ setValue }) => {
           <Box sx={{ display: 'flex' }}>
             {row.getCanExpand() && (
               <Tooltip title="Indikator Program">
-                <IconButton color="primary" size="medium" aria-label="Indikator Program" onClick={row.getToggleExpandedHandler()}>
+                <IconButton color="secondary" size="medium" aria-label="Indikator Program" onClick={row.getToggleExpandedHandler()}>
                   <PostAddTwoTone fontSize="small" />
                 </IconButton>
               </Tooltip>
             )}
             <Tooltip title="Kegiatan">
-              <IconButton color="primary" size="medium" aria-label="Kegiatan" onClick={() => setValue(2)}>
+              <IconButton color="secondary" size="medium" aria-label="Kegiatan" onClick={() => setValue(2)}>
                 <FastForwardTwoTone fontSize="small" />
               </IconButton>
             </Tooltip>
@@ -130,7 +135,9 @@ const TabRencanaProgram = ({ setValue }) => {
 };
 
 TabRencanaProgram.propTypes = {
-  setValue: PropTypes.func
+  setValue: PropTypes.func,
+  params: PropTypes.object,
+  setParams: PropTypes.func
 };
 
 export default TabRencanaProgram;
