@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createKegiatan, updateKegiatan } from 'store/slices/kegiatan';
 import { toast } from 'react-hot-toast';
 import { IMaskInput } from 'react-imask';
+import { createProgramOnKegiatan } from 'store/slices/program-on-kegiatan';
 
 const KodeKegiatanMask = forwardRef((props, ref) => {
   const { onChange, ...other } = props;
@@ -33,18 +34,22 @@ const KodeKegiatanMask = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object({
-  kegiatanId: yup.string().required('Kode Kegiatan wajib diisi'),
+  kodeKegiatan: yup.string().required('Kode Kegiatan wajib diisi'),
   namaKegiatan: yup.string().required('Nama Kegiatan wajib diisi'),
-  paguKegiatan: yup.number().required('Pagu Kegiatan wajib diisi').typeError('Pagu Kegiatan harus berupa angka')
+  // paguKegiatan: yup.number().required('Pagu Kegiatan wajib diisi').typeError('Pagu Kegiatan harus berupa angka'),
+  tahun: yup.string().required('Tahun wajib diisi')
 });
 
-const FormKegiatan = ({ isEdit, kegiatan }) => {
+const FormKegiatan = ({ isEdit, kegiatan, programId }) => {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
   const queryCreateKegiatan = useMutation({
-    mutationFn: (newKegiatan) => createKegiatan(newKegiatan),
+    mutationFn: async (newKegiatan) => {
+      const kegiatan = await createKegiatan(newKegiatan);
+      return createProgramOnKegiatan({ programId, kegiatanId: kegiatan.id });
+    },
 
     onSuccess: (newKegiatan) => {
       queryClient.invalidateQueries(['kegiatan']);
@@ -70,14 +75,14 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
 
   const formik = useFormik({
     initialValues: {
-      kegiatanId: isEdit ? kegiatan.kegiatanId : '',
+      kodeKegiatan: isEdit ? kegiatan.kodeKegiatan : '',
       namaKegiatan: isEdit ? kegiatan.namaKegiatan : '',
-      paguKegiatan: isEdit ? kegiatan.paguKegiatan : ''
+      tahun: '2022'
     },
     validationSchema,
     validate: (values) => {
       const errors = {};
-      if (values.kegiatanId.length < 12) errors.kegiatanId = 'Format kode kegiatan tidak valid';
+      if (values.kodeKegiatan.length < 12) errors.kodeKegiatan = 'Format kode kegiatan tidak valid';
       return errors;
     },
     onSubmit: (values) => {
@@ -128,16 +133,16 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
           <DialogTitle> {isEdit ? 'Ubah Kegiatan' : 'Tambah Kegiatan'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="kegiatanId"
+              name="kodeKegiatan"
               label="Kode Kegiatan"
               variant="outlined"
               fullWidth
               placeholder="#.##.##.#.##"
               sx={{ marginTop: 2 }}
-              value={formik.values.kegiatanId}
+              value={formik.values.kodeKegiatan}
               onChange={formik.handleChange}
-              error={formik.touched.kegiatanId && Boolean(formik.errors.kegiatanId)}
-              helperText={formik.touched.kegiatanId && formik.errors.kegiatanId}
+              error={formik.touched.kodeKegiatan && Boolean(formik.errors.kodeKegiatan)}
+              helperText={formik.touched.kodeKegiatan && formik.errors.kodeKegiatan}
               InputProps={{ inputComponent: KodeKegiatanMask }}
             />
             <TextField
@@ -151,7 +156,7 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
               error={formik.touched.namaKegiatan && Boolean(formik.errors.namaKegiatan)}
               helperText={formik.touched.namaKegiatan && formik.errors.namaKegiatan}
             />
-            <TextField
+            {/* <TextField
               name="paguKegiatan"
               label="Pagu Kegiatan"
               variant="outlined"
@@ -162,7 +167,7 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
               onChange={formik.handleChange}
               error={formik.touched.paguKegiatan && Boolean(formik.errors.paguKegiatan)}
               helperText={formik.touched.paguKegiatan && formik.errors.paguKegiatan}
-            />
+            /> */}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Batal</Button>
@@ -176,6 +181,7 @@ const FormKegiatan = ({ isEdit, kegiatan }) => {
 
 FormKegiatan.propTypes = {
   isEdit: PropTypes.bool,
+  programId: PropTypes.number,
   kegiatan: PropTypes.any
 };
 

@@ -1,5 +1,5 @@
 // assets
-import { IconDashboard, IconTarget } from '@tabler/icons';
+import { IconBuildingSkyscraper, IconDashboard, IconTarget } from '@tabler/icons';
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -14,6 +14,13 @@ const masterData = {
       type: 'item',
       url: '/kemiskinan/dashboard/bidang-urusan',
       icon: IconTarget
+    },
+    {
+      id: 'instansi',
+      title: 'Instansi',
+      type: 'item',
+      url: '/kemiskinan/dashboard/instansi',
+      icon: IconBuildingSkyscraper
     }
   ]
 };

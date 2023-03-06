@@ -34,7 +34,7 @@ const KodeBidangUrusanMask = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object({
-  bidangUrusanId: yup.string().required('Kode Bidang Urusan wajib diisi'),
+  kodeBidangUrusan: yup.string().required('Kode Bidang Urusan wajib diisi'),
   namaBidangUrusan: yup.string().required('Bidang Urusan wajib diisi')
 });
 
@@ -69,13 +69,13 @@ const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
 
   const formik = useFormik({
     initialValues: {
-      bidangUrusanId: isEdit ? bidangUrusan.bidangUrusanId : '',
+      kodeBidangUrusan: isEdit ? bidangUrusan.kodeBidangUrusan : '',
       namaBidangUrusan: isEdit ? bidangUrusan.namaBidangUrusan : ''
     },
     validationSchema,
     validate: (values) => {
       const errors = {};
-      if (values.bidangUrusanId.length < 4) errors.bidangUrusanId = 'Format kode bidang urusan tidak valid';
+      if (values.kodeBidangUrusan.length < 4) errors.kodeBidangUrusan = 'Format kode bidang urusan tidak valid';
       return errors;
     },
     onSubmit: (values) => {
@@ -126,16 +126,16 @@ const FormBidangUrusan = ({ isEdit, bidangUrusan }) => {
           <DialogTitle> {isEdit ? 'Ubah Bidang Urusan' : 'Tambah Bidang Urusan'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="bidangUrusanId"
+              name="kodeBidangUrusan"
               label="Kode Bidang Urusan"
               variant="outlined"
               fullWidth
               placeholder="#.##"
               sx={{ marginTop: 2 }}
-              value={formik.values.bidangUrusanId}
+              value={formik.values.kodeBidangUrusan}
               onChange={formik.handleChange}
-              error={formik.touched.bidangUrusanId && Boolean(formik.errors.bidangUrusanId)}
-              helperText={formik.touched.bidangUrusanId && formik.errors.bidangUrusanId}
+              error={formik.touched.kodeBidangUrusan && Boolean(formik.errors.kodeBidangUrusan)}
+              helperText={formik.touched.kodeBidangUrusan && formik.errors.kodeBidangUrusan}
               InputProps={{ inputComponent: KodeBidangUrusanMask }}
             />
             <TextField

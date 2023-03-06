@@ -16,6 +16,7 @@ import { toast } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import { EditTwoTone } from '@mui/icons-material';
 import { IMaskInput } from 'react-imask';
+import { createInstansiOnProgram } from 'store/slices/instansi-on-program';
 
 const KodeProgramMask = forwardRef((props, ref) => {
   const { onChange, ...other } = props;
@@ -34,18 +35,21 @@ const KodeProgramMask = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object({
-  programId: yup.string().required('ID Program wajib diisi'),
+  kodeProgram: yup.string().required('ID Program wajib diisi'),
   namaProgram: yup.string().required('Nama Program wajib diisi'),
-  paguProgram: yup.number().required('Pagu Program wajib diisi').typeError('Pagu Program harus berupa angka')
+  tahun: yup.string().required('Tahun Program wajib diisi')
 });
 
-const FormProgram = ({ isEdit, program }) => {
+const FormProgram = ({ isEdit, program, instansiId }) => {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
   const queryCreateProgram = useMutation({
-    mutationFn: (newProgram) => createProgram(newProgram),
+    mutationFn: async (newProgram) => {
+      const program = await createProgram(newProgram);
+      return createInstansiOnProgram({ instansiId, programId: program.id });
+    },
 
     onSuccess: (newProgram) => {
       queryClient.invalidateQueries(['program']);
@@ -71,14 +75,14 @@ const FormProgram = ({ isEdit, program }) => {
 
   const formik = useFormik({
     initialValues: {
-      programId: isEdit ? program.programId : '',
+      kodeProgram: isEdit ? program.kodeProgram : '',
       namaProgram: isEdit ? program.namaProgram : '',
-      paguProgram: isEdit ? program.paguProgram : ''
+      tahun: '2022'
     },
     validationSchema,
     validate: (values) => {
       const errors = {};
-      if (values.programId.length < 7) errors.programId = 'Format kode program tidak valid';
+      if (values.kodeProgram.length < 7) errors.kodeProgram = 'Format kode program tidak valid';
       return errors;
     },
     onSubmit: (values) => {
@@ -129,16 +133,16 @@ const FormProgram = ({ isEdit, program }) => {
           <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="programId"
+              name="kodeProgram"
               label="Kode Program"
               variant="outlined"
               fullWidth
               placeholder="#.##.##"
               sx={{ marginTop: 2 }}
-              value={formik.values.programId}
+              value={formik.values.kodeProgram}
               onChange={formik.handleChange}
-              error={formik.touched.programId && Boolean(formik.errors.programId)}
-              helperText={formik.touched.programId && formik.errors.programId}
+              error={formik.touched.kodeProgram && Boolean(formik.errors.kodeProgram)}
+              helperText={formik.touched.kodeProgram && formik.errors.kodeProgram}
               InputProps={{ inputComponent: KodeProgramMask }}
             />
             <TextField
@@ -152,7 +156,7 @@ const FormProgram = ({ isEdit, program }) => {
               error={formik.touched.namaProgram && Boolean(formik.errors.namaProgram)}
               helperText={formik.touched.namaProgram && formik.errors.namaProgram}
             />
-            <TextField
+            {/* <TextField
               name="paguProgram"
               label="Pagu Program"
               variant="outlined"
@@ -163,7 +167,7 @@ const FormProgram = ({ isEdit, program }) => {
               onChange={formik.handleChange}
               error={formik.touched.paguProgram && Boolean(formik.errors.paguProgram)}
               helperText={formik.touched.paguProgram && formik.errors.paguProgram}
-            />
+            /> */}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Batal</Button>
@@ -179,6 +183,7 @@ const FormProgram = ({ isEdit, program }) => {
 
 FormProgram.propTypes = {
   isEdit: PropTypes.bool,
+  instansiId: PropTypes.number,
   program: PropTypes.any
 };
 

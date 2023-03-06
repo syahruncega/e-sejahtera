@@ -34,7 +34,7 @@ const KodeInstansiMask = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object({
-  instansiId: yup.string().required('Kode Instansi wajib diisi'),
+  kodeInstansi: yup.string().required('Kode Instansi wajib diisi'),
   namaInstansi: yup.string().required('Nama Instansi wajib diisi')
 });
 
@@ -47,10 +47,8 @@ const FormInstansi = ({ isEdit, instansi }) => {
     mutationFn: (newInstansi) => createInstansi(newInstansi),
 
     onSuccess: (newInstansi) => {
-      // queryClient.setQueriesData(['instansi'], (oldData) => [newInstansi, ...(oldData ?? [])]);
       queryClient.invalidateQueries('instansi');
       setOpen(false);
-      // setBidangUrusan(null);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
     }
@@ -60,23 +58,19 @@ const FormInstansi = ({ isEdit, instansi }) => {
     mutationFn: (newInstansi) => updateInstansi(instansi.id, newInstansi),
     onSuccess: (newInstansi) => {
       queryClient.invalidateQueries('instansi');
-      // queryClient.setQueriesData(['instansi'], (oldData) => {
-      //   const filteredOldData = oldData.filter((values) => values.id !== newInstansi.id);
-      //   return [newInstansi, ...(filteredOldData ?? [])];
-      // });
       setOpen(false);
     }
   });
 
   const formik = useFormik({
     initialValues: {
-      instansiId: isEdit ? instansi.id : '',
+      kodeInstansi: isEdit ? instansi.kodeInstansi : '',
       namaInstansi: isEdit ? instansi.namaInstansi : ''
     },
     validationSchema,
     validate: (values) => {
       const errors = {};
-      if (values.instansiId.length < 22) errors.instansiId = 'Format kode instansi tidak valid';
+      if (values.kodeInstansi.length < 22) errors.kodeInstansi = 'Format kode instansi tidak valid';
       return errors;
     },
     onSubmit: (values) => {
@@ -127,16 +121,16 @@ const FormInstansi = ({ isEdit, instansi }) => {
           <DialogTitle> {isEdit ? 'Ubah Instansi' : 'Tambah Instansi'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="instansiId"
+              name="kodeInstansi"
               label="Kode Instansi"
               variant="outlined"
               fullWidth
               placeholder="#.##.#.##.#.##.##.####"
               sx={{ marginTop: 2 }}
-              value={formik.values.instansiId}
+              value={formik.values.kodeInstansi}
               onChange={formik.handleChange}
-              error={formik.touched.instansiId && Boolean(formik.errors.instansiId)}
-              helperText={formik.touched.instansiId && formik.errors.instansiId}
+              error={formik.touched.kodeInstansi && Boolean(formik.errors.kodeInstansi)}
+              helperText={formik.touched.kodeInstansi && formik.errors.kodeInstansi}
               InputProps={{ inputComponent: KodeInstansiMask }}
             />
             <TextField
