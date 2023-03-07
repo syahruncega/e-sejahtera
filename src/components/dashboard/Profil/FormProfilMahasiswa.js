@@ -23,7 +23,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/detail-lokasi';
+import { getDesaKelurahan, getKabupatenKota, getKecamatan } from 'store/slices/wilayah';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import useAuth from 'hooks/useAuth';

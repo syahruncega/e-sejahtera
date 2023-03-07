@@ -12,7 +12,7 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { EditTwoTone } from '@mui/icons-material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createKegiatan, updateKegiatan } from 'store/slices/kegiatan';
+import { createKegiatan, updateKegiatan } from 'store/slices/kemiskinan/kegiatan';
 import { toast } from 'react-hot-toast';
 
 const validationSchema = yup.object({

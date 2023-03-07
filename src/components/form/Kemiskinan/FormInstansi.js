@@ -14,7 +14,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
 import { EditTwoTone } from '@mui/icons-material';
-import { createInstansi, updateInstansi } from 'store/slices/instansi';
+import { createInstansi, updateInstansi } from 'store/slices/kemiskinan/instansi';
 import { IMaskInput } from 'react-imask';
 
 const KodeInstansiMask = forwardRef((props, ref) => {

@@ -14,17 +14,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
 import { EditTwoTone } from '@mui/icons-material';
-import { createBidangUrusan, updateBidangUrusan } from 'store/slices/bidang-urusan';
-import { createBidangUrusanOnInstansi, updateBidangUrusanOnInstansi } from 'store/slices/bidang-urusan-on-instansi';
+import { createBidangUrusan, updateBidangUrusan } from 'store/slices/kemiskinan/bidang-urusan';
+import { createBidangUrusanOnInstansi, updateBidangUrusanOnInstansi } from 'store/slices/kemiskinan/bidang-urusan-on-instansi';
 
 const validationSchema = yup.object({
   bidangUrusanId: yup.string().required('Bidang Urusan wajib diisi')
 });
 
-const FormBidangUrusanInstansi = ({ isEdit, bidangUrusanInstansi, instansiId, dataBidangUrusan }) => {
+const FormBidangUrusanInstansi = ({ isEdit, instansiId, dataBidangUrusan }) => {
   const [open, setOpen] = useState(false);
-
-  const [bidangUrusan, setBidangUrusan] = useState(isEdit ? bidangUrusanInstansi.bidangUrusan : null);
 
   const queryClient = useQueryClient();
 
@@ -39,22 +37,14 @@ const FormBidangUrusanInstansi = ({ isEdit, bidangUrusanInstansi, instansiId, da
     }
   });
 
-  const queryUpdateBidangUrusanInstnasi = useMutation({
-    mutationFn: (newBidangUrusanInstansi) => updateBidangUrusanOnInstansi(bidangUrusanInstansi.id, newBidangUrusanInstansi),
-    onSuccess: (newBidangUrusanInstansi) => {
-      queryClient.invalidateQueries('bidangUrusanInstansi');
-      setOpen(false);
-    }
-  });
-
   const formik = useFormik({
     initialValues: {
-      bidangUrusanId: isEdit ? bidangUrusanInstansi.bidangUrusanId : ''
+      bidangUrusanId: ''
     },
     validationSchema,
     onSubmit: (values) => {
       toast.promise(
-        isEdit ? queryUpdateBidangUrusanInstnasi.mutateAsync(values) : queryCreateBidangUrusanInstansi.mutateAsync(values),
+        queryCreateBidangUrusanInstansi.mutateAsync(values),
         {
           loading: 'Sedang menyimpan...',
           success: `Data bidang urusan berhasil ${isEdit ? 'diubah' : 'disimpan'} `,
@@ -95,12 +85,10 @@ const FormBidangUrusanInstansi = ({ isEdit, bidangUrusanInstansi, instansiId, da
             <Autocomplete
               disablePortal
               name="bidangUrusanId"
-              value={bidangUrusanInstansi}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               getOptionLabel={(option) => option.namaBidangUrusan}
               onChange={(e, value) => {
                 formik.setFieldValue('bidangUrusanId', value !== null ? value.id : '');
-                setBidangUrusan(value);
               }}
               options={dataBidangUrusan || []}
               sx={{ width: 'auto', marginTop: 2 }}
@@ -116,10 +104,10 @@ const FormBidangUrusanInstansi = ({ isEdit, bidangUrusanInstansi, instansiId, da
             />
           </DialogContent>
           <DialogActions>
-            <Button disabled={queryCreateBidangUrusanInstansi.isLoading || queryUpdateBidangUrusanInstnasi.isLoading} onClick={handleClose}>
+            <Button disabled={queryCreateBidangUrusanInstansi.isLoading} onClick={handleClose}>
               Batal
             </Button>
-            <LoadingButton loading={queryCreateBidangUrusanInstansi.isLoading || queryUpdateBidangUrusanInstnasi.isLoading} type="submit">
+            <LoadingButton loading={queryCreateBidangUrusanInstansi.isLoading} type="submit">
               Simpan
             </LoadingButton>
           </DialogActions>
@@ -131,7 +119,6 @@ const FormBidangUrusanInstansi = ({ isEdit, bidangUrusanInstansi, instansiId, da
 
 FormBidangUrusanInstansi.propTypes = {
   isEdit: PropTypes.bool,
-  bidangUrusanInstansi: PropTypes.any,
   instansiId: PropTypes.number,
   dataBidangUrusan: PropTypes.array
 };

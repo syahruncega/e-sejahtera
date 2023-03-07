@@ -8,12 +8,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import Chip from 'components/ui-component/extended/Chip';
 import FormSubKegiatan from 'components/form/Kemiskinan/FormSubKegiatan';
 import { useQueries } from '@tanstack/react-query';
-import { getInstansiById } from 'store/slices/instansi';
-import { getProgramById } from 'store/slices/program';
+import { getInstansiById } from 'store/slices/kemiskinan/instansi';
+import { getProgramById } from 'store/slices/kemiskinan/program';
 import DeleteDialog from 'components/dialog/DeleteDialog';
-import { deleteKegiatanOnSubKegiatan, getKegiatanOnSubKegiatan } from 'store/slices/kegiatan-on-sub-kegiatan';
-import { deleteSubKegiatan } from 'store/slices/sub-kegiatan';
-import { getKegiatanById } from 'store/slices/kegiatan';
+import { deleteKegiatanOnSubKegiatan, getKegiatanOnSubKegiatan } from 'store/slices/kemiskinan/kegiatan-on-sub-kegiatan';
+import { deleteSubKegiatan } from 'store/slices/kemiskinan/sub-kegiatan';
+import { getKegiatanById } from 'store/slices/kemiskinan/kegiatan';
 
 const TabMasterSubKegiatan = ({ setValue, params, setParams }) => {
   const [search, setSearch] = useState('');

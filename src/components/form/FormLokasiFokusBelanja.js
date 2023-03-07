@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
-import { createDetailLokasi, getDesaKelurahan, getKecamatan, updateDetailLokasi } from 'store/slices/detail-lokasi';
+import { createDetailLokasi, getDesaKelurahan, getKecamatan, updateDetailLokasi } from 'store/slices/kemiskinan/detail-lokasi';
 import { EditOutlined, EditTwoTone } from '@mui/icons-material';
 import { toast } from 'react-hot-toast';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

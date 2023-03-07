@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
-import { FastForwardTwoTone, PostAddTwoTone } from '@mui/icons-material';
+import { FastForwardTwoTone } from '@mui/icons-material';
 import {
   Box,
-  Button,
   Grid,
   IconButton,
   InputAdornment,
@@ -10,26 +9,23 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   TextField,
-  Tooltip,
-  Typography
+  Tooltip
 } from '@mui/material';
 import AppTable from 'components/AppTable';
 import SubCard from 'components/ui-component/cards/SubCard';
-import { kegiatan, program } from 'data';
 import React, { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import SearchIcon from '@mui/icons-material/Search';
 import Chip from 'components/ui-component/extended/Chip';
 import FormKegiatan from 'components/form/Kemiskinan/FormKegiatan';
 import { useQueries } from '@tanstack/react-query';
-import { getInstansiById } from 'store/slices/instansi';
-import { getProgramById } from 'store/slices/program';
-import { deleteKegiatan, getKegiatan } from 'store/slices/kegiatan';
+import { getInstansiById } from 'store/slices/kemiskinan/instansi';
+import { getProgramById } from 'store/slices/kemiskinan/program';
+import { deleteKegiatan } from 'store/slices/kemiskinan/kegiatan';
 import DeleteDialog from 'components/dialog/DeleteDialog';
-import { getProgramOnKegiatan, deleteProgramOnKegiatan } from 'store/slices/program-on-kegiatan';
+import { getProgramOnKegiatan, deleteProgramOnKegiatan } from 'store/slices/kemiskinan/program-on-kegiatan';
 
 const TabMasterKegiatan = ({ setValue, params, setParams }) => {
   const [search, setSearch] = useState('');

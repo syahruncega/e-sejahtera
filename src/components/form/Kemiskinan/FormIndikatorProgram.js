@@ -11,7 +11,7 @@ import AddIcon from '@mui/icons-material/AddTwoTone';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createProgram, updateProgram } from 'store/slices/program';
+import { createProgram, updateProgram } from 'store/slices/kemiskinan/program';
 import { toast } from 'react-hot-toast';
 import { LoadingButton } from '@mui/lab';
 import { EditTwoTone } from '@mui/icons-material';

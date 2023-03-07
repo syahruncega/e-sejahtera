@@ -10,7 +10,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import renderSubRowRencanaInstansi from './SubRowRencanaInstansi';
 import FormInstansi from 'components/form/Kemiskinan/FormInstansi';
 import { useQuery } from '@tanstack/react-query';
-import { deleteInstansi, getInstansi } from 'store/slices/instansi';
+import { deleteInstansi, getInstansi } from 'store/slices/kemiskinan/instansi';
 import MainCard from 'components/ui-component/cards/MainCard';
 import DeleteDialog from 'components/dialog/DeleteDialog';
 
@@ -27,20 +27,20 @@ const TabRencanaInstansi = ({ setValue, setParams }) => {
         header: '',
         cell: ({ row }) => (
           <Box sx={{ display: 'flex' }}>
-            {row.getCanExpand() && (
+            {/* {row.getCanExpand() && (
               <Tooltip title="Bidang Urusan">
                 <IconButton color="secondary" size="medium" aria-label="Bidang Urusan" onClick={row.getToggleExpandedHandler()}>
                   <PostAddTwoTone fontSize="small" />
                 </IconButton>
               </Tooltip>
-            )}
+            )} */}
             <Tooltip title="Program">
               <IconButton
                 color="secondary"
                 size="medium"
                 aria-label="Program"
                 onClick={() => {
-                  setParams({ instansiId: row.original.instansiId });
+                  setParams({ instansiId: row.original.id });
                   setValue(1);
                 }}
               >
@@ -56,28 +56,28 @@ const TabRencanaInstansi = ({ setValue, setParams }) => {
         header: 'No'
       },
       {
-        id: 'instansiId',
-        accessorKey: 'instansiId',
+        id: 'kodeInstansi',
+        accessorKey: 'kodeInstansi',
         header: 'Kode Instansi'
       },
       {
         id: 'namaInstansi',
         accessorKey: 'namaInstansi',
         header: 'Nama Instansi'
-      },
-      {
-        id: 'aksi2',
-        header: 'Aksi',
-        cell: ({ row: { original: data } }) => (
-          <Box sx={{ display: 'flex' }}>
-            <FormInstansi isEdit instansi={data} />
-            <DeleteDialog id={data.id} deleteFunc={deleteInstansi} mutationKey="instansi" />
-          </Box>
-        )
       }
+      // {
+      //   id: 'aksi2',
+      //   header: 'Aksi',
+      //   cell: ({ row: { original: data } }) => (
+      //     <Box sx={{ display: 'flex' }}>
+      //       <FormInstansi isEdit instansi={data} />
+      //       <DeleteDialog id={data.id} deleteFunc={deleteInstansi} mutationKey="instansi" />
+      //     </Box>
+      //   )
+      // }
     ],
 
-    [setValue]
+    [setValue, setParams]
   );
   return (
     <>
@@ -104,9 +104,9 @@ const TabRencanaInstansi = ({ setValue, setParams }) => {
                 size="small"
               />
             </Grid>
-            <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
+            {/* <Grid item xs={12} sm={6} sx={{ textAlign: 'right' }}>
               <FormInstansi />
-            </Grid>
+            </Grid> */}
           </Grid>
 
           {!fetchInstansi.isLoading && (
@@ -116,8 +116,8 @@ const TabRencanaInstansi = ({ setValue, setParams }) => {
                 columns={columns}
                 initialData={fetchInstansi.data ?? []}
                 globalFilter={debouncedValue}
-                getRowCanExpand={() => true}
-                renderSubComponent={renderSubRowRencanaInstansi}
+                // getRowCanExpand={() => true}
+                // renderSubComponent={renderSubRowRencanaInstansi}
               />
             </SubCard>
           )}

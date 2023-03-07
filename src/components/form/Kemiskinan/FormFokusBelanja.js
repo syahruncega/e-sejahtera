@@ -13,7 +13,7 @@ import { useFormik } from 'formik';
 import { useRouter } from 'next/router';
 import { EditTwoTone } from '@mui/icons-material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createDetailSubKegiatan, updateDetailSubKegiatan } from 'store/slices/detail-sub-kegiatan';
+import { createDetailSubKegiatan, updateDetailSubKegiatan } from 'store/slices/kemiskinan/detail-sub-kegiatan';
 import { toast } from 'react-hot-toast';
 
 const validationSchema = yup.object({

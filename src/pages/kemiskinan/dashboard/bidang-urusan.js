@@ -4,7 +4,7 @@ import Page from 'components/ui-component/Page';
 import { useMemo, useState } from 'react';
 import useDebounce from 'hooks/useDebounce';
 import { useQuery } from '@tanstack/react-query';
-import { deleteBidangUrusan, getBidangUrusan } from 'store/slices/bidang-urusan';
+import { deleteBidangUrusan, getBidangUrusan } from 'store/slices/kemiskinan/bidang-urusan';
 import FormBidangUrusan from 'components/form/Kemiskinan/FormBidangUrusan';
 import { Alert, AlertTitle, Box, CircularProgress, Grid, IconButton, InputAdornment, TextField, Tooltip } from '@mui/material';
 import DeleteDialog from 'components/dialog/DeleteDialog';

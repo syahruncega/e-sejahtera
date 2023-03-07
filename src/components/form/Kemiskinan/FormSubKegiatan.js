@@ -12,10 +12,10 @@ import * as yup from 'yup';
 import { useFormik } from 'formik';
 import { EditTwoTone } from '@mui/icons-material';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createSubKegiatan, updateSubKegiatan } from 'store/slices/sub-kegiatan';
+import { createSubKegiatan, updateSubKegiatan } from 'store/slices/kemiskinan/sub-kegiatan';
 import { toast } from 'react-hot-toast';
 import { IMaskInput } from 'react-imask';
-import { createKegiatanOnSubKegiatan } from 'store/slices/kegiatan-on-sub-kegiatan';
+import { createKegiatanOnSubKegiatan } from 'store/slices/kemiskinan/kegiatan-on-sub-kegiatan';
 
 const KodeSubKegiatanMask = forwardRef((props, ref) => {
   const { onChange, ...other } = props;

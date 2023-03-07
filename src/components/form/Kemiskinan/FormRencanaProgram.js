@@ -17,43 +17,27 @@ import { LoadingButton } from '@mui/lab';
 import { EditTwoTone } from '@mui/icons-material';
 import { IMaskInput } from 'react-imask';
 import { createInstansiOnProgram } from 'store/slices/kemiskinan/instansi-on-program';
-
-const KodeProgramMask = forwardRef((props, ref) => {
-  const { onChange, ...other } = props;
-  return (
-    <IMaskInput
-      {...other}
-      mask="#.00.00"
-      definitions={{
-        '#': /[1-9]/
-      }}
-      inputRef={ref}
-      onAccept={(value) => onChange({ target: { name: props.name, value } })}
-      overwrite
-    />
-  );
-});
+import { createRencanaProgram, updateRencanaProgram } from 'store/slices/kemiskinan/rencana-program';
 
 const validationSchema = yup.object({
-  kodeProgram: yup.string().required('ID Program wajib diisi'),
-  namaProgram: yup.string().required('Nama Program wajib diisi'),
-  tahun: yup.string().required('Tahun Program wajib diisi')
+  instansiId: yup.string().required('Instansi wajib diisi'),
+  programId: yup.string().required('Program wajib diisi'),
+  paguProgram: yup.number().typeError('Pagu Program harus berupa angka').required('Pagu Program wajib diisi'),
+  tipe: yup.string().required('Tipe wajib diisi')
 });
 
-const FormProgram = ({ isEdit, program, instansiId }) => {
+const FormRencanaProgram = ({ isEdit, instansiId, rencanaProgram, dataProgram }) => {
   const [open, setOpen] = useState(false);
-
   const queryClient = useQueryClient();
 
-  const queryCreateProgram = useMutation({
-    mutationFn: async (newProgram) => {
-      const program = await createProgram(newProgram);
-      return createInstansiOnProgram({ instansiId, programId: program.id });
-    },
+  const [programValue, setProgramValue] = useState(isEdit ? rencanaProgram : null);
 
-    onSuccess: (newProgram) => {
-      queryClient.invalidateQueries(['program']);
-      // queryClient.setQueriesData(['program'], (oldData) => [newProgram, ...(oldData ?? [])]);
+  const queryCreateProgram = useMutation({
+    mutationFn: async (newRencanaProgram) =>
+      createRencanaProgram({ ...newRencanaProgram, paguProgram: Number(newRencanaProgram.paguProgram) }),
+
+    onSuccess: (newRencanaProgram) => {
+      queryClient.invalidateQueries(['rencanaProgram']);
       setOpen(false);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
@@ -61,13 +45,9 @@ const FormProgram = ({ isEdit, program, instansiId }) => {
   });
 
   const queryUpdateProgram = useMutation({
-    mutationFn: (newProgram) => updateProgram(program.id, newProgram),
-    onSuccess: (newProgram) => {
-      queryClient.invalidateQueries(['program']);
-      // queryClient.setQueriesData(['program'], (oldData) => {
-      //   const filteredOldData = oldData.filter((values) => values.id !== newProgram.id);
-      //   return [newProgram, ...(filteredOldData ?? [])];
-      // });
+    mutationFn: (newRencanaProgram) => updateRencanaProgram(rencanaProgram.id, newRencanaProgram),
+    onSuccess: (newRencanaProgram) => {
+      queryClient.invalidateQueries(['rencanaProgram']);
 
       setOpen(false);
     }
@@ -75,16 +55,12 @@ const FormProgram = ({ isEdit, program, instansiId }) => {
 
   const formik = useFormik({
     initialValues: {
-      kodeProgram: isEdit ? program.kodeProgram : '',
-      namaProgram: isEdit ? program.namaProgram : '',
-      tahun: '2022'
+      instansiId,
+      programId: isEdit ? rencanaProgram.programId : '',
+      paguProgram: isEdit ? rencanaProgram.paguProgram : '',
+      tipe: 'Kemiskinan'
     },
     validationSchema,
-    validate: (values) => {
-      const errors = {};
-      if (values.kodeProgram.length < 7) errors.kodeProgram = 'Format kode program tidak valid';
-      return errors;
-    },
     onSubmit: (values) => {
       toast.promise(
         isEdit ? queryUpdateProgram.mutateAsync(values) : queryCreateProgram.mutateAsync(values),
@@ -132,31 +108,29 @@ const FormProgram = ({ isEdit, program, instansiId }) => {
         <form onSubmit={formik.handleSubmit}>
           <DialogTitle> {isEdit ? 'Ubah Program' : 'Tambah Program'}</DialogTitle>
           <DialogContent>
-            <TextField
-              name="kodeProgram"
-              label="Kode Program"
-              variant="outlined"
-              fullWidth
-              placeholder="#.##.##"
-              sx={{ marginTop: 2 }}
-              value={formik.values.kodeProgram}
-              onChange={formik.handleChange}
-              error={formik.touched.kodeProgram && Boolean(formik.errors.kodeProgram)}
-              helperText={formik.touched.kodeProgram && formik.errors.kodeProgram}
-              InputProps={{ inputComponent: KodeProgramMask }}
+            <Autocomplete
+              disablePortal
+              name="programId"
+              value={programValue}
+              isOptionEqualToValue={(option, value) => option.programId === value.programId}
+              getOptionLabel={(option) => option.program.namaProgram}
+              onChange={(e, value) => {
+                formik.setFieldValue('programId', value !== null ? value.id : '');
+                setProgramValue(value);
+              }}
+              options={dataProgram}
+              sx={{ width: 'auto', marginTop: 2 }}
+              renderInput={(params) => (
+                <TextField
+                  label="Program"
+                  value={formik.values.programId}
+                  helperText={formik.touched.programId && formik.errors.programId}
+                  error={formik.touched.programId && Boolean(formik.errors.programId)}
+                  {...params}
+                />
+              )}
             />
             <TextField
-              name="namaProgram"
-              label="Nama Program"
-              variant="outlined"
-              fullWidth
-              sx={{ marginTop: 2 }}
-              value={formik.values.namaProgram}
-              onChange={formik.handleChange}
-              error={formik.touched.namaProgram && Boolean(formik.errors.namaProgram)}
-              helperText={formik.touched.namaProgram && formik.errors.namaProgram}
-            />
-            {/* <TextField
               name="paguProgram"
               label="Pagu Program"
               variant="outlined"
@@ -167,7 +141,7 @@ const FormProgram = ({ isEdit, program, instansiId }) => {
               onChange={formik.handleChange}
               error={formik.touched.paguProgram && Boolean(formik.errors.paguProgram)}
               helperText={formik.touched.paguProgram && formik.errors.paguProgram}
-            /> */}
+            />
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose}>Batal</Button>
@@ -181,10 +155,11 @@ const FormProgram = ({ isEdit, program, instansiId }) => {
   );
 };
 
-FormProgram.propTypes = {
+FormRencanaProgram.propTypes = {
   isEdit: PropTypes.bool,
   instansiId: PropTypes.number,
-  program: PropTypes.any
+  rencanaProgram: PropTypes.object,
+  dataProgram: PropTypes.array
 };
 
-export default FormProgram;
+export default FormRencanaProgram;

@@ -14,7 +14,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { LoadingButton } from '@mui/lab';
 import toast from 'react-hot-toast';
 import { EditTwoTone } from '@mui/icons-material';
-import { createBidangUrusan, updateBidangUrusan } from 'store/slices/bidang-urusan';
+import { createBidangUrusan, updateBidangUrusan } from 'store/slices/kemiskinan/bidang-urusan';
 import { IMaskInput } from 'react-imask';
 
 const KodeBidangUrusanMask = forwardRef((props, ref) => {

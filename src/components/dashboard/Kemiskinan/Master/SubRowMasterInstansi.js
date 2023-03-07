@@ -7,8 +7,8 @@ import SubCard from 'components/ui-component/cards/SubCard';
 import React, { Fragment, useMemo, useState } from 'react';
 import FormBidangUrusanInstansi from 'components/form/Kemiskinan/FormBidangUrusanInstansi';
 import { useQuery } from '@tanstack/react-query';
-import { getBidangUrusan } from 'store/slices/bidang-urusan';
-import { deleteBidangUrusanOnInstansi, getBidangUrusanOnInstansi } from 'store/slices/bidang-urusan-on-instansi';
+import { getBidangUrusan } from 'store/slices/kemiskinan/bidang-urusan';
+import { deleteBidangUrusanOnInstansi, getBidangUrusanOnInstansi } from 'store/slices/kemiskinan/bidang-urusan-on-instansi';
 import DeleteDialog from 'components/dialog/DeleteDialog';
 
 const renderSubRowMasterInstansi = ({ row }) => <SubRowMasterInstansi row={row} />;

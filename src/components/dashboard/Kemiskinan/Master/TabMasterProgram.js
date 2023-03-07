@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { FastForwardTwoTone, PostAddTwoTone } from '@mui/icons-material';
+import { FastForwardTwoTone } from '@mui/icons-material';
 import {
   Box,
   Grid,
@@ -21,9 +21,9 @@ import SearchIcon from '@mui/icons-material/Search';
 import FormProgram from 'components/form/Kemiskinan/FormProgram';
 import Chip from 'components/ui-component/extended/Chip';
 import { useQueries } from '@tanstack/react-query';
-import { deleteProgram, getProgram } from 'store/slices/program';
-import { deleteInstansiOnProgram, getInstansiOnProgram } from 'store/slices/instansi-on-program';
-import { getInstansiById } from 'store/slices/instansi';
+import { deleteProgram } from 'store/slices/kemiskinan/program';
+import { deleteInstansiOnProgram, getInstansiOnProgram } from 'store/slices/kemiskinan/instansi-on-program';
+import { getInstansiById } from 'store/slices/kemiskinan/instansi';
 import DeleteDialog from 'components/dialog/DeleteDialog';
 
 const TabMasterProgram = ({ setValue, params, setParams }) => {
@@ -102,7 +102,16 @@ const TabMasterProgram = ({ setValue, params, setParams }) => {
               <TableBody>
                 <TableRow>
                   <TableCell sx={{ pl: 3 }}>
-                    <Chip chipcolor="warning" label="< Kembali" size="small" sx={{ cursor: 'pointer' }} onClick={() => setValue(0)} />
+                    <Chip
+                      chipcolor="warning"
+                      label="< Kembali"
+                      size="small"
+                      sx={{ cursor: 'pointer' }}
+                      onClick={() => {
+                        setParams({});
+                        setValue(0);
+                      }}
+                    />
                   </TableCell>
                   <TableCell>Instansi</TableCell>
                   <TableCell>{fetchData[0].data.namaInstansi || '-'}</TableCell>

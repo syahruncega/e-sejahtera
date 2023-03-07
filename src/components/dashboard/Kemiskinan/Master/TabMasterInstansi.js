@@ -9,7 +9,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import renderSubRowMasterInstansi from './SubRowMasterInstansi';
 import FormInstansi from 'components/form/Kemiskinan/FormInstansi';
 import { useQuery } from '@tanstack/react-query';
-import { deleteInstansi, getInstansi } from 'store/slices/instansi';
+import { deleteInstansi, getInstansi } from 'store/slices/kemiskinan/instansi';
 import DeleteDialog from 'components/dialog/DeleteDialog';
 
 const TabMasterInstansi = ({ setValue, setParams }) => {

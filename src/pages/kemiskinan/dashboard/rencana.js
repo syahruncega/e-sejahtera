@@ -8,7 +8,6 @@ import Layout from 'layout';
 import Page from 'components/ui-component/Page';
 import MainCard from 'components/ui-component/cards/MainCard';
 import { useState } from 'react';
-import useDebounce from 'hooks/useDebounce';
 import { gridSpacing } from 'store/constant';
 import TabRencanaInstansi from 'components/dashboard/Kemiskinan/Rencana/TabRencanaInstansi';
 import TabRencanaProgram from 'components/dashboard/Kemiskinan/Rencana/TabRencanaProgram';
@@ -62,10 +61,6 @@ const RencanaPage = () => {
 
   const [value, setValue] = useState(0);
   const [params, setParams] = useState({});
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
 
   const pageProps = {
     title: 'Rencana',
@@ -137,13 +132,13 @@ const RencanaPage = () => {
               <TabRencanaProgram setValue={setValue} params={params} setParams={setParams} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <TabRencanaKegiatan setValue={setValue} />
+              <TabRencanaKegiatan setValue={setValue} params={params} setParams={setParams} />
             </TabPanel>
             <TabPanel value={value} index={3}>
-              <TabRencanaSubKegiatan setValue={setValue} />
+              <TabRencanaSubKegiatan setValue={setValue} params={params} setParams={setParams} />
             </TabPanel>
             <TabPanel value={value} index={4}>
-              <TabRencanaFokusBelanja setValue={setValue} />
+              <TabRencanaFokusBelanja setValue={setValue} params={params} setParams={setParams} />
             </TabPanel>
           </Grid>
         </Grid>
