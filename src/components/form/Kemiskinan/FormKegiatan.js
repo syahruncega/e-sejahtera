@@ -53,7 +53,6 @@ const FormKegiatan = ({ isEdit, kegiatan, programId }) => {
 
     onSuccess: (newKegiatan) => {
       queryClient.invalidateQueries(['kegiatan']);
-      // queryClient.setQueriesData(['kegiatan'], (oldData) => [newKegiatan, ...(oldData ?? [])]);
       setOpen(false);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
@@ -64,10 +63,6 @@ const FormKegiatan = ({ isEdit, kegiatan, programId }) => {
     mutationFn: (newKegiatan) => updateKegiatan(kegiatan.id, newKegiatan),
     onSuccess: (newKegiatan) => {
       queryClient.invalidateQueries(['kegiatan']);
-      // queryClient.setQueriesData(['kegiatan'], (oldData) => {
-      //   const filteredOldData = oldData.filter((values) => values.id !== newKegiatan.id);
-      //   return [newKegiatan, ...(filteredOldData ?? [])];
-      // });
 
       setOpen(false);
     }

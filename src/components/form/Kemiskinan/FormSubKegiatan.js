@@ -15,6 +15,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createSubKegiatan, updateSubKegiatan } from 'store/slices/sub-kegiatan';
 import { toast } from 'react-hot-toast';
 import { IMaskInput } from 'react-imask';
+import { createKegiatanOnSubKegiatan } from 'store/slices/kegiatan-on-sub-kegiatan';
 
 const KodeSubKegiatanMask = forwardRef((props, ref) => {
   const { onChange, ...other } = props;
@@ -33,22 +34,24 @@ const KodeSubKegiatanMask = forwardRef((props, ref) => {
 });
 
 const validationSchema = yup.object({
-  subKegiatanId: yup.string().required('Kode Sub Kegiatan wajib diisi'),
-  namaSubKegiatan: yup.string().required('Nama Sub Kegiatan wajib diisi'),
-  paguSubKegiatan: yup.number().required('Pagu Sub Kegiatan wajib diisi').typeError('Pagu Sub Kegiatan harus berupa angka')
+  kodeSubKegiatan: yup.string().required('Kode Sub Kegiatan wajib diisi'),
+  namaSubKegiatan: yup.string().required('Nama Sub Kegiatan wajib diisi')
 });
 
-const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
+const FormSubKegiatan = ({ isEdit, subKegiatan, kegiatanId }) => {
   const [open, setOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
   const queryCreateSubKegiatan = useMutation({
-    mutationFn: (newSubKegiatan) => createSubKegiatan(newSubKegiatan),
+    mutationFn: async (newSubKegiatan) => {
+      const subKegiatan = await createSubKegiatan(newSubKegiatan);
+      return createKegiatanOnSubKegiatan({ kegiatanId, subKegiatanId: subKegiatan.id });
+    },
 
     onSuccess: (newSubKegiatan) => {
       queryClient.invalidateQueries(['subKegiatan']);
-      // queryClient.setQueriesData(['subKegiatan'], (oldData) => [newSubKegiatan, ...(oldData ?? [])]);
+
       setOpen(false);
       // eslint-disable-next-line no-use-before-define
       formik.resetForm();
@@ -59,24 +62,19 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
     mutationFn: (newSubKegiatan) => updateSubKegiatan(subKegiatan.id, newSubKegiatan),
     onSuccess: (newSubKegiatan) => {
       queryClient.invalidateQueries(['subKegiatan']);
-      // queryClient.setQueriesData(['subKegiatan'], (oldData) => {
-      //   const filteredOldData = oldData.filter((values) => values.id !== newSubKegiatan.id);
-      //   return [newSubKegiatan, ...(filteredOldData ?? [])];
-      // });
-
       setOpen(false);
     }
   });
 
   const formik = useFormik({
     initialValues: {
-      subKegiatanId: isEdit ? subKegiatan.subKegiatanId : '',
+      kodeSubKegiatan: isEdit ? subKegiatan.kodeSubKegiatan : '',
       namaSubKegiatan: isEdit ? subKegiatan.namaSubKegiatan : '',
-      paguSubKegiatan: isEdit ? subKegiatan.paguSubKegiatan : ''
+      tahun: '2022'
     },
     validate: (values) => {
       const errors = {};
-      if (values.subKegiatanId.length < 15) errors.subKegiatanId = 'Format kode sub kegiatan tidak valid';
+      if (values.kodeSubKegiatan.length < 15) errors.kodeSubKegiatan = 'Format kode sub kegiatan tidak valid';
       return errors;
     },
     validationSchema,
@@ -128,16 +126,16 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
           <DialogTitle> {isEdit ? 'Ubah Sub Kegiatan' : 'Tambah Sub Kegiatan'}</DialogTitle>
           <DialogContent>
             <TextField
-              name="subKegiatanId"
+              name="kodeSubKegiatan"
               label="Kode Sub Kegiatan"
               variant="outlined"
               fullWidth
               sx={{ marginTop: 2 }}
-              value={formik.values.subKegiatanId}
+              value={formik.values.kodeSubKegiatan}
               onChange={formik.handleChange}
               placeholder="#.##.##.#.##.##"
-              error={formik.touched.subKegiatanId && Boolean(formik.errors.subKegiatanId)}
-              helperText={formik.touched.subKegiatanId && formik.errors.subKegiatanId}
+              error={formik.touched.kodeSubKegiatan && Boolean(formik.errors.kodeSubKegiatan)}
+              helperText={formik.touched.kodeSubKegiatan && formik.errors.kodeSubKegiatan}
               InputProps={{ inputComponent: KodeSubKegiatanMask }}
             />
             <TextField
@@ -150,18 +148,6 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
               onChange={formik.handleChange}
               error={formik.touched.namaSubKegiatan && Boolean(formik.errors.namaSubKegiatan)}
               helperText={formik.touched.namaSubKegiatan && formik.errors.namaSubKegiatan}
-            />
-            <TextField
-              name="paguSubKegiatan"
-              label="Pagu Sub Kegiatan"
-              variant="outlined"
-              fullWidth
-              InputProps={{ inputMode: 'numeric', startAdornment: <InputAdornment position="start">Rp</InputAdornment> }}
-              sx={{ marginTop: 2 }}
-              value={formik.values.paguSubKegiatan}
-              onChange={formik.handleChange}
-              error={formik.touched.paguSubKegiatan && Boolean(formik.errors.paguSubKegiatan)}
-              helperText={formik.touched.paguSubKegiatan && formik.errors.paguSubKegiatan}
             />
           </DialogContent>
           <DialogActions>
@@ -177,7 +163,7 @@ const FormSubKegiatan = ({ isEdit, subKegiatan, dataKegiatan }) => {
 FormSubKegiatan.propTypes = {
   isEdit: PropTypes.bool,
   subKegiatan: PropTypes.any,
-  dataKegiatan: PropTypes.array
+  kegiatanId: PropTypes.number
 };
 
 export default FormSubKegiatan;

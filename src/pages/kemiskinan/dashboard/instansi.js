@@ -120,7 +120,7 @@ const InstansiPage = () => {
               <TabMasterKegiatan setValue={setValue} params={params} setParams={setParams} />
             </TabPanel>
             <TabPanel value={value} index={3}>
-              <TabMasterSubKegiatan setValue={setValue} />
+              <TabMasterSubKegiatan setValue={setValue} params={params} setParams={setParams} />
             </TabPanel>
           </Grid>
         </Grid>
